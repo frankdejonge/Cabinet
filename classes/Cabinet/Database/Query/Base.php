@@ -2,6 +2,7 @@
 
 namespace Cabinet\Database\Query;
 
+use Cabibet\Database\Connection;
 
 abstract class Base
 {
@@ -26,6 +27,11 @@ abstract class Base
 	protected $type = null;
 
 	/**
+	 * @var  object  $connection  connection object
+	 */
+	protected $connection = null;
+
+	/**
 	 * Bind a value to the query.
 	 *
 	 * @param   mixed  $key    binding key or associative array of bindings
@@ -41,6 +47,40 @@ abstract class Base
 		}
 
 		return $this;
+	}
+
+	/**
+	 * Get the query value.
+	 *
+	 * @param   object  $connection  database connection object
+	 * @return  object  $this
+	 */
+	public function setConnection($connection)
+	{
+		if( ! $connection instanceof \Cabinet\Database\Connection)
+		{
+			throw new \Cabinet\Database\Exception('Supplied invalid connection object');
+		}
+
+		$this->connection = $connection;
+
+		return $this;
+	}
+
+	/**
+	 *
+	 *
+	 * @return  object  connection object
+	 * @throws  Cabinet\Database\Exception  when no connection object is set.
+	 */
+	public function getConnection()
+	{
+		if ( ! $this->connection)
+		{
+			throw new \Cabinet\Database\Exception('Can\'t retrieve Connection object when none is set.');
+		}
+
+		return $this->connection;
 	}
 
 	/**
@@ -96,9 +136,11 @@ abstract class Base
 	 * @param   object  $connection  Cabinet\Database\Connection
 	 * @return  mixed   Query result.
 	 */
-	public function execute(\Cabinet\Database\Connection $connection)
+	public function execute($connection = null)
 	{
-		return $connection->execute($this);
+		$connection and $this->setConnection($connection);
+
+		return $this->getConnection()->execute($this);
 	}
 
 	/**
@@ -107,8 +149,10 @@ abstract class Base
 	 * @param   object  $connection  Cabinet\Database\Connection
 	 * @return  mixed   compiled query
 	 */
-	public function compile(\Cabinet\Database\Connection $connection)
+	public function compile($connection = null)
 	{
-		return $connection->compile($this, $this->getType());
+		$connection and $this->setConnection($connection);
+
+		return $this->getConnection()->compile($this, $this->getType());
 	}
 }

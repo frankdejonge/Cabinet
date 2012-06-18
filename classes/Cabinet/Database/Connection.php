@@ -43,6 +43,31 @@ abstract class Connection
 		$this->commit_transaction();
 		return $result;
 	}
+	
+	public function query($query, $type, $bindings = array())
+	{
+		return Db::query($query, $type, $bindings)->setConnection($this);	
+	}
+	
+	public function select($columns = array())
+	{
+		return Db::select($columns)->setConnection($this);
+	}
+	
+	public function update($table, $columns = array())
+	{
+		return Db::update($table, $columns)->setConnection($this);
+	}
+	
+	public function delete($table, $columns = array())
+	{
+		return Db::delete($table, $columns)->setConnection($this);
+	}
+	
+	public function insert($table, $columns = array())
+	{
+		return Db::insert($table, $columns)->setConnection($this);
+	}
 
 	/**
 	 * Transaction functions.
@@ -50,4 +75,6 @@ abstract class Connection
 	abstract public function start_transaction($name = null);
 	abstract public function commit_transaction($name = null);
 	abstract public function rollback_transaction($name = null);
+	
+	
 }

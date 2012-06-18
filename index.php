@@ -51,3 +51,7 @@ $update = Db::delete('containers')
 
 var_dump($update);
 
+
+$query = $conn->select();
+
+var_dump($query);

@@ -1,0 +1,13 @@
+{
+    "name": "Cabinet/Database",
+    "description": "Database Abstraction Layer for PDO and MongoDB",
+    "authors": [
+        {
+            "name": "Frank de Jonge",
+            "email": "info@frenky.net"
+        }
+    ],
+    "autoload": {
+		"psr-0": { "Cabinet\\Database": "classes/" }
+	}
+}

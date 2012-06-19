@@ -52,6 +52,8 @@ $update = Db::delete('containers')
 var_dump($update);
 
 
-$query = $conn->select();
+$result = $conn->select('*')
+	->from('blocks')
+	->execute();
 
-var_dump($query);
+var_dump($result);

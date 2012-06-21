@@ -114,20 +114,20 @@ abstract class Base
 	}
 
 	/**
-	 * As object getter/setter.
+	 * As object setter.
 	 *
-	 * @param   $object  null for array, true for stdClass or string classname
+	 * @param   $object  falsey (falls/null) for array, true for stdClass or string classname
 	 */
 	public function asObject($object = true)
 	{
-		if ( ! func_num_args())
-		{
-			return $this->asObject;
-		}
-
 		$this->asObject = $object ?: null;
 
 		return $this;
+	}
+	
+	public function getAsObject()
+	{
+		return $this->asObject;
 	}
 
 	/**

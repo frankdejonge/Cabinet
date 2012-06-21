@@ -32,9 +32,9 @@ class Where extends Collector
 	{
 		if($column instanceof \Closure)
 		{
-			$this->andWhere_open();
+			$this->andWhereOpen();
 			$column($this);
-			$this->andWhere_close();
+			$this->andWhereClose();
 			return $this;
 		}
 
@@ -59,9 +59,9 @@ class Where extends Collector
 	{
 		if($column instanceof \Closure)
 		{
-			$this->orWhere_open();
+			$this->orWhereOpen();
 			$column($this);
-			$this->orWhere_close();
+			$this->orWhereClose();
 			return $this;
 		}
 
@@ -79,7 +79,7 @@ class Where extends Collector
 	 *
 	 * @return  object  current instance
 	 */
-	public function where_open()
+	public function whereOpen()
 	{
 		$this->query['where'][] = array(
 			'type' => 'and',
@@ -94,7 +94,7 @@ class Where extends Collector
 	 *
 	 * @return  object  current instance
 	 */
-	public function where_close()
+	public function whereClose()
 	{
 		$this->query['where'][] = array(
 			'type' => 'and',
@@ -109,7 +109,7 @@ class Where extends Collector
 	 *
 	 * @return  object  current instance
 	 */
-	public function andWhere_open()
+	public function andWhereOpen()
 	{
 		$this->query['where'][] = array(
 			'type' => 'and',
@@ -124,7 +124,7 @@ class Where extends Collector
 	 *
 	 * @return  object  current instance
 	 */
-	public function andWhere_close()
+	public function andWhereClose()
 	{
 		$this->query['where'][] = array(
 			'type' => 'and',
@@ -139,7 +139,7 @@ class Where extends Collector
 	 *
 	 * @return  object  current instance
 	 */
-	public function orWhere_open()
+	public function orWhereOpen()
 	{
 		$this->query['where'][] = array(
 			'type' => 'or',
@@ -154,7 +154,7 @@ class Where extends Collector
 	 *
 	 * @return  object  current instance
 	 */
-	public function orWhere_close()
+	public function orWhereClose()
 	{
 		$this->query['where'][] = array(
 			'type' => 'or',

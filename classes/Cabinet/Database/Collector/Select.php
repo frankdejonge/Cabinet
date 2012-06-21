@@ -65,7 +65,7 @@ class Select extends Where
 	 * @param   array  $columns  list of column names or aliases
 	 * @return  object current instance
 	 */
-	public function select_array(array $columns = array('*'))
+	public function selectArray(array $columns = array('*'))
 	{
 		$this->query['columns'] = array_merge($this->query['columns'], $columns);
 		
@@ -120,7 +120,7 @@ class Select extends Where
 	}
 
 	/**
-	 * Alias for and_having.
+	 * Alias for andHaving.
  	 *
 	 * @param   mixed   $column  array of 'and having' statements or column name
 	 * @param   string  $op      having logic operator
@@ -129,7 +129,7 @@ class Select extends Where
 	 */
 	public function having($column, $op, $value = null)
 	{
-		return call_user_func_array(array($this, 'and_having'), func_get_args());
+		return call_user_func_array(array($this, 'andHaving'), func_get_args());
 	}
 	
 	/**
@@ -140,13 +140,13 @@ class Select extends Where
 	 * @param   mixed   $value   having value
 	 * @return  object  current instance
 	 */
-	public function and_having($column, $op = null, $value = null)
+	public function andHaving($column, $op = null, $value = null)
 	{
 		if($column instanceof \Closure)
 		{
-			$this->and_having_open();
+			$this->andHavingOpen();
 			$column($this);
-			$this->and_having_close();
+			$this->andHavingClose();
 			return $this;
 		}
 
@@ -167,13 +167,13 @@ class Select extends Where
 	 * @param   mixed   $value   having value
 	 * @return  object  current instance
 	 */
-	public function or_having($column, $op = null, $value = null)
+	public function orHaving($column, $op = null, $value = null)
 	{
 		if($column instanceof \Closure)
 		{
-			$this->or_having_open();
+			$this->orHavingOpen();
 			$column($this);
-			$this->or_having_close();
+			$this->orHavingClose();
 			return $this;
 		}
 
@@ -191,7 +191,7 @@ class Select extends Where
 	 *
 	 * @return  object  current instance
 	 */
-	public function having_open()
+	public function havingOpen()
 	{
 		$this->query['having'][] = array(
 			'type' => 'and',
@@ -206,7 +206,7 @@ class Select extends Where
 	 *
 	 * @return  object  current instance
 	 */
-	public function having_close()
+	public function havingClose()
 	{
 		$this->query['having'][] = array(
 			'type' => 'and',
@@ -221,7 +221,7 @@ class Select extends Where
 	 *
 	 * @return  object  current instance
 	 */
-	public function and_having_open()
+	public function andHavingOpen()
 	{
 		$this->query['having'][] = array(
 			'type' => 'and',
@@ -236,7 +236,7 @@ class Select extends Where
 	 *
 	 * @return  object  current instance
 	 */
-	public function and_having_close()
+	public function andHavingClose()
 	{
 		$this->query['having'][] = array(
 			'type' => 'and',
@@ -251,7 +251,7 @@ class Select extends Where
 	 *
 	 * @return  object  current instance
 	 */
-	public function or_having_open()
+	public function orHavingOpen()
 	{
 		$this->query['having'][] = array(
 			'type' => 'or',
@@ -266,7 +266,7 @@ class Select extends Where
 	 *
 	 * @return  object  current instance
 	 */
-	public function or_having_close()
+	public function orHavingClose()
 	{
 		$this->query['having'][] = array(
 			'type' => 'or',

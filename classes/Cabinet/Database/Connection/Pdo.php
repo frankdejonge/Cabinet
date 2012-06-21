@@ -163,19 +163,20 @@ class Pdo extends Connection
 
 		$type = $type ?: $query->getType();
 		$sql = $this->compile($query, $type, $bindings);
-		
+		$this->lastQuery = $sql;
+
 		try
 		{
 			$result = $this->connection->query($sql);
 		}
 		catch (\PDOException $e)
 		{
-			throw new \Cabinet\Database\Exception($e->getMessage().' from QUERY: '.$sql, $e->getCode());
+			throw new Exception($e->getMessage().' from QUERY: '.$sql, $e->getCode());
 		}
 		
 		if($type === Db::SELECT)
 		{
-			$asObject = $query->asObject();
+			$asObject = $query->getAsObject();
 			
 			if ( ! $asObject)
 			{

@@ -15,5 +15,6 @@ class Collector extends Query\Base
 		'joins' => array(),
 		'limit' => null,
 		'offset' => null,
+		'asObject' => false,
 	);
 }

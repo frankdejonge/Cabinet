@@ -20,6 +20,16 @@ abstract class Connection
 	}
 
 	/**
+	 * Returnes the last executed query.
+	 *
+	 * @return  mixed  last executed query
+	 */
+	public function lastQuery()
+	{
+		return $this->lastQuery;
+	}
+
+	/**
 	 * Run transactional queries.
 	 *
 	 * @param   closure  $callback  transaction callback

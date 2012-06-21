@@ -63,14 +63,22 @@ $pg = Db::connection(array(
 	'port' => 5432,
 ));
 
-$pg->delete('my_table')->execute();
+//$pg->delete('my_table')->execute();
 
 $pg->insert('my_table')
 	->values(array(
-		'name' => 'John',
+		'name' => 'John: '.time(),
 	))
 	->execute();
 
 
-var_dump($pg->select()->from('my_table')->execute());
+var_dump($pg->select()
+	->where('id', '>', 0)
+	->from('my_table')
+	->limit(2)
+	->offset(2)
+	->asObject()
+	->execute());
+
+var_dump($pg->lastQuery());
 

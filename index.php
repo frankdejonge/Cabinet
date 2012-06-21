@@ -12,7 +12,7 @@ $conn = Db::connection(array(
 ));
 
 $query = Db::query('SELECT * from `:table`', Db::SELECT, array(
-	'table' => 'containers',
+	'table' => 'blocks',
 ))->asObject(true);
 
 $compiled = $query->execute($conn);
@@ -31,7 +31,7 @@ $query = Db::select()->from('containers')
 $compiled = $query->compile($conn);
 $compiled = $conn->compile($query);
 
-var_dump($compiled);
+//var_dump($compiled);
 
 $update = Db::update('containers')
 	->where('id', 1)
@@ -40,20 +40,37 @@ $update = Db::update('containers')
 		'hash' => 'new-name',
 	))->compile($conn);
 
-var_dump($update);
+//var_dump($update);
 
-$update = Db::delete('containers')
+$select = Db::select('containers')
 	->where('id', 1)
-	->orWhere(function($query){
-		$query->where('something', 'between', array(1, 4))
-			->where('something_else', 'this');
-	})->compile($conn);
+	->compile($conn);
 
-var_dump($update);
+//var_dump($select);
 
 
 $result = $conn->select('*')
 	->from('blocks')
 	->execute();
 
-var_dump($result);
+//var_dump($result);
+
+$pg = Db::connection(array(
+	'driver' => 'pgsql',
+	'username' => 'postgres',
+	'password' => 'password',
+	'database' => 'mydb',
+	'port' => 5432,
+));
+
+$pg->delete('my_table')->execute();
+
+$pg->insert('my_table')
+	->values(array(
+		'name' => 'John',
+	))
+	->execute();
+
+
+var_dump($pg->select()->from('my_table')->execute());
+

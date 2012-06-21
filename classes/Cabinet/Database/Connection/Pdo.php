@@ -43,8 +43,8 @@ class Pdo extends Connection
 		);
 		
 		// exception mode
-		$config['attr'][NativePDO::ATTR_ERRMODE] = NativePDO::ERRMODE_EXCEPTION;
-
+		$config['attrs'][NativePDO::ATTR_ERRMODE] = NativePDO::ERRMODE_EXCEPTION;
+		
 		// store the driver
 		$this->driver = strtolower($config['driver']);
 
@@ -121,7 +121,8 @@ class Pdo extends Connection
 		// build the dsn
 		return $config['driver'].':host='.
 			$config['host'].';dbname='.
-			$config['database'];
+			$config['database'].
+			(isset($config['port']) ? ';port='.$config['port'] : '');
 	}
 
 	/**
@@ -137,7 +138,7 @@ class Pdo extends Connection
 
 			if ( ! class_exists($class))
 			{
-				throw new Exception('Cannot locate compiler for dialect: '.$this->driver);
+				throw new Exception('Cannot locate compiler for dialect: '.$class);
 			}
 
 			$this->compiler = new $class($this);
@@ -162,8 +163,15 @@ class Pdo extends Connection
 
 		$type = $type ?: $query->getType();
 		$sql = $this->compile($query, $type, $bindings);
-
-		$result = $this->connection->query($sql);
+		
+		try
+		{
+			$result = $this->connection->query($sql);
+		}
+		catch (\PDOException $e)
+		{
+			throw new \Cabinet\Database\Exception($e->getMessage().' from QUERY: '.$sql, $e->getCode());
+		}
 		
 		if($type === Db::SELECT)
 		{

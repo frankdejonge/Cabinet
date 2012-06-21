@@ -6,6 +6,8 @@ use Cabinet\Database\Compiler;
 
 abstract class Pdo extends Compiler
 {
+	protected static $tableQuote = '`';
+
 	/**
 	 * Compiles a INSERT query
 	 *
@@ -62,7 +64,7 @@ abstract class Pdo extends Compiler
 	public function compileInsert()
 	{
 		$sql = $this->compilePartInsert();
-		$sql .= $this->compilePartValues();
+		$sql .= $this->compilePartInsertValues();
 		return $sql;
 	}
 	
@@ -137,6 +139,34 @@ abstract class Pdo extends Compiler
 		
 		return ' '.trim(implode('', $parts));
 	}
+	
+	protected function compilePartInsert()
+	{
+		return 'INSERT INTO '.$this->query['table'];
+	}
+	
+	protected function compilePartInsertValues()
+	{
+		$sql = ' ('.join(' , ', $this->query['columns']).') VALUES (';
+		$parts = array();
+
+		foreach ($this->query['values'] as $row)
+		{
+			foreach ($this->query['columns'] as $c)
+			{
+				if (array_key_exists($c, $row))
+				{
+					$parts[] = $this->quote($row[$c]);
+				}
+				else
+				{
+					$parts[] = 'NULL';
+				}
+			}	
+		}
+		
+		return $sql.join(', ', $parts).')';
+	}
 
 	/**
 	 * Compiles SELECT statement
@@ -158,7 +188,7 @@ abstract class Pdo extends Compiler
 	 */
 	protected function compilePartDelete()
 	{
-		return 'DELETE '.$this->quoteIdentifier($this->query['table']);
+		return 'DELETE FROM '.$this->quoteIdentifier($this->query['table']);
 	}
 
 	/**
@@ -411,7 +441,7 @@ abstract class Pdo extends Compiler
 			return implode('.', array_map(array($this, __FUNCTION__), $parts));
 		}
 		
-		return '`'.$value.'`';
+		return static::$tableQuote.$value.static::$tableQuote;
 	}
 
 	/**

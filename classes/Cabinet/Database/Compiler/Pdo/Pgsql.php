@@ -4,7 +4,7 @@ namespace Cabinet\Database\Compiler\Pdo;
 
 use Cabinet\Database\Compiler\Pdo;
 
-class Postgresql extends Pdo
+class Pgsql extends Pdo
 {
-	
+	protected static $tableQuote = '"';
 }

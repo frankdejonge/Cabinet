@@ -39,9 +39,15 @@ class Db
 		return new Query($query, $type, $bindings);
 	}
 	
-	public static function select($columns = array())
+	public static function select($column = null)
 	{
-		return new Collector\Select($columns);
+		$query =  new Collector\Select();
+		return $query->selectArray(func_get_args());
+	}
+	
+	public static function selectArray($columns = array())
+	{
+		return static::select()->selectArray($columns);
 	}
 	
 	public static function update($table, $columns = array())

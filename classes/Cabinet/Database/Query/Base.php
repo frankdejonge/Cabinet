@@ -68,18 +68,13 @@ abstract class Base
 	}
 
 	/**
-	 *
+	 * Get the connection object.
 	 *
 	 * @return  object  connection object
 	 * @throws  Cabinet\Database\Exception  when no connection object is set.
 	 */
 	public function getConnection()
 	{
-		if ( ! $this->connection)
-		{
-			throw new \Cabinet\Database\Exception('Can\'t retrieve Connection object when none is set.');
-		}
-
 		return $this->connection;
 	}
 
@@ -139,8 +134,14 @@ abstract class Base
 	public function execute($connection = null)
 	{
 		$connection and $this->setConnection($connection);
+		
+		$connection = $this->getConnection();
+		if( ! $connection)
+		{
+			throw new Exception('Cannot execute a query without a valid connection');
+		}
 
-		return $this->getConnection()->execute($this);
+		return $connection->execute($this);
 	}
 
 	/**
@@ -153,6 +154,12 @@ abstract class Base
 	{
 		$connection and $this->setConnection($connection);
 
-		return $this->getConnection()->compile($this, $this->getType());
+		$connection = $this->getConnection();
+		if( ! $connection)
+		{
+			throw new Exception('Cannot compile a query without a valid connection');
+		}
+
+		return $connection->compile($this, $this->getType());
 	}
 }

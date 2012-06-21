@@ -16,5 +16,6 @@ class Collector extends Query\Base
 		'limit' => null,
 		'offset' => null,
 		'asObject' => false,
+		'distinct' => false,
 	);
 }

@@ -2,7 +2,6 @@
 
 namespace Cabinet\Database\Connection;
 
-use PDO as NativePDO;
 use Cabinet\Database\Exception;
 use Cabinet\Database\Expression;
 use Cabinet\Database\Connection;
@@ -43,7 +42,7 @@ class Pdo extends Connection
 		);
 		
 		// exception mode
-		$config['attrs'][NativePDO::ATTR_ERRMODE] = NativePDO::ERRMODE_EXCEPTION;
+		$config['attrs'][\PDO::ATTR_ERRMODE] = \PDO::ERRMODE_EXCEPTION;
 		
 		// store the driver
 		$this->driver = strtolower($config['driver']);
@@ -72,7 +71,7 @@ class Pdo extends Connection
 	{
 		try
 		{
-			$this->connection = new NativePDO($this->formatDsn($config), $config['username'], $config['password'], $config['attrs']);
+			$this->connection = new \PDO($this->formatDsn($config), $config['username'], $config['password'], $config['attrs']);
 		}
 		catch (\PDOException $e)
 		{
@@ -225,17 +224,17 @@ class Pdo extends Connection
 		$this->disconnect();
 	}
 	
-	public function start_transaction($name = null)
+	public function startTransaction($name = null)
 	{
 		
 	}
 
-	public function commit_transaction($name = null)
+	public function commitTransaction($name = null)
 	{
 		
 	}
 
-	public function rollback_transaction($name = null)
+	public function rollbackTransaction($name = null)
 	{
 		
 	}

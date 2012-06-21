@@ -28,8 +28,13 @@ $query = Db::select()->from('containers')
 	->bind('id' , '%1%')
 	->asObject(true);
 
+// a query can compile with a connection
 $compiled = $query->compile($conn);
+
+// and a connection can compile a query
 $compiled = $conn->compile($query);
+
+// works the same for executing
 
 //var_dump($compiled);
 
@@ -63,7 +68,9 @@ $pg = Db::connection(array(
 	'port' => 5432,
 ));
 
-//$pg->delete('my_table')->execute();
+$pg->delete('my_table')
+	->where('id', '<', 100)
+	->execute();
 
 $pg->insert('my_table')
 	->values(array(
@@ -74,6 +81,7 @@ $pg->insert('my_table')
 
 var_dump($pg->select()
 	->where('id', '>', 0)
+	->orderBy('id', 'desc')
 	->from('my_table')
 	->limit(2)
 	->offset(2)

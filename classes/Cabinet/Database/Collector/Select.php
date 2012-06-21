@@ -22,10 +22,14 @@ class Select extends Where
 	 *
 	 * @param  array  $columns  an array of columns to select
 	 */
-	public function __construct($columns = array('*'))
+	public function __construct($column = null)
 	{
-		is_array($columns) or $columns = array($columns);
-		$this->query['columns'] = $columns;
+		$columns = func_get_args();
+
+		if (count($columns))
+		{
+			$this->query['columns'] = $columns;
+		}		
 	}
 	
 	/**
@@ -51,9 +55,10 @@ class Select extends Where
 	 * @param   ...
 	 * @return  object  current instance
 	 */
-	public function select($columns = '*')
+	public function select($column = null)
 	{
 		$columns = func_get_args();
+		print_r($columns);
 		$this->query['columns'] = array_merge($this->query['columns'], $columns);
 		
 		return $this;
@@ -65,9 +70,9 @@ class Select extends Where
 	 * @param   array  $columns  list of column names or aliases
 	 * @return  object current instance
 	 */
-	public function selectArray(array $columns = array('*'))
+	public function selectArray(array $columns = array())
 	{
-		$this->query['columns'] = array_merge($this->query['columns'], $columns);
+		! empty($columns) and $this->query['columns'] = array_merge($this->query['columns'], $columns);
 		
 		return $this;
 	}

@@ -178,7 +178,7 @@ abstract class Pdo extends Compiler
 		$columns = $this->query['columns'];
 		empty($columns) and $columns = array('*');
 		$columns = array_map(array($this, 'quoteIdentifier'), $columns);
-		return 'SELECT '.join(', ', $columns);
+		return 'SELECT'.($this->query['distinct'] === true ? ' DISTINCT ' : '').join(', ', $columns);
 	}
 	
 	/**
@@ -281,7 +281,7 @@ abstract class Pdo extends Compiler
 
 			foreach ($this->query['orderBy'] as $group)
 			{
-				list ($column, $direction) = $group;
+				extract($group);
 	
 				if ( ! empty($direction))
 				{

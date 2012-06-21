@@ -38,30 +38,47 @@ abstract class Connection
 	 */
 	public function transaction(\Closure $callback)
 	{
-		$this->start_transaction();
+		// start the transaction
+		$this->startTransaction();
 
 		try
 		{
+			// execute the callback
 			$result = $callback($this);
 		}
-		catch(Exception $e)
+		// catch any errors generated in the callback
+		catch (Exception $e)
 		{
-			$this->rollback_transaction();
+			// rolleback on error
+			$this->rollbackTransaction();
 			throw $e;
 		}
-		
-		$this->commit_transaction();
+
+		// all fine, commit the transaction
+		$this->commitTransaction();
 		return $result;
 	}
-	
+
+	/**
+	 * Retrieve a Cabinet\Database\Query object with the current connection.
+	 *
+	 * @param   mixed    $query     query
+	 * @param   integer  $type      query type
+	 * @param   array    $bindings  query bindings
+	 */
 	public function query($query, $type, $bindings = array())
 	{
 		return Db::query($query, $type, $bindings)->setConnection($this);	
 	}
-	
-	public function select($columns = array())
+
+	/**
+	 * Retrieve a Cabinet\Database\Collector\Select object with the current connection.
+	 *
+	 * @param   array  $columns  
+	 */
+	public function select($columns = '*')
 	{
-		return Db::select($columns)->setConnection($this);
+		return Db::selectArray(func_get_args())->setConnection($this);
 	}
 	
 	public function update($table, $columns = array())
@@ -82,9 +99,9 @@ abstract class Connection
 	/**
 	 * Transaction functions.
 	 */
-	abstract public function start_transaction($name = null);
-	abstract public function commit_transaction($name = null);
-	abstract public function rollback_transaction($name = null);
+	abstract public function startTransaction($name = null);
+	abstract public function commitTransaction($name = null);
+	abstract public function rollbackTransaction($name = null);
 	
 	
 }

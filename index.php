@@ -47,18 +47,13 @@ $update = Db::update('containers')
 
 //var_dump($update);
 
-$select = Db::select('containers')
-	->where('id', 1)
-	->compile($conn);
-
-//var_dump($select);
 
 
 $result = $conn->select('*')
 	->from('blocks')
 	->execute();
 
-//var_dump($result);
+var_dump($result);
 
 $pg = Db::connection(array(
 	'driver' => 'pgsql',
@@ -90,3 +85,9 @@ var_dump($pg->select()
 
 var_dump($pg->lastQuery());
 
+$sqlite = Db::connection(array(
+	'driver' => 'sqlite',
+	'dsn' => 'sqlite:/Applications/MAMP/db/sqlite/mysqlite',
+));
+
+var_dump($sqlite->select()->from('my_table')->asObject()->execute());

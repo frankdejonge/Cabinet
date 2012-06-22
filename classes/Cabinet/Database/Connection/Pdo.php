@@ -133,7 +133,7 @@ class Pdo extends Connection
 	{
 		if ( ! $this->compiler)
 		{
-			$class = 'Cabinet\\Database\\Compiler\\Pdo\\'.ucfirst($this->driver);
+			$class = 'Cabinet\\Database\\Compiler\\Sql\\'.ucfirst($this->driver);
 
 			if ( ! class_exists($class))
 			{

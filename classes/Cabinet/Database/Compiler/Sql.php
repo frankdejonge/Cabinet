@@ -4,7 +4,7 @@ namespace Cabinet\Database\Compiler;
 
 use Cabinet\Database\Compiler;
 
-abstract class Pdo extends Compiler
+abstract class Sql extends Compiler
 {
 	protected static $tableQuote = '`';
 

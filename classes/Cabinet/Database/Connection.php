@@ -4,16 +4,26 @@ namespace Cabinet\Database;
 
 abstract class Connection
 {
+	/**
+	 * Returns a connection instance based on the config.
+	 *
+	 * @param   array   connection config
+	 * @return  object  a new connection instance
+	 * @throws  Cainet\Database\Exception   when connection 
+	 */
 	public static function instance($config = array())
 	{
 		$config = $config + array(
 			'type' => 'pdo',
+			'driver' => null,
 		);
 		
-		$type = ucfirst(strtolower($config['type']));
-		if( ! class_exists($class = __NAMESPACE__.'\\Connection\\'.$type))
+		$class = ucfirst(strtolower($config['type']));
+		$config['driver'] and $class .= '\\'.ucfirst(strtolower($config['driver']));
+
+		if( ! class_exists($class = __NAMESPACE__.'\\Connection\\'.$class))
 		{
-			throw new Exception('Cannot load database connection of type: '.$config['type']);
+			throw new Exception('Cannot load database connection: '.$class);
 		}
 		
 		return new $class($config);

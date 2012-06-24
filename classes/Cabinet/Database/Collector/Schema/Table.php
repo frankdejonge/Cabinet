@@ -30,7 +30,11 @@ class Table extends Base;
 	}
 
 	/**
-	 * 
+	 * Adds a field
+	 *
+	 * @param   mixed    $field     field name or field object
+	 * @param   Closure  $callback  field config callback
+	 * @return  object   $this
 	 */
 	public function addField($field, \Closure $callback = null)
 	{
@@ -48,6 +52,12 @@ class Table extends Base;
 		return $this;
 	}
 
+	/**
+	 * Adds one or more fields to be removed.
+	 *
+	 * @param   mixed   $field  string field name or array of fields
+	 * @return  object  $this
+	 */
 	public function dropField($field)
 	{
 		is_array($field) or $field = array($field);

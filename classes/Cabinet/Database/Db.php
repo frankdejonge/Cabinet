@@ -7,11 +7,17 @@ class Db
 	/**
 	 * Query type contants.
 	 */
-	const PLAIN = 'Plain';
-	const INSERT = 'Insert';
-	const SELECT = 'Select';
-	const UPDATE = 'Update';
-	const DELETE = 'Delete';
+	const PLAIN                 = 'Plain';
+	const INSERT                = 'Insert';
+	const SELECT                = 'Select';
+	const UPDATE                = 'Update';
+	const DELETE                = 'Delete';
+	const DATABASE_DROP         = 'DatabaseDrop';
+	const DATABASE_ALTER        = 'DatabaseAlter';
+	const DATABASE_CREATE       = 'DatabaseCreate';
+	const TABLE_DROP            = 'TableDrop';
+	const TABLE_ALTER           = 'TableAlter';
+	const TABLE_CREATE          = 'TableCreate';
 	/**
 	 * Retrieve a database connection.
 	 *

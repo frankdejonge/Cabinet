@@ -35,12 +35,12 @@ class Field
 	protected $collation = null;
 
 	/**
-	 * @var  boolean  $null  is nullable
+	 * @var  boolean  $nullable  is nullable
 	 */
-	protected $null = false;
+	protected $nullable = false;
 
 	/**
-	 * Constructor, sets the field name
+	 * Constructor, sets the field name.
 	 *
 	 * @param  string  $name  field name
 	 */
@@ -50,7 +50,7 @@ class Field
 	}
 
 	/**
-	 * Sets the field type
+	 * Sets the field type.
 	 *
 	 * @param   string  $type  field type
 	 * @return  object  $this
@@ -63,7 +63,7 @@ class Field
 	}
 
 	/**
-	 * Sets the field type
+	 * Sets the field type.
 	 *
 	 * @param   string  $constraint  field type
 	 * @return  object  $this
@@ -76,7 +76,20 @@ class Field
 	}
 
 	/**
-	 * Sets the field comments
+	 * Determine wether the field is nullable.
+	 *
+	 * @param   string  $null  wether the field is nullable
+	 * @return  object  $this
+	 */
+	public function nullable($null = true)
+	{
+		$this->nullable = $null;
+
+		return $this;
+	}
+
+	/**
+	 * Sets the field comments.
 	 *
 	 * @param   string  $comments  field type
 	 * @return  object  $this
@@ -89,7 +102,7 @@ class Field
 	}
 
 	/**
-	 * Returns the field setup as an array
+	 * Returns the field setup as an array.
 	 *
 	 * @return  array  field setup array
 	 */
@@ -103,6 +116,7 @@ class Field
 			'collation' => $this->collation,
 			'engine' => $this->engine,
 			'comments' => $this->comments,
+			'nullable' => $this->nullable,
 		);
 	}
 }

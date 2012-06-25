@@ -17,10 +17,11 @@ class Table extends Base;
 		'ifNotExists' => true,
 		'charset' => null,
 		'collate' => null,
+		'fields' => array(),
 	)
 
 	/**
-	 * Constructor, sets the database name 
+	 * Constructor, sets the database name
 	 *
 	 * @param  string  $database  database
 	 */
@@ -149,5 +150,24 @@ class Table extends Base;
 		$this->type = Db::TABLE_ALTER;
 
 		return $this;
+	}
+
+	/**
+	 * Adds a field to the query
+	 *
+	 * @param   string   $field
+	 */
+	public function field($field, \Closure $callback = null)
+	{
+		if( ! $field instanceof Field)
+		{
+			$field = new Field($field);
+		}
+
+		$callback and $callback($field);
+
+		$this->query['fields'][] = $field;
+
+		returns $this;
 	}
 }

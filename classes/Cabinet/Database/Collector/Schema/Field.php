@@ -65,12 +65,25 @@ class Field
 	/**
 	 * Sets the field type
 	 *
-	 * @param   string  $type  field type
+	 * @param   string  $constraint  field type
 	 * @return  object  $this
 	 */
 	public function constraint($constraint)
 	{
 		$this->constraint = $constraint;
+
+		return $this;
+	}
+
+	/**
+	 * Sets the field comments
+	 *
+	 * @param   string  $comments  field type
+	 * @return  object  $this
+	 */
+	public function comments($comments)
+	{
+		$this->comments = $comments;
 
 		return $this;
 	}

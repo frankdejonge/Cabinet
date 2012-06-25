@@ -9,7 +9,7 @@ abstract class Connection
 	 *
 	 * @param   array   connection config
 	 * @return  object  a new connection instance
-	 * @throws  Cainet\Database\Exception   when connection 
+	 * @throws  Cainet\Database\Exception   when connection
 	 */
 	public static function instance($config = array())
 	{
@@ -17,7 +17,7 @@ abstract class Connection
 			'type' => 'pdo',
 			'driver' => null,
 		);
-		
+
 		$class = ucfirst(strtolower($config['type']));
 		$config['driver'] and $class .= '\\'.ucfirst(strtolower($config['driver']));
 
@@ -25,7 +25,7 @@ abstract class Connection
 		{
 			throw new Exception('Cannot load database connection: '.$class);
 		}
-		
+
 		return new $class($config);
 	}
 
@@ -44,7 +44,7 @@ abstract class Connection
 	 *
 	 * @param   closure  $callback  transaction callback
 	 * @return  mixed    callback result
-	 * @throws  
+	 * @throws
 	 */
 	public function transaction(\Closure $callback)
 	{
@@ -78,32 +78,37 @@ abstract class Connection
 	 */
 	public function query($query, $type, $bindings = array())
 	{
-		return Db::query($query, $type, $bindings)->setConnection($this);	
+		return Db::query($query, $type, $bindings)->setConnection($this);
 	}
 
 	/**
 	 * Retrieve a Cabinet\Database\Collector\Select object with the current connection.
 	 *
-	 * @param   array  $columns  
+	 * @param   array  $columns
 	 */
 	public function select($columns = '*')
 	{
 		return Db::selectArray(func_get_args())->setConnection($this);
 	}
-	
+
 	public function update($table, $columns = array())
 	{
 		return Db::update($table, $columns)->setConnection($this);
 	}
-	
+
 	public function delete($table, $columns = array())
 	{
 		return Db::delete($table, $columns)->setConnection($this);
 	}
-	
+
 	public function insert($table, $columns = array())
 	{
 		return Db::insert($table, $columns)->setConnection($this);
+	}
+	
+	public function schema()
+	{
+		return Db::schema()->setConnection($this);
 	}
 
 	/**
@@ -112,6 +117,6 @@ abstract class Connection
 	abstract public function startTransaction($name = null);
 	abstract public function commitTransaction($name = null);
 	abstract public function rollbackTransaction($name = null);
-	
-	
+
+
 }

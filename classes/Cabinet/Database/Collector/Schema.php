@@ -6,6 +6,24 @@ namespace Cabinet\Database\Collector;
 class Schema
 {
 	/**
+	 * @var  object  $connection
+	 */
+	protected $connection = null;
+
+	/**
+	 * Sets the connection for schema builders.
+	 *
+	 * @param   object  $connection  connection object
+	 * @return  object  $this
+	 */
+	public function setConnection($connection)
+	{
+		$this->connection = $connection;
+
+		return $this;
+	}
+
+	/**
 	 * Get a new schema builder object
 	 *
 	 * @param   string  $database  database name
@@ -13,16 +31,16 @@ class Schema
 	 */
 	public function database($database)
 	{
-		return new Schema\Database($database);
+		return new Schema\Database($database)->setConnection($this->connection);
 	}
 
 	/**
-	 * Database delete shortcut
+	 * Database create shortcut
 	 *
 	 * @param   string   $database  database name
 	 * @param   Closure  $callback  configuration callback
 	 */
-	public function deleteDatabase($database, \Closure $callback = null)
+	public function createDatabase($database, \Closure $callback = null)
 	{
 		// prep the query
 		$query = $this->database($database)->delete();
@@ -34,15 +52,15 @@ class Schema
 	}
 
 	/**
-	 * Database update shortcut
+	 * Database alter shortcut
 	 *
 	 * @param   string   $database  database name
 	 * @param   Closure  $callback  configuration callback
 	 */
-	public function updateDatabase($database, \Closure $callback = null)
+	public function alterDatabase($database, \Closure $callback = null)
 	{
 		// prep the query
-		$query = $this->database($database)->update();
+		$query = $this->database($database)->alter();
 
 		// fire configuration callback
 		$callback and $callback($query);
@@ -73,8 +91,56 @@ class Schema
 	 * @param   string  $table  database name
 	 * @return  object  new table schema builder object
 	 */
-	public function table($table, $database = null)
+	public function table($table)
 	{
-		return new Schema\Table($table, $database);
+		return new Schema\Table($table)->setConnection($connection);
+	}
+
+	/**
+	 * Table create shortcut
+	 *
+	 * @param   string   $table     table name
+	 * @param   Closure  $callback  configuration callback
+	 */
+	public function createTable($table, \Closure $callback = null)
+	{
+		$query =  $this->table($table)->create();
+
+		// fire configuration callback
+		$callback and $callback($query);
+
+		return $query;
+	}
+
+	/**
+	 * Table alter shortcut
+	 *
+	 * @param   string   Table      table name
+	 * @param   Closure  $callback  configuration callback
+	 */
+	public function alterTable($table, \Closure $callback = null)
+	{
+		$query =  $this->table($table)->alter();
+
+		// fire configuration callback
+		$callback and $callback($query);
+
+		return $query;
+	}
+
+	/**
+	 * Table drop shortcut
+	 *
+	 * @param   string   $table     table name
+	 * @param   Closure  $callback  configuration callback
+	 */
+	public function dropTable($table, \Closure $callback = null)
+	{
+		$query =  $this->table($table)->drop();
+
+		// fire configuration callback
+		$callback and $callback($query);
+
+		return $query;
 	}
 }

@@ -10,7 +10,7 @@ class Delete extends Where
 	
 	public function __construct($table = null)
 	{
-		$table and $this->query['table'] = $table;
+		$table and $this->table = $table;
 	}
 
 	/**
@@ -21,7 +21,7 @@ class Delete extends Where
 	 */
 	public function from($table)
 	{
-		$this->query['table'] = $table;
+		$this->table = $table;
 
 		return $this;
 	}

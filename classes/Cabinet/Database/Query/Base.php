@@ -7,14 +7,9 @@ use Cabibet\Database\Connection;
 abstract class Base
 {
 	/**
-	 * @var  mixed  $query  raw query
-	 */
-	protected $query = null;
-
-	/**
 	 * @var  string  $asOjbect  true for stCLass or string classname
 	 */
-	protected $asObject = null;
+	protected $asObject = false;
 
 	/**
 	 * @var  array  $bindings  query bindings
@@ -24,12 +19,12 @@ abstract class Base
 	/**
 	 * @var  string  $type  query type
 	 */
-	protected $type = null;
+	protected $type;
 
 	/**
 	 * @var  object  $connection  connection object
 	 */
-	protected $connection = null;
+	protected $_connection;
 
 	/**
 	 * Bind a value to the query.
@@ -62,7 +57,7 @@ abstract class Base
 			throw new \Cabinet\Database\Exception('Supplied invalid connection object');
 		}
 
-		$this->connection = $connection;
+		$this->_connection = $connection;
 
 		return $this;
 	}
@@ -75,7 +70,7 @@ abstract class Base
 	 */
 	public function getConnection()
 	{
-		return $this->connection;
+		return $this->_connection;
 	}
 
 	/**
@@ -83,10 +78,7 @@ abstract class Base
 	 *
 	 * @return  mixed  query contents
 	 */
-	public function getContents()
-	{
-		return $this->query;
-	}
+	abstract public function getContents();
 
 	/**
 	 * Returns the query's bindings.
@@ -119,7 +111,12 @@ abstract class Base
 
 		return $this;
 	}
-	
+
+	/**
+	 * Returns wether to get as array or object
+	 *
+	 * @return  mixed  null for array, true for stdClass or string for classname
+	 */
 	public function getAsObject()
 	{
 		return $this->asObject;
@@ -133,10 +130,9 @@ abstract class Base
 	 */
 	public function execute($connection = null)
 	{
-		$connection and $this->setConnection($connection);
-		
-		$connection = $this->getConnection();
-		if( ! $connection)
+		$connection or $connection = $this->getConnection();
+
+		if ( ! $connection)
 		{
 			throw new Exception('Cannot execute a query without a valid connection');
 		}
@@ -152,10 +148,9 @@ abstract class Base
 	 */
 	public function compile($connection = null)
 	{
-		$connection and $this->setConnection($connection);
+		$connection or $connection = $this->getConnection();
 
-		$connection = $this->getConnection();
-		if( ! $connection)
+		if ( ! $connection)
 		{
 			throw new Exception('Cannot compile a query without a valid connection');
 		}

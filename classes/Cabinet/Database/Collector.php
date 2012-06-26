@@ -4,18 +4,88 @@ namespace Cabinet\Database;
 
 class Collector extends Query\Base
 {
-	protected $query = array(
-		'table' => array(),
-		'columns' => array(),
-		'values' => array(),
-		'where' => array(),
-		'having' => array(),
-		'orderBy' => array(),
-		'groupBy' => array(),
-		'joins' => array(),
-		'limit' => null,
-		'offset' => null,
-		'asObject' => false,
-		'distinct' => false,
-	);
+	/**
+	 * @var  array|string  $table  tables to use
+	 */
+	public $table = array();
+
+	/**
+	 * @var  array  $columns  columns to use
+	 */
+	public $columns = array();
+
+
+	/**
+	 * @var  array  $values  values for insert
+	 */
+	public $values = array();
+
+
+	/**
+	 * @var  array  $where  where conditions
+	 */
+	public $where = array();
+
+
+	/**
+	 * @var  array  $having  having conditions
+	 */
+	public $having = array();
+
+
+	/**
+	 * @var  array  $orderBy  ORDER BY clause
+	 */
+	public $orderBy = array();
+
+
+	/**
+	 * @var  array  $groupBy  GROUP BY clause
+	 */
+	public $groupBy = array();
+
+
+	/**
+	 * @var  array  $joins  query joins
+	 */
+	public $joins = array();
+
+
+	/**
+	 * @var  integer  $limit  query limit
+	 */
+	public $limit;
+
+
+	/**
+	 * @var  array  $offset  query offset
+	 */
+	public $offset;
+
+
+	/**
+	 * @var  boolean  $columns  wether to use distinct
+	 */
+	public $distinct = false;
+
+	/**
+	 * Get the query contents
+	 *
+	 * @return  array  query contents
+	 */
+	public function getContents()
+	{
+		$return = array();
+		$vars = get_object_vars($this);
+
+		foreach ($vars as $k => $v)
+		{
+			if ( ! preg_match('/^_/', $k))
+			{
+				$return[$k] = $v;
+			}
+		}
+
+		return $return;
+	}
 }

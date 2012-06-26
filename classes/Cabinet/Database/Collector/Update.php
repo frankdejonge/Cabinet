@@ -10,7 +10,7 @@ class Update extends Where
 	
 	public function __construct($table = null)
 	{
-		$table and $this->query['table'] = $table;
+		$table and $this->table = $table;
 	}
 
 	/**
@@ -21,7 +21,7 @@ class Update extends Where
 	 */
 	public function table($table)
 	{
-		$this->query['table'] = $table;
+		$this->table = $table;
 
 		return $this;
 	}
@@ -39,7 +39,7 @@ class Update extends Where
 		
 		foreach ($key as $k => $v)
 		{
-			$this->query['values'][$k] = $v;
+			$this->values[$k] = $v;
 		}
 
 		return $this;

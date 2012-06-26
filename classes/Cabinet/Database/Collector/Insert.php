@@ -15,7 +15,7 @@ class Insert extends Collector
 	/**
 	 * @param
 	 */
-	protected $lastValues = false;
+	protected $_lastValues = false;
 	
 	public function __construct($table, $values = array())
 	{
@@ -31,7 +31,7 @@ class Insert extends Collector
 	 */
 	public function into($table)
 	{
-		$this->query['table'] = $table;
+		$this->table = $table;
 		return $this;
 	}
 
@@ -54,16 +54,16 @@ class Insert extends Collector
 		foreach($values as $v)
 		{
 			$keys = array_keys($v);
-			$this->query['columns'] = array_merge($this->query['columns'], $keys);
+			$this->columns = array_merge($this->columns, $keys);
 
-			if($merge and count($this->query['values']))
+			if($merge and count($this->values))
 			{
-				$last = array_pop($this->query['values']);
-				$this->query['values'][] = array_merge($last, $v);
+				$last = array_pop($this->values);
+				$this->values[] = array_merge($last, $v);
 			}
 			else
 			{
-				$this->query['values'][] = $this->lastValues = $v;
+				$this->values[] = $this->_lastValues = $v;
 			}
 		}
 

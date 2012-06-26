@@ -15,7 +15,7 @@ class Select extends Where
 	/**
 	 * @var  object  $lastJoin  last join object
 	 */
-	protected $lastJoin = null;
+	protected $_lastJoin = null;
 	
 	/**
 	 * Constructor
@@ -28,7 +28,7 @@ class Select extends Where
 
 		if (count($columns))
 		{
-			$this->query['columns'] = $columns;
+			$this->columns = $columns;
 		}		
 	}
 	
@@ -43,7 +43,7 @@ class Select extends Where
 	{
 		$tables = func_get_args();
 
-		$this->query['table'] = array_merge($this->query['table'], $tables);
+		$this->table = array_merge($this->table, $tables);
 
 		return $this;
 	}
@@ -57,9 +57,7 @@ class Select extends Where
 	 */
 	public function select($column = null)
 	{
-		$columns = func_get_args();
-		print_r($columns);
-		$this->query['columns'] = array_merge($this->query['columns'], $columns);
+		$this->columns = array_merge($this->columns, func_get_args());
 		
 		return $this;
 	}
@@ -72,7 +70,7 @@ class Select extends Where
 	 */
 	public function selectArray(array $columns = array())
 	{
-		! empty($columns) and $this->query['columns'] = array_merge($this->query['columns'], $columns);
+		! empty($columns) and $this->columns = array_merge($this->columns, $columns);
 		
 		return $this;
 	}
@@ -85,7 +83,7 @@ class Select extends Where
 	 */
 	public function distinct($distinct = true)
 	{
-		$this->query['distinct'] = $distinct;
+		$this->distinct = $distinct;
 		
 		return $this;
 	}
@@ -99,7 +97,7 @@ class Select extends Where
 	 */
 	public function join($table, $type = null)
 	{
-		$this->query['join'][] = $this->lastJoin = new Join($table, $type);
+		$this->join[] = $this->_lastJoin = new Join($table, $type);
 
 		return $this;
 	}
@@ -114,12 +112,12 @@ class Select extends Where
 	 */
 	public function on($column1, $op, $column2 = null)
 	{
-		if( ! $this->lastJoin)
+		if( ! $this->_lastJoin)
 		{
 			throw new Exception('You must first join a table before setting an "on" clause.');
 		}
 
-		call_user_func_array(array($this->lastJoin, 'on'), func_get_args());
+		call_user_func_array(array($this->_lastJoin, 'on'), func_get_args());
 
 		return $this;
 	}
@@ -198,7 +196,7 @@ class Select extends Where
 	 */
 	public function havingOpen()
 	{
-		$this->query['having'][] = array(
+		$this->having[] = array(
 			'type' => 'and',
 			'nesting' => 'open',
 		);
@@ -213,7 +211,7 @@ class Select extends Where
 	 */
 	public function havingClose()
 	{
-		$this->query['having'][] = array(
+		$this->having[] = array(
 			'type' => 'and',
 			'nesting' => 'close',
 		);
@@ -228,7 +226,7 @@ class Select extends Where
 	 */
 	public function andHavingOpen()
 	{
-		$this->query['having'][] = array(
+		$this->having[] = array(
 			'type' => 'and',
 			'nesting' => 'open',
 		);
@@ -243,7 +241,7 @@ class Select extends Where
 	 */
 	public function andHavingClose()
 	{
-		$this->query['having'][] = array(
+		$this->having[] = array(
 			'type' => 'and',
 			'nesting' => 'close',
 		);
@@ -258,7 +256,7 @@ class Select extends Where
 	 */
 	public function orHavingOpen()
 	{
-		$this->query['having'][] = array(
+		$this->having[] = array(
 			'type' => 'or',
 			'nesting' => 'open',
 		);
@@ -273,7 +271,7 @@ class Select extends Where
 	 */
 	public function orHavingClose()
 	{
-		$this->query['having'][] = array(
+		$this->having[] = array(
 			'type' => 'or',
 			'nesting' => 'close',
 		);
@@ -300,7 +298,7 @@ class Select extends Where
 				{
 					if (count($val) === 2)
 					{
-						$this->query['having'][] = array(
+						$this->having[] = array(
 							'type' => $type,
 							'field' => $val[0],
 							'op' => '=',
@@ -309,7 +307,7 @@ class Select extends Where
 					}
 					else
 					{
-						$this->query['having'][] = array(
+						$this->having[] = array(
 							'type' => $type,
 							'field' => $val[0],
 							'op' => $val[1],
@@ -321,7 +319,7 @@ class Select extends Where
 		}
 		else
 		{
-			$this->query['having'][] = array(
+			$this->having[] = array(
 				'type' => $type,
 				'field' => $column,
 				'op' => $op,

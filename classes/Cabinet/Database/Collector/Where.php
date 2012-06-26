@@ -81,7 +81,7 @@ class Where extends Collector
 	 */
 	public function whereOpen()
 	{
-		$this->query['where'][] = array(
+		$this->where[] = array(
 			'type' => 'and',
 			'nesting' => 'open',
 		);
@@ -96,7 +96,7 @@ class Where extends Collector
 	 */
 	public function whereClose()
 	{
-		$this->query['where'][] = array(
+		$this->where[] = array(
 			'type' => 'and',
 			'nesting' => 'close',
 		);
@@ -111,7 +111,7 @@ class Where extends Collector
 	 */
 	public function andWhereOpen()
 	{
-		$this->query['where'][] = array(
+		$this->where[] = array(
 			'type' => 'and',
 			'nesting' => 'open',
 		);
@@ -126,7 +126,7 @@ class Where extends Collector
 	 */
 	public function andWhereClose()
 	{
-		$this->query['where'][] = array(
+		$this->where[] = array(
 			'type' => 'and',
 			'nesting' => 'close',
 		);
@@ -141,7 +141,7 @@ class Where extends Collector
 	 */
 	public function orWhereOpen()
 	{
-		$this->query['where'][] = array(
+		$this->where[] = array(
 			'type' => 'or',
 			'nesting' => 'open',
 		);
@@ -156,7 +156,7 @@ class Where extends Collector
 	 */
 	public function orWhereClose()
 	{
-		$this->query['where'][] = array(
+		$this->where[] = array(
 			'type' => 'or',
 			'nesting' => 'close',
 		);
@@ -183,7 +183,7 @@ class Where extends Collector
 				{
 					if (count($val) === 2)
 					{
-						$this->query['where'][] = array(
+						$this->where[] = array(
 							'type' => $type,
 							'field' => $val[0],
 							'op' => '=',
@@ -192,7 +192,7 @@ class Where extends Collector
 					}
 					else
 					{
-						$this->query['where'][] = array(
+						$this->where[] = array(
 							'type' => $type,
 							'field' => $val[0],
 							'op' => $val[1],
@@ -204,7 +204,7 @@ class Where extends Collector
 		}
 		else
 		{
-			$this->query['where'][] = array(
+			$this->where[] = array(
 				'type' => $type,
 				'field' => $column,
 				'op' => $op,
@@ -234,7 +234,7 @@ class Where extends Collector
 					$val = null;
 				}
 
-				$this->query['orderBy'][] = array(
+				$this->orderBy[] = array(
 					'column' => $key,
 					'direction' => $val,	
 				);
@@ -242,7 +242,7 @@ class Where extends Collector
 		}
 		else
 		{
-			$this->query['orderBy'][] = array(
+			$this->orderBy[] = array(
 				'column' => $column,
 				'direction' => $direction,	
 			);
@@ -260,8 +260,8 @@ class Where extends Collector
 	 */
 	public function limit($limit, $offset = null)
 	{
-		$this->query['limit'] = (int) $limit;
-		func_num_args() > 1 and $this->query['offset'] = (int) $offset;
+		$this->limit = (int) $limit;
+		func_num_args() > 1 and $this->offset = (int) $offset;
 
 		return $this;
 	}
@@ -274,7 +274,7 @@ class Where extends Collector
 	 */
 	public function offset($offset)
 	{
-		$this->query['offset'] = (int) $offset;
+		$this->offset = (int) $offset;
 
 		return $this;
 	}

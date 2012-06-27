@@ -6,8 +6,14 @@ use Cabinet\Database\Db;
 
 class Update extends Where
 {
+	/**
+	 * @var  string  $type  query type
+	 */
 	protected $type = Db::UPDATE;
-	
+
+	/**
+	 * Constructor, sets the table name
+	 */
 	public function __construct($table = null)
 	{
 		$table and $this->table = $table;

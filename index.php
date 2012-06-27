@@ -11,6 +11,12 @@ $conn = Db::connection(array(
 	'database' => 'louter',
 ));
 
+$conn->update('blocks')
+	->set(array(
+		'title' => DB::expr('CONCAT(`title`, "_a")'),
+	))
+	->execute();
+
 $query = Db::query('SELECT * from `:table`', Db::SELECT, array(
 	'table' => 'blocks',
 ))->asObject(true);

@@ -3,8 +3,7 @@
 namespace Cabinet\Database;
 
 
-
-abstract class Compiler extends Query
+abstract class Compiler
 {
 	/**
 	 * @var  object  $connection  Cabinet connection object.

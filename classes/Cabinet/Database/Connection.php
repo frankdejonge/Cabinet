@@ -5,6 +5,11 @@ namespace Cabinet\Database;
 abstract class Connection
 {
 	/**
+	 * @var collection of executed queries
+	 */
+	protected $queries = array();
+
+	/**
 	 * Returns a connection instance based on the config.
 	 *
 	 * @param   array   connection config
@@ -36,7 +41,29 @@ abstract class Connection
 	 */
 	public function lastQuery()
 	{
-		return $this->lastQuery;
+		return ($last = end($this->queries)) ? $last['query'] : null;
+	}
+
+	/**
+	 * Returns an array of fired queries.
+	 *
+	 * @retun  array  fired queries
+	 */
+	public function queries()
+	{
+		return array_map(function($i){
+			return $i['query'];
+		}, $this->queries);
+	}
+
+	/**
+	 * Returns the fired queries with profiling data.
+	 *
+	 * @return  array  profiler data about the queries
+	 */
+	public function profilerQueries()
+	{
+		return $this->queries;
 	}
 
 	/**

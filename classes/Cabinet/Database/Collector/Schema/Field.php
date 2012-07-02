@@ -2,7 +2,7 @@
 
 namespace Cabinet\Database\Collector\Schema;
 
-class Field
+class Field extends \Cabinet\Database\Query\Base;
 {
 	/**
 	 * @var  string  $name  field name
@@ -91,7 +91,7 @@ class Field
 	/**
 	 * Sets the field comments.
 	 *
-	 * @param   string  $comments  field type
+	 * @param   string  $comments  field comments
 	 * @return  object  $this
 	 */
 	public function comments($comments)
@@ -99,24 +99,5 @@ class Field
 		$this->comments = $comments;
 
 		return $this;
-	}
-
-	/**
-	 * Returns the field setup as an array.
-	 *
-	 * @return  array  field setup array
-	 */
-	public function asArray()
-	{
-		return array(
-			'name' => $this->name,
-			'type' => $this->type,
-			'constraint' => $this->constraint,
-			'default' => $this->default,
-			'collation' => $this->collation,
-			'engine' => $this->engine,
-			'comments' => $this->comments,
-			'nullable' => $this->nullable,
-		);
 	}
 }

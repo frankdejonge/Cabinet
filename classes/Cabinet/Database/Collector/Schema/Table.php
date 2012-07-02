@@ -8,17 +8,44 @@ use Cabinet\Database\Query\Base;
 class Table extends Base;
 {
 	/**
-	 * @var  array  $query  query defaults
+	 * @var  string  $database  database name
 	 */
-	protected $query = array(
-		'database' => null,
-		'table' => null,
-		'ifExists' => true,
-		'ifNotExists' => true,
-		'charset' => null,
-		'collate' => null,
-		'fields' => array(),
-	)
+	public $database;
+
+	/**
+	 * @var  string  $table  table name
+	 */
+	public $table;
+
+	/**
+	 * @var  boolean  $ifExists  wether to use IF EXISTS
+	 */
+	public $ifExists = false;
+
+	/**
+	 * @var  boolean  $ifNotExists  wether to use IF NOT EXISTS
+	 */
+	public $ifNotExists = false;
+
+	/**
+	 * @var  string  $charset  table charset
+	 */
+	public $charset;
+
+	/**
+	 * @var  string  $collate  table collate
+	 */
+	public $collate;
+
+	/**
+	 * @var  array  $fields  table fields
+	 */
+	public $fields = array();
+
+	/**
+	 * @var  array  $indexes  table indexes
+	 */
+	public $indexes = array();
 
 	/**
 	 * Constructor, sets the database name
@@ -27,7 +54,7 @@ class Table extends Base;
 	 */
 	public function __construct($database)
 	{
-		$this->query['table'] = $table;
+		$this->table = $table;
 	}
 
 	/**
@@ -48,7 +75,7 @@ class Table extends Base;
 		$callback and $callback($field);
 
 		// append the field
-		$this->query['fields'][$field->getName()] = $field;
+		$this->->fields[$field->getName()] = $field;
 
 		return $this;
 	}
@@ -63,7 +90,7 @@ class Table extends Base;
 	{
 		is_array($field) or $field = array($field);
 
-		$this->query['fields'] = array_merge($this->query['fields'], $field);
+		$this->fields = array_merge($this->fields, $field);
 	}
 
 	/**
@@ -73,7 +100,7 @@ class Table extends Base;
 	 */
 	public function ifExists($useExists = true)
 	{
-		$this->query['ifExists'] = $useExists;
+		$this->ifExists = $useExists;
 
 		return $this;
 	}
@@ -85,7 +112,7 @@ class Table extends Base;
 	 */
 	public function ifNotExists($useNotExists = true)
 	{
-		$this->query['ifNotExists'] = $useNotExists;
+		$this->ifNotExists = $useNotExists;
 
 		return $this;
 	}
@@ -98,7 +125,7 @@ class Table extends Base;
 	 */
 	public function charset($charset)
 	{
-		$this->query['charset'] = $charset;
+		$this->charset = $charset;
 
 		return $this;
 	}
@@ -111,7 +138,7 @@ class Table extends Base;
 	 */
 	public function collate($collate)
 	{
-		$this->query['collate'] = $collate;
+		$this->collate = $collate;
 
 		return $this;
 	}
@@ -165,8 +192,21 @@ class Table extends Base;
 		}
 
 		$callback and $callback($field);
+		$this->fields[] = $field;
 
-		$this->query['fields'][] = $field;
+		returns $this;
+	}
+
+	/**
+	 * Adds a index to the query
+	 *
+	 * @param   string   $field
+	 */
+	public function index(\Closure $callback = null)
+	{
+		$index = new Index();
+		$callback and $callback($index);
+		$this->indexes[] = $index;
 
 		returns $this;
 	}

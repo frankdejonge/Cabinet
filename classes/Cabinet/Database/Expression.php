@@ -17,7 +17,8 @@ class Expression
 	/**
 	 * Returns the expression value.
 	 *
-	 * @return  mixed  the expression value
+	 * @param   object  $connection  connection
+	 * @return  mixed   the expression value
 	 */
 	public function value()
 	{

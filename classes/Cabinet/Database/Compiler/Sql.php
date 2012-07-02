@@ -3,9 +3,13 @@
 namespace Cabinet\Database\Compiler;
 
 use Cabinet\Database\Compiler;
+use Cabinet\Database\Query\Base;
 
 abstract class Sql extends Compiler
 {
+	/**
+	 * @var  string  $tableQuote  table quote
+	 */
 	protected static $tableQuote = '`';
 
 	/**
@@ -67,7 +71,7 @@ abstract class Sql extends Compiler
 		$sql .= $this->compilePartInsertValues();
 		return $sql;
 	}
-	
+
 	/**
 	 * Compiles conditions for where and having statements.
 	 *
@@ -119,9 +123,9 @@ abstract class Sql extends Compiler
 						$c['op'] = 'IS';
 					}
 				}
-				
+
 				$c['op'] = strtoupper($c['op']);
-				
+
 				if($c['op'] === 'BETWEEN' and is_array($c['value']))
 				{
 					list($min, $max) = $c['value'];
@@ -129,22 +133,23 @@ abstract class Sql extends Compiler
 				}
 				else
 				{
-					$c['value'] = $this->quote($c['value']);	
+					$c['value'] = $this->quote($c['value']);
 				}
 
 				$c['field'] = $this->quoteIdentifier($c['field']);
 				$parts[] = $c['field'].' '.$c['op'].' '.$c['value'];
 			}
 		}
-		
+
 		return ' '.trim(implode('', $parts));
 	}
-	
+
+
 	protected function compilePartInsert()
 	{
 		return 'INSERT INTO '.$this->query['table'];
 	}
-	
+
 	protected function compilePartInsertValues()
 	{
 		$sql = ' ('.join(' , ', $this->query['columns']).') VALUES (';
@@ -162,9 +167,9 @@ abstract class Sql extends Compiler
 				{
 					$parts[] = 'NULL';
 				}
-			}	
+			}
 		}
-		
+
 		return $sql.join(', ', $parts).')';
 	}
 
@@ -180,7 +185,7 @@ abstract class Sql extends Compiler
 		$columns = array_map(array($this, 'quoteIdentifier'), $columns);
 		return 'SELECT'.($this->query['distinct'] === true ? ' DISTINCT ' : '').join(', ', $columns);
 	}
-	
+
 	/**
 	 * Compiles DELETE statement
 	 *
@@ -226,7 +231,7 @@ abstract class Sql extends Compiler
 			// Add selection conditions
 			return ' WHERE'.$this->compileConditions($this->query['where']);
 		}
-		
+
 		return '';
 	}
 
@@ -240,15 +245,15 @@ abstract class Sql extends Compiler
 		if ( ! empty($this->query['values']))
 		{
 			$parts = array();
-			
+
 			foreach ($this->query['values'] as $k => $v)
 			{
 				$parts[] = $this->quoteIdentifier($k).' = '.$this->quote($v);
 			}
-			
+
 			return ' SET '.join(', ', $parts);
 		}
-		
+
 		return '';
 	}
 
@@ -264,7 +269,7 @@ abstract class Sql extends Compiler
 			// Add selection conditions
 			return ' HAVING '.$this->compileConditions($this->query['having']);
 		}
-		
+
 		return '';
 	}
 
@@ -282,19 +287,19 @@ abstract class Sql extends Compiler
 			foreach ($this->query['orderBy'] as $group)
 			{
 				extract($group);
-	
+
 				if ( ! empty($direction))
 				{
 					// Make the direction uppercase
 					$direction = ' '.strtoupper($direction);
 				}
-	
+
 				$sort[] = $this->quoteIdentifier($column).$direction;
 			}
 
 			return ' ORDER BY '.implode(', ', $sort);
 		}
-		
+
 		return '';
 	}
 
@@ -306,11 +311,11 @@ abstract class Sql extends Compiler
 	protected function compilePartJoin()
 	{
 		$return = array();
-		
+
 		foreach ($this->query['joins'] as $join)
 		{
 			$join = $join->as_array();
-			
+
 			if ($join['type'])
 			{
 				$sql = strtoupper($join['type']).' JOIN';
@@ -319,32 +324,32 @@ abstract class Sql extends Compiler
 			{
 				$sql = 'JOIN';
 			}
-	
+
 			// Quote the table name that is being joined
 			$sql .= ' '.$this->quoteIdentifier($join['table']).' ON ';
-	
+
 			$conditions = array();
 			foreach ($join['on'] as $condition)
 			{
 				// Split the condition
 				list($c1, $op, $c2) = $condition;
-	
+
 				if ($op)
 				{
 					// Make the operator uppercase and spaced
 					$op = ' '.strtoupper($op);
 				}
-	
+
 				// Quote each of the identifiers used for the condition
 				$conditions[] = $this->quoteIdentifier($c1).$op.' '.$this->quoteIdentifier($c2);
 			}
-	
+
 			// Concat the conditions "... AND ..."
 			$sql .= '('.implode(' AND ', $conditions).')';
-	
+
 			$return[] = $sql;
 		}
-		
+
 		return ' '.implode(' ', $return);
 	}
 
@@ -398,10 +403,10 @@ abstract class Sql extends Compiler
 		{
 			return $value;
 		}
-	
+
 		if (is_object($value))
 		{
-			if ($value instanceof \Cabinet\Database\Query\Base)
+			if ($value instanceof Base)
 			{
 				// Create a sub-query
 				return '('.$value->compile($this->connection).')';
@@ -417,7 +422,7 @@ abstract class Sql extends Compiler
 				return $this->quoteIdentifier((string) $value);
 			}
 		}
-		
+
 		if (is_array($value))
 		{
 			var_dump($value);
@@ -431,7 +436,7 @@ abstract class Sql extends Compiler
 			// Quote the column in FUNC("ident") identifiers
 			return preg_replace('/"(.+?)"/e', '$this->quoteIdentifier("$1")', $value);
 		}
-		
+
 		if (strpos($value, '.') !== false)
 		{
 			// Split the identifier into the individual parts
@@ -440,7 +445,7 @@ abstract class Sql extends Compiler
 			// Quote each of the parts
 			return implode('.', array_map(array($this, __FUNCTION__), $parts));
 		}
-		
+
 		return static::$tableQuote.$value.static::$tableQuote;
 	}
 
@@ -472,7 +477,7 @@ abstract class Sql extends Compiler
 		}
 		elseif (is_object($value))
 		{
-			if ($value instanceof \Cabinet\Database\Query\Base)
+			if ($value instanceof Base)
 			{
 				// Create a sub-query
 				return '('.$value->compile($this->connection).')';

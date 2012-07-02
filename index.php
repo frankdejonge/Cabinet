@@ -2,6 +2,11 @@
 
 use Cabinet\Database\Db;
 
+class MyObject
+{
+
+}
+
 require 'vendor/autoload.php';
 
 $conn = Db::connection(array(
@@ -11,17 +16,20 @@ $conn = Db::connection(array(
 	'database' => 'louter',
 ));
 
-$conn->update('blocks')
-	->set(array(
-		'title' => DB::expr('CONCAT(`title`, "_a")'),
-	))
-	->execute();
-
 $query = Db::query('SELECT * from `:table`', Db::SELECT, array(
 	'table' => 'blocks',
 ))->asObject(true);
 
 $compiled = $query->execute($conn);
+
+$result = $conn->select()
+	->from('containers')
+	->asObject('MyObject')
+	->execute();
+
+print_r($result);
+
+exit();
 
 //print_r($compiled);
 
@@ -43,13 +51,6 @@ $compiled = $conn->compile($query);
 // works the same for executing
 
 //var_dump($compiled);
-
-$update = Db::update('containers')
-	->where('id', 1)
-	->set(array(
-		'name' => 'New Name',
-		'hash' => 'new-name',
-	))->compile($conn);
 
 //var_dump($update);
 
@@ -97,3 +98,5 @@ $sqlite = Db::connection(array(
 ));
 
 var_dump($sqlite->select()->from('my_table')->asObject()->execute());
+
+print_r($conn->profilerQueries());

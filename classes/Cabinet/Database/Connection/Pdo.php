@@ -162,7 +162,15 @@ class Pdo extends Connection
 
 		$type = $type ?: $query->getType();
 		$sql = $this->compile($query, $type, $bindings);
-		$this->lastQuery = $sql;
+		
+		$profilerData = array(
+			'query' => $sql,
+			'start' => microtime(true),
+			'type' => $type,
+			'driver' => get_class($this).':'.$this->driver,
+		);
+		
+		//$this->queries[] = $sql;
 
 		try
 		{
@@ -177,21 +185,26 @@ class Pdo extends Connection
 		{
 			$asObject = $query->getAsObject();
 			
+			var_dump($asObject);
+			//die();
+			
 			if ( ! $asObject)
 			{
-				$result->setFetchMode(\PDO::FETCH_ASSOC);
+				$result = $result->fetchAll(\PDO::FETCH_ASSOC);
 			}
 			elseif (is_string($asObject))
 			{
-				$result->setFetchMode(\PDO::FETCH_CLASS, $asObject);
+				$result = $result->fetchAll(\PDO::FETCH_CLASS, $asObject);
 			}
 			else
 			{
-				$result->setFetchMode(\PDO::FETCH_CLASS, 'stdClass');
+				$result = $result->fetchAll(\PDO::FETCH_CLASS, 'stdClass');
 			}
-
-			$result = $result->fetchAll();
 		}
+		
+		$profilerData['end'] = microtime(true);
+		$profilerData['duration'] = $profilerData['end'] - $profilerData['start'];
+		$this->queries[] = $profilerData;
 		
 		return $result;
 	}

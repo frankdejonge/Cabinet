@@ -40,14 +40,6 @@ class Db
 		return new Expression($expression);
 	}
 	
-	public static function increment($field, $by = null)
-	{
-		$increment = new Expression\Increment($field);
-		$by and $increment->by($by);
-		
-		return $increment;
-	}
-	
 	public static function query($query, $type, $bindings = array())
 	{
 		return new Query($query, $type, $bindings);

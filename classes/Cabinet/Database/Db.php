@@ -39,35 +39,75 @@ class Db
 	{
 		return new Expression($expression);
 	}
-	
+
+	/**
+	 * Returns a query object.
+	 *
+	 * @param   mixed   $query     raw database query
+	 * @param   string  $type      query type
+	 * @param   array   $bindings  query bindings
+	 * @return  object  Cabinet\Database\Query
+	 */
 	public static function query($query, $type, $bindings = array())
 	{
 		return new Query($query, $type, $bindings);
 	}
-	
+
+	/**
+	 * Created a select collector object.
+	 *
+	 * @param   mixed  string field name or arrays for alias
+	 * ....
+	 * @return  object  select query collector object
+	 */
 	public static function select($column = null)
 	{
 		$query =  new Collector\Select();
 		return $query->selectArray(func_get_args());
 	}
-	
+
+	/**
+	 * Creates a select collector object.
+	 *
+	 * @param   array   $columns  array of fields to select
+	 * @return  object  select query collector object
+	 */
 	public static function selectArray($columns = array())
 	{
 		return static::select()->selectArray($columns);
 	}
-	
-	public static function update($table, $columns = array())
+
+	/**
+	 * Creates an update collector object.
+	 *
+	 * @param   string   $table  table to update
+	 * @param   array    $set    associative array of new values
+	 * @return  object   update query collector object
+	 */
+	public static function update($table, $set = array())
 	{
-		return new Collector\Update($table, $columns);
+		return new Collector\Update($table, $set);
 	}
-	
-	public static function delete($table, $columns = array())
+
+	/**
+	 * Creates a delete collector object.
+	 *
+	 * @param   string   $table  table to delete from
+	 * @return  object   delete query collector object
+	 */
+	public static function delete($table)
 	{
-		return new Collector\Delete($table, $columns);
+		return new Collector\Delete($table);
 	}
-	
-	public static function insert($table, $columns = array())
+
+	/**
+	 * Creates an insert collector object.
+	 *
+	 * @param   string   $table  table to insert into
+	 * @return  object   insert query collector object
+	 */
+	public static function insert($table)
 	{
-		return new Collector\Insert($table, $columns);
+		return new Collector\Insert($table);
 	}
 }

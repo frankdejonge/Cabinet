@@ -7,37 +7,37 @@ class Field extends \Cabinet\Database\Query\Base;
 	/**
 	 * @var  string  $name  field name
 	 */
-	protected $name = null;
+	public $name = null;
 
 	/**
 	 * @var  integer  $name  field constraint
 	 */
-	protected $constraint = null;
+	public $constraint = null;
 
 	/**
 	 * @var  string  $default  default value
 	 */
-	protected $default = null;
+	public $default = null;
 
 	/**
 	 * @var  string  $comments  field comments
 	 */
-	protected $comments = null;
+	public $comments = null;
 
 	/**
 	 * @var  string  $engine  field storage engine
 	 */
-	protected $engine = null;
+	public $engine = null;
 
 	/**
 	 * @var  string  $collation  field collation
 	 */
-	protected $collation = null;
+	public $collation = null;
 
 	/**
 	 * @var  boolean  $nullable  is nullable
 	 */
-	protected $nullable = false;
+	public $nullable = false;
 
 	/**
 	 * Constructor, sets the field name.

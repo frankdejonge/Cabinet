@@ -5,11 +5,6 @@ namespace Cabinet\Database;
 abstract class Connection
 {
 	/**
-	 * @var collection of executed queries
-	 */
-	protected $queries = array();
-
-	/**
 	 * Returns a connection instance based on the config.
 	 *
 	 * @param   array   connection config
@@ -33,6 +28,11 @@ abstract class Connection
 
 		return new $class($config);
 	}
+
+	/**
+	 * @var collection of executed queries
+	 */
+	protected $queries = array();
 
 	/**
 	 * Returnes the last executed query.
@@ -111,28 +111,63 @@ abstract class Connection
 	/**
 	 * Retrieve a Cabinet\Database\Collector\Select object with the current connection.
 	 *
-	 * @param   array  $columns
+	 * @param   mixed   $column
+	 * @return  object  Cabinet\Database\Collector\Select object
 	 */
-	public function select($columns = '*')
+	public function select($column = null)
 	{
 		return Db::selectArray(func_get_args())->setConnection($this);
 	}
 
-	public function update($table, $columns = array())
+	/**
+	 * Retrieve a Cabinet\Database\Collector\Select object with the current connection.
+	 *
+	 * @param   array   $columns
+	 * @return  object  Cabinet\Database\Collector\Select object
+	 */
+	public function selectArray($columns = array())
 	{
-		return Db::update($table, $columns)->setConnection($this);
+		return Db::selectArray($columns)->setConnection($this);
 	}
 
-	public function delete($table, $columns = array())
+	/**
+	 * Retrieve a Cabinet\Database\Collector\Update object with the current connection.
+	 *
+	 * @param   string  $table
+	 * @return  object  Cabinet\Database\Collector\Update object
+	 */
+	public function update($table)
 	{
-		return Db::delete($table, $columns)->setConnection($this);
+		return Db::update($table)->setConnection($this);
 	}
 
-	public function insert($table, $columns = array())
+	/**
+	 * Retrieve a Cabinet\Database\Collector\Delete object with the current connection.
+	 *
+	 * @param   string  $table
+	 * @return  object  Cabinet\Database\Collector\Delete object
+	 */
+	public function delete($table)
 	{
-		return Db::insert($table, $columns)->setConnection($this);
+		return Db::delete($table)->setConnection($this);
 	}
-	
+
+	/**
+	 * Retrieve a Cabinet\Database\Collector\Insert object with the current connection.
+	 *
+	 * @param   string  $table
+	 * @return  object  Cabinet\Database\Collector\Insert object
+	 */
+	public function insert($table)
+	{
+		return Db::insert($table)->setConnection($this);
+	}
+
+	/**
+	 * Retrieve a Cabinet\Database\Collector\Schema object with the current connection.
+	 *
+	 * @return  object  Cabinet\Database\Collector\Schema object
+	 */
 	public function schema()
 	{
 		return Db::schema()->setConnection($this);
@@ -144,6 +179,4 @@ abstract class Connection
 	abstract public function startTransaction($name = null);
 	abstract public function commitTransaction($name = null);
 	abstract public function rollbackTransaction($name = null);
-
-
 }

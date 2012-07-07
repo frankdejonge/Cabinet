@@ -3,20 +3,34 @@
 namespace Cabinet\Database\Collector\Schema;
 
 use Cabinet\Database\Db;
-use Cabinet\Database\Query\Base;
+use Cabinet\Database\Collector;
 
-class Database extends Base;
+class Database extends Collector
 {
 	/**
-	 * @var  array  $query  query defaults
+	 * @var  bool  $database  database name
 	 */
-	protected $query = array(
-		'database' => null,
-		'ifExists' => true,
-		'ifNotExists' => true,
-		'charset' => null,
-		'collate' => null,
-	)
+	public $database;
+
+	/**
+	 * @var  bool  $ifExists  wether to use IF EXISTS
+	 */
+	public $ifExists = false;
+
+	/**
+	 * @var  bool  $ifNotExists  wether to use IF NOT EXISTS
+	 */
+	public $ifNotExists = false;
+
+	/**
+	 * @var  bool  $charset  database charset
+	 */
+	public $charset;
+
+	/**
+	 * @var  bool  $charsetIsDefault  wether the charset/collate are default
+	 */
+	public $charsetIsDefault = false;
 
 	/**
 	 * Constructor, sets the database name 
@@ -25,7 +39,7 @@ class Database extends Base;
 	 */
 	public function __construct($database)
 	{
-		$this->query['database'] = $database;
+		$this->database = $database;
 	}
 
 	/**
@@ -35,7 +49,7 @@ class Database extends Base;
 	 */
 	public function ifExists($useExists = true)
 	{
-		$this->query['ifExists'] = $useExists;
+		$this->ifExists = $useExists;
 
 		return $this;
 	}
@@ -47,7 +61,7 @@ class Database extends Base;
 	 */
 	public function ifNotExists($useNotExists = true)
 	{
-		$this->query['ifNotExists'] = $useNotExists;
+		$this->ifNotExists = $useNotExists;
 
 		return $this;
 	}
@@ -55,25 +69,15 @@ class Database extends Base;
 	/**
 	 * Sets the charset.
 	 *
-	 * @param   string  $charset  database charset
-	 * @return  object  $this
+	 * @param   string   $charset    database charset
+	 * @param   boolean  $isDefault  wether the charset/collate are default
+	 * @return  object   $this
 	 */
-	public function charset($charset)
+	public function charset($charset, $isDefault = null)
 	{
-		$this->query['charset'] = $charset;
+		$this->charset = $charset;
 
-		return $this;
-	}
-
-	/**
-	 * Sets the collate.
-	 *
-	 * @param   string  $charset  database collate
-	 * @return  object  $this
-	 */
-	public function collate($collate)
-	{
-		$this->query['collate'] = $collate;
+		is_bool($isDefault) and $this->charsetIsDefault = $isDefault; 
 
 		return $this;
 	}

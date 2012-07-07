@@ -16,6 +16,15 @@ $conn = Db::connection(array(
 	'database' => 'louter',
 ));
 
+$conn->schema()
+	->createDatabase('unknown_database')
+	->execute();
+
+var_dump($conn->schema()
+	->database('unknown_database')
+	->drop()
+	->execute());
+
 $query = Db::query('SELECT * from `:table`', Db::SELECT, array(
 	'table' => 'blocks',
 ))->asObject(true);
@@ -29,7 +38,7 @@ $result = $conn->select()
 
 print_r($result);
 
-exit();
+//exit();
 
 //print_r($compiled);
 

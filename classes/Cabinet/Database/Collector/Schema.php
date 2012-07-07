@@ -8,7 +8,7 @@ class Schema
 	/**
 	 * @var  object  $connection
 	 */
-	protected $connection = null;
+	protected $connection;
 
 	/**
 	 * Sets the connection for schema builders.
@@ -31,7 +31,10 @@ class Schema
 	 */
 	public function database($database)
 	{
-		return new Schema\Database($database)->setConnection($this->connection);
+		$schema = new Schema\Database($database);
+		$schema->setConnection($this->connection);
+
+		return $schema;
 	}
 
 	/**
@@ -43,7 +46,7 @@ class Schema
 	public function createDatabase($database, \Closure $callback = null)
 	{
 		// prep the query
-		$query = $this->database($database)->delete();
+		$query = $this->database($database)->create();
 
 		// fire configuration callback
 		$callback and $callback($query);
@@ -93,7 +96,10 @@ class Schema
 	 */
 	public function table($table)
 	{
-		return new Schema\Table($table)->setConnection($connection);
+		$schema = new Schema\Table($table);
+		$schema->setConnection($connection);
+
+		return $schema;
 	}
 
 	/**

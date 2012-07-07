@@ -110,4 +110,14 @@ class Db
 	{
 		return new Collector\Insert($table);
 	}
+
+	/**
+	 * Creates a schema collector object.
+	 *
+	 * @return  object   schema query collector object
+	 */
+	public static function schema()
+	{
+		return new Collector\Schema();
+	}
 }

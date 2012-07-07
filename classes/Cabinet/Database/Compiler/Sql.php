@@ -73,6 +73,66 @@ abstract class Sql extends Compiler
 	}
 
 	/**
+	 * Compiles a DROP DATABASE query
+	 *
+	 * @return  string  compiles DROP DATABASE query
+	 */
+	public function compileDatabaseDrop()
+	{
+		return 'DROP DATABASE '
+			.($this->query['ifExists'] ? 'IF EXISTS ' : '')
+			.$this->quoteIdentifier($this->query['database']);
+	}
+
+	/**
+	 * Compiles a CREATE DATABASE query
+	 *
+	 * @return  string  compiles DROP DATABASE query
+	 */
+	public function compileDatabaseCreate()
+	{
+		return 'CREATE DATABASE '
+			.($this->query['ifNotExists'] ? 'IF NOT EXISTS ' : '')
+			.$this->quoteIdentifier($this->query['database'])
+			.$this->compileCharset();
+	}
+
+	/**
+	 * Compiles a DROP TABLE query
+	 *
+	 * @return  string  compiles DROP TABLE query
+	 */
+	public function compileTableDrop()
+	{
+		return 'DROP DATABASE '
+			.($this->query['ifExists'] ? 'IF EXISTS ' : '')
+			.$this->quoteIdentifier($this->query['table']);
+	}
+	
+	protected function compileCharset()
+	{
+		$charset = $this->query['charset'];
+		
+		if (empty($charset))
+		{
+			return '';
+		}
+		
+		if (($pos = stripos($charset, '_')) !== false)
+		{
+			$charset = ' CHARACTER SET '.substr($charset, 0, $pos).' COLLATE '.$charset;
+		}
+		else
+		{
+			$charset = ' CHARACTER SET '.$charset;
+		}
+
+		$this->query['charsetIsDefault'] and $charset = ' DEFAULT'.$charset;
+
+		return $charset;
+	}
+
+	/**
 	 * Compiles conditions for where and having statements.
 	 *
 	 * @param   array   $conditions  conditions array
@@ -183,7 +243,7 @@ abstract class Sql extends Compiler
 		$columns = $this->query['columns'];
 		empty($columns) and $columns = array('*');
 		$columns = array_map(array($this, 'quoteIdentifier'), $columns);
-		return 'SELECT'.($this->query['distinct'] === true ? ' DISTINCT ' : '').join(', ', $columns);
+		return 'SELECT '.($this->query['distinct'] === true ? ' DISTINCT ' : '').join(', ', $columns);
 	}
 
 	/**

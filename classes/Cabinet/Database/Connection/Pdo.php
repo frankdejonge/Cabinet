@@ -32,6 +32,11 @@ class Pdo extends Connection
 	public $insertIdField;
 
 	/**
+	 * @var  string  $charset  connection charset
+	 */
+	public $charset;
+
+	/**
 	 * Connection constructor.
 	 * Connects to a database with the supplied config.
 	 */
@@ -46,6 +51,7 @@ class Pdo extends Connection
 			'password' => null,
 			'attrs' => array(),
 			'insertIdField' => null,
+			'charset' => null,
 		);
 		
 		// exception mode
@@ -56,6 +62,9 @@ class Pdo extends Connection
 
 		// get connected
 		$this->connect($config);
+		
+		// set the charset
+		$this->setCharset($config['charset']);
 	}
 
 	/**
@@ -84,6 +93,16 @@ class Pdo extends Connection
 		{
 			throw new Exception($e->getMessage(), $e->getCode(), $e);
 		}
+	}
+	
+	public function setCharset($charset)
+	{
+		if (empty($charset))
+		{
+			return $this;
+		}
+
+		
 	}
 
 	/**
@@ -176,8 +195,6 @@ class Pdo extends Connection
 			'type' => $type,
 			'driver' => get_class($this).':'.$this->driver,
 		);
-		
-		//$this->queries[] = $sql;
 
 		try
 		{
@@ -205,7 +222,7 @@ class Pdo extends Connection
 				$result = $result->fetchAll(\PDO::FETCH_CLASS, 'stdClass');
 			}
 		}
-		elseif($type = Db::INSERT)
+		elseif($type === Db::INSERT)
 		{
 			$result = array(
 				$this->connection->lastInsertId($query->insertIdField() ?: $this->insertIdField),

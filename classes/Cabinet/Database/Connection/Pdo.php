@@ -7,23 +7,29 @@ use Cabinet\Database\Expression;
 use Cabinet\Database\Connection;
 use Cabinet\Database\Db;
 use Cabinet\Database\Query;
+use Cabinet\Database\Result;
 
 class Pdo extends Connection
 {
 	/**
 	 * @var  object  $connection  PDO connection
 	 */
-	protected $connection = null;
+	protected $connection;
 
 	/**
 	 * @var  string  $driver  
 	 */
-	protected $driver = null;
+	protected $driver;
 
 	/**
 	 * @var  object  $connection  Cabinet Compiler object
 	 */
-	protected $compiler = null;
+	protected $compiler;
+
+	/**
+	 * @var  string  $insertIdField  field used for lastInsertId
+	 */
+	public $insertIdField;
 
 	/**
 	 * Connection constructor.
@@ -39,6 +45,7 @@ class Pdo extends Connection
 			'username' => null,
 			'password' => null,
 			'attrs' => array(),
+			'insertIdField' => null,
 		);
 		
 		// exception mode
@@ -185,9 +192,6 @@ class Pdo extends Connection
 		{
 			$asObject = $query->getAsObject();
 			
-			var_dump($asObject);
-			//die();
-			
 			if ( ! $asObject)
 			{
 				$result = $result->fetchAll(\PDO::FETCH_ASSOC);
@@ -200,6 +204,17 @@ class Pdo extends Connection
 			{
 				$result = $result->fetchAll(\PDO::FETCH_CLASS, 'stdClass');
 			}
+		}
+		elseif($type = Db::INSERT)
+		{
+			$result = array(
+				$this->connection->lastInsertId($query->insertIdField() ?: $this->insertIdField),
+				$result->rowCount(),
+			);
+		}
+		else
+		{
+			$result = $result->errorCode() === '00000' ? $result->rowCount() : -1;
 		}
 		
 		$profilerData['end'] = microtime(true);

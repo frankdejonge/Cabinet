@@ -13,14 +13,32 @@ class Insert extends Collector
 	protected $type = Db::INSERT;
 
 	/**
-	 * @param
+	 * @var  string  $insertIdField  field used for lastInsertId
 	 */
-	protected $_lastValues = false;
+	public $insertIdField;
 	
 	public function __construct($table, $values = array())
 	{
 		$this->into($table);
 		$this->values($values);
+	}
+
+	/**
+	 * Sets/Gets the field used for lastInsertId
+	 *
+	 * @param   string  
+	 * @return  mixed  current instance when setting, string fieldname when gettting.
+	 */
+	public function insertIdField($field = null)
+	{
+		if ($field)
+		{
+			$this->insertIdField = $field;
+
+			return $this;
+		}
+
+		return $this->insertIdField;
 	}
 
 	/**
@@ -63,7 +81,7 @@ class Insert extends Collector
 			}
 			else
 			{
-				$this->values[] = $this->_lastValues = $v;
+				$this->values[] = $v;
 			}
 		}
 

@@ -6,11 +6,20 @@ use Cabinet\Database\Db;
 
 class Select extends Where
 {
-		/**
+	/**
 	 * @var  int  $type  query type
 	 */
 	protected $type = Db::SELECT;
 
+	/**
+	 * @var  array  $having  having conditions
+	 */
+	public $having = array();
+
+	/**
+	 * @var  array  $groupBy  GROUP BY clause
+	 */
+	public $groupBy = array();
 	
 	/**
 	 * @var  object  $lastJoin  last join object

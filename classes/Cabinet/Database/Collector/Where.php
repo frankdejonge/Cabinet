@@ -8,6 +8,16 @@ use Cabinet\Database\Db;
 class Where extends Collector
 {
 	/**
+	 * @var  array  $where  where conditions
+	 */
+	public $where = array();
+
+	/**
+	 * @var  array  $orderBy  ORDER BY clause
+	 */
+	public $orderBy = array();
+
+	/**
 	 * Alias for andWhere.
  	 *
 	 * @param   mixed   $column  array of 'and where' statements or column name

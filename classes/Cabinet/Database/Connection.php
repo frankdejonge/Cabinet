@@ -97,86 +97,34 @@ abstract class Connection
 	}
 
 	/**
-	 * Retrieve a Cabinet\Database\Query object with the current connection.
-	 *
-	 * @param   mixed    $query     query
-	 * @param   integer  $type      query type
-	 * @param   array    $bindings  query bindings
-	 */
-	public function query($query, $type, $bindings = array())
-	{
-		return Db::query($query, $type, $bindings)->setConnection($this);
-	}
-
-	/**
-	 * Retrieve a Cabinet\Database\Collector\Select object with the current connection.
-	 *
-	 * @param   mixed   $column
-	 * @return  object  Cabinet\Database\Collector\Select object
-	 */
-	public function select($column = null)
-	{
-		return Db::selectArray(func_get_args())->setConnection($this);
-	}
-
-	/**
-	 * Retrieve a Cabinet\Database\Collector\Select object with the current connection.
-	 *
-	 * @param   array   $columns
-	 * @return  object  Cabinet\Database\Collector\Select object
-	 */
-	public function selectArray($columns = array())
-	{
-		return Db::selectArray($columns)->setConnection($this);
-	}
-
-	/**
-	 * Retrieve a Cabinet\Database\Collector\Update object with the current connection.
-	 *
-	 * @param   string  $table
-	 * @return  object  Cabinet\Database\Collector\Update object
-	 */
-	public function update($table)
-	{
-		return Db::update($table)->setConnection($this);
-	}
-
-	/**
-	 * Retrieve a Cabinet\Database\Collector\Delete object with the current connection.
-	 *
-	 * @param   string  $table
-	 * @return  object  Cabinet\Database\Collector\Delete object
-	 */
-	public function delete($table)
-	{
-		return Db::delete($table)->setConnection($this);
-	}
-
-	/**
-	 * Retrieve a Cabinet\Database\Collector\Insert object with the current connection.
-	 *
-	 * @param   string  $table
-	 * @return  object  Cabinet\Database\Collector\Insert object
-	 */
-	public function insert($table)
-	{
-		return Db::insert($table)->setConnection($this);
-	}
-
-	/**
-	 * Retrieve a Cabinet\Database\Collector\Schema object with the current connection.
-	 *
-	 * @return  object  Cabinet\Database\Collector\Schema object
-	 */
-	public function schema()
-	{
-		return Db::schema()->setConnection($this);
-	}
-
-	/**
 	 * Transaction functions.
 	 */
 	abstract public function startTransaction($name = null);
 	abstract public function commitTransaction($name = null);
 	abstract public function rollbackTransaction($name = null);
+
+	/**
+	 * Db class call forwarding. Sets the current connection if setter is available.
+	 *
+	 * @param   string  $func  function name
+	 * @param   array   $args  function arguments
+	 * @return  forwarded result (with set connection)
+	 * @throws  \BadMethodCallException when method doesn't exist.
+	 */
+	public function __call($func, $args)
+	{
+		if (is_callable($call = __NAMESPACE__.'\\Db::'.$func))
+		{
+			$return = call_user_func_array($call, $args);
+			
+			if (is_object($return) and method_exists($result, 'setConnection'))
+			{
+				$return->setConnection($this);
+			}
+
+			return $this;
+		}
+		
+		throw new \BadMethodCallException($func.' is not a method of '.get_called_class());
+	}
 }

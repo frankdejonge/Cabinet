@@ -1,8 +1,9 @@
 <?php
 
 namespace Cabinet\Database\Collector\Schema;
+use Cabinet\Database\Collector;
 
-class Field extends \Cabinet\Database\Query\Base;
+class Field extends Collector;
 {
 	/**
 	 * @var  string  $name  field name

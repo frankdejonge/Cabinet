@@ -50,16 +50,4 @@ class Update extends Where
 
 		return $this;
 	}
-
-	public function increment($key, $valye = null)
-	{
-		is_array($key) or $key = array($key => $value);
-
-		foreach ($key as $k => $v)
-		{
-			$this->values[$k] = $v;
-		}
-
-		return $this;
-	}
 }

@@ -94,7 +94,7 @@ abstract class Sql extends Compiler
 		return 'CREATE DATABASE '
 			.($this->query['ifNotExists'] ? 'IF NOT EXISTS ' : '')
 			.$this->quoteIdentifier($this->query['database'])
-			.$this->compileCharset();
+			.$this->compilePartCharset();
 	}
 
 	/**
@@ -108,8 +108,49 @@ abstract class Sql extends Compiler
 			.($this->query['ifExists'] ? 'IF EXISTS ' : '')
 			.$this->quoteIdentifier($this->query['table']);
 	}
+
+	public function compileTableCreate()
+	{
+		$sql = 'CREATE TABLE ';
+		$this->query['isNotExists'] and $sql .= 'IF NOT EXISTS ';
+		$sql .= $this->quoteIdentifier($this->query['table']).' ( ';
+		$sql .= $this->compilePartFields();
+		$sql .= $this->compilePartPrimaryKey();
+		$sql .= $this->compilePartEngine();
+		$sql .= $this->compilePartCharset();
+		return $sql;
+	}
 	
-	protected function compileCharset()
+	public function compilePartFields()
+	{
+		$fields = array();
+		
+		foreach ($this->query['fields'] as $field)
+		{
+			$field_sql = '';
+			
+			$fields[] = $field_sql;
+		}
+		
+		return join(', ', $fields);
+	}
+	
+	public function compilePartIndexes()
+	{
+		
+	}
+	
+	public function compilePartEngine()
+	{
+		return $this->query['engine'] ? ' ) ENGINE = '.$this->query['engine'] : ' ) '; 
+	}
+
+	/**
+	 * Compiles charset statements.
+	 *
+	 * @return  string  compiled charset statement
+	 */
+	protected function compilePartCharset()
 	{
 		$charset = $this->query['charset'];
 		
@@ -127,7 +168,7 @@ abstract class Sql extends Compiler
 			$charset = ' CHARACTER SET '.$charset;
 		}
 
-		$this->query['charsetIsDefault'] and $charset = ' DEFAULT'.$charset;
+		isset($this->query['charsetIsDefault']) and $this->query['charsetIsDefault'] and $charset = ' DEFAULT'.$charset;
 
 		return $charset;
 	}

@@ -22,24 +22,6 @@ class Collector extends Query\Base
 
 
 	/**
-	 * @var  array  $where  where conditions
-	 */
-	public $where = array();
-
-
-	/**
-	 * @var  array  $having  having conditions
-	 */
-	public $having = array();
-
-
-	/**
-	 * @var  array  $orderBy  ORDER BY clause
-	 */
-	public $orderBy = array();
-
-
-	/**
 	 * @var  array  $groupBy  GROUP BY clause
 	 */
 	public $groupBy = array();

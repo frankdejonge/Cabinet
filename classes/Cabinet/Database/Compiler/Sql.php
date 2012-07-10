@@ -517,6 +517,10 @@ abstract class Sql extends Compiler
 				// Use a raw expression
 				return $value->value();
 			}
+			elseif ($value instanceof \Cabinet\Database\Fn)
+			{
+				return $this->compilePartFn($value);
+			}
 			else
 			{
 				// Convert the object to a string
@@ -526,7 +530,6 @@ abstract class Sql extends Compiler
 
 		if (is_array($value))
 		{
-			var_dump($value);
 			// Separate the column and alias
 			list ($_value, $alias) = $value;
 			return $this->quoteIdentifier($_value).' AS '.$this->quoteIdentifier($alias);
@@ -582,6 +585,18 @@ abstract class Sql extends Compiler
 			{
 				// Create a sub-query
 				return '('.$value->compile($this->connection).')';
+			}
+			elseif ($valye instanceof \Cabinet\Database\Value)
+			{
+				return $this->escape($value->value());
+			}
+			elseif ($valye instanceof \Cabinet\Database\Identifier)
+			{
+				return $this->quoteIdentifier($value->value());
+			}
+			elseif ($value instanceof \Cabinet\Database\Fn)
+			{
+				return $this->compilePartFn($value);
 			}
 			elseif ($value instanceof \Cabinet\Database\Expression)
 			{

@@ -31,7 +31,7 @@ $query = Db::query('SELECT * from `:table`', Db::SELECT, array(
 
 $compiled = $query->execute($conn);
 
-$result = $conn->select()
+$result = $conn->select(Db::fn('max', 'id'))
 	->from('containers')
 	->asObject('MyObject')
 	->execute();

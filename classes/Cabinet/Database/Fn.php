@@ -2,7 +2,7 @@
 
 namespace Cabinet\Database;
 
-abstract class Fn
+class Fn
 {
 	/**
 	 * @var  array  $params  function params
@@ -12,7 +12,12 @@ abstract class Fn
 	/**
 	 * @var  string  $fn  function name
 	 */
-	protected $fn
+	protected $fn;
+
+	/**
+	 * @var  string  $quoteAs  quote as value or as identifier
+	 */
+	protected $quoteAs = 'identifier';
 
 	/**
 	 * Constructor, stores function name and ensures $params is an array.
@@ -26,6 +31,40 @@ abstract class Fn
 
 		$this->fn = $fn;
 		$this->params = $params;
+	}
+
+	/**
+	 * Sets the default quote type to value.
+	 *
+	 * @return  object  $this
+	 */
+	public function quoteAsValue()
+	{
+		$this->quoteAs = 'value';
+
+		return $this;
+	}
+
+	/**
+	 * Sets the default quote type to identifier.
+	 *
+	 * @return  object  $this
+	 */
+	public function quoteAsIdentifier()
+	{
+		$this->quoteAs = 'identifier';
+		
+		return $this;
+	}
+
+	/**
+	 * Returns default the quoting type.
+	 *
+	 * @return  string  quoteation type
+	 */
+	public function quoteAs()
+	{
+		return $this->quoteAs;
 	}
 
 	/**

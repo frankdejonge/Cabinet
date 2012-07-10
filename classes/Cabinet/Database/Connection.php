@@ -113,16 +113,18 @@ abstract class Connection
 	 */
 	public function __call($func, $args)
 	{
-		if (is_callable($call = __NAMESPACE__.'\\Db::'.$func))
+		$call = '\\Cabinet\\Database\\Db::'.$func;
+
+		if (is_callable($call))
 		{
 			$return = call_user_func_array($call, $args);
 			
-			if (is_object($return) and method_exists($result, 'setConnection'))
+			if (is_object($return) and method_exists($return, 'setConnection'))
 			{
 				$return->setConnection($this);
 			}
 
-			return $this;
+			return $return;
 		}
 		
 		throw new \BadMethodCallException($func.' is not a method of '.get_called_class());

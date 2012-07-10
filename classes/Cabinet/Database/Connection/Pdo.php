@@ -2,12 +2,12 @@
 
 namespace Cabinet\Database\Connection;
 
-use Cabinet\Database\Exception;
-use Cabinet\Database\Expression;
-use Cabinet\Database\Connection;
 use Cabinet\Database\Db;
 use Cabinet\Database\Query;
 use Cabinet\Database\Result;
+use Cabinet\Database\Exception;
+use Cabinet\Database\Expression;
+use Cabinet\Database\Connection;
 
 class Pdo extends Connection
 {
@@ -113,8 +113,17 @@ class Pdo extends Connection
 	 */
 	public function quote($value)
 	{
-		if($value instanceof Expression)
+		if ($value instanceof Expression)
 		{
+			if ($value instanceof Value)
+			{
+				return $this->connection->quote($value->value());
+			}
+			elseif ($value instanceof Identifier)
+			{
+				return $this->quoteIdentifier($value->value());
+			}
+
 			return $value->value();
 		}
 

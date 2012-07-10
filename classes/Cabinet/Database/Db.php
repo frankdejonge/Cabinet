@@ -41,6 +41,40 @@ class Db
 	}
 
 	/**
+	 * Database value shortcut.
+	 *
+	 * @param   mixed   $value  value
+	 * @return  object  a new Cabinet\Database\Value object.
+	 */
+	public static function value($value)
+	{
+		return new Value($value);
+	}
+
+	/**
+	 * Database identifier shortcut.
+	 *
+	 * @param   mixed   $identifier  identifier
+	 * @return  object  a new Cabinet\Database\Value object.
+	 */
+	public static function identifier($identifier)
+	{
+		return new Identifier($identifier);
+	}
+
+	/**
+	 * Database function shortcut.
+	 *
+	 * @param   string  $fn      function
+	 * @param   array   $params  function params
+	 * @return  object  a new Cabinet\Database\Fn object.
+	 */
+	public static function fn($fn, $params = array())
+	{
+		return new Fn($fn, $params);
+	}
+
+	/**
 	 * Returns a query object.
 	 *
 	 * @param   mixed   $query     raw database query

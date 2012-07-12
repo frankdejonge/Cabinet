@@ -56,6 +56,25 @@ class DatabaseBuilderTest extends PHPUnit_Framework_TestCase
 	}
 
 	/**
+	 * Test Schema Create Database
+	 *
+	 * @test
+	 */
+	public function testCreateDatabaseIfNotExists()
+	{
+		$expected = "CREATE DATABASE IF NOT EXISTS `my_database`";
+
+		$query = $this->connection
+			->schema()
+			->database('my_database')
+			->create()
+			->ifNotExists()
+			->compile();
+
+		$this->assertEquals($expected, $query);
+	}
+
+	/**
 	 * Test Schema Create Database with Charset
 	 *
 	 * @test

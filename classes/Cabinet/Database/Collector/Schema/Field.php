@@ -62,6 +62,19 @@ class Field extends Collector;
 	}
 
 	/**
+	 * New field name.
+	 *
+	 * @param   string  $name  field name
+	 * @return  object  $this
+	 */
+	public function newName($name)
+	{
+		$this->newName = $name;
+
+		return $this;
+	}
+
+	/**
 	 * Sets the field type.
 	 *
 	 * @param   string  $type  field type

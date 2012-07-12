@@ -103,7 +103,7 @@ abstract class Sql extends Compiler
 		return 'CREATE DATABASE '
 			.($this->query['ifNotExists'] ? 'IF NOT EXISTS ' : '')
 			.$this->quoteIdentifier($this->query['database'])
-			.$this->compilePartCharset();
+			.$this->compilePartCharset($this->query['charset']);
 	}
 
 	/**
@@ -126,56 +126,143 @@ abstract class Sql extends Compiler
 		return 'RENAME TABLE '.$this->quoteIdentifier($this->query['table']).' TO '.$this->quoteIdentifier($this->query['newName']);
 	}
 
+	public function compileTableDropFields()
+	{
+		return 'ALTER TABLE '.
+			$this->quoteIdentifier($this->query['table']).
+			' DROP '.
+			join(', ', array_map(array($this, 'quoteIdentifier'), $this->query['fields']));
+	}
+
+	public function compileTableAlterFields()
+	{
+		return 'ALTER TABLE '.
+			$this->quoteIdentifier($this->query['table']).' '.
+			$this->compilePartFields('alter');
+	}
+
+	public function compileTableAddFields()
+	{
+		return 'ALTER TABLE '.
+			$this->quoteIdentifier($this->query['table']).' '.
+			$this->compilePartFields('add');
+	}
+
 	public function compileTableCreate()
 	{
 		$sql = 'CREATE TABLE ';
 		$this->query['isNotExists'] and $sql .= 'IF NOT EXISTS ';
 		$sql .= $this->quoteIdentifier($this->query['table']).' ( ';
-		$sql .= $this->compilePartFields();
+		$sql .= $this->compilePartFields('create');
 		$sql .= $this->compilePartPrimaryKey();
 		$sql .= $this->compilePartEngine();
-		$sql .= $this->compilePartCharset();
+		$sql .= $this->compilePartCharset($this->query['charset']);
 		return $sql;
 	}
-	
-	public function compilePartFields()
+
+	protected function compilePartFields($type)
 	{
 		$fields = array();
-		
+
 		foreach ($this->query['fields'] as $field)
 		{
-			$field_sql = '';
-			
+			$data = $field->getContents();
+
+			if($type !== 'alter')
+			{
+				if ( ! isset($data['newName']) and $data['name'] !== $data['newName'])
+				{
+					$type = 'change';
+				}
+				else
+				{
+					$type = 'modify';
+				}
+			}
+
+			$field_sql = strtoupper($type).' '.$this->quoteIdentifier($this->query['name']).' ';
+
+			if ($field['newName'])
+			{
+				$field_sql .= $this->quoteIdentifier($this->query['newName']).' ';
+			}
+
+			$field_sql .= strtoupper($field['type']);
+
+			if ($field['constraint'])
+			{
+				$constraint = is_array($field['constraint']) ? $field['constraint'] : array($field['constraint']);
+				$field_sql .= '('.join(', ', array_map(array($this, 'quote'), $constraint)).')';
+			}
+
+			if ($field['charset'])
+			{
+				$field_sql .= ' '.$this->compilePartCharset($field['charset']);
+			}
+
+			if ($field['unsigned'])
+			{
+				$field_sql .= ' UNSIGNED';
+			}
+
+			if ($field['default'])
+			{
+				$field_sql .= ' DEFAULT'.$this->quote($field['default']);
+			}
+
+			if ($field['null'])
+			{
+				$field_sql .= ' NULL';
+			}
+			else
+			{
+				$field_sql .= ' NOT NULL';
+			}
+
+			if($field['first'])
+			{
+				$field_sql .= ' FIRST';
+			}
+
+			if ($field['after'])
+			{
+				$field_sql .= ' AFTER '.$this->quoteIdentifier($field['after']);
+			}
+
+			if ($field['comments'])
+			{
+				$sql .= ' COMMENT '.$this->quote($field['comments']);
+			}
+
 			$fields[] = $field_sql;
 		}
-		
+
 		return join(', ', $fields);
 	}
-	
+
 	public function compilePartIndexes()
 	{
-		
+
 	}
-	
+
 	public function compilePartEngine()
 	{
-		return $this->query['engine'] ? ' ) ENGINE = '.$this->query['engine'] : ' ) '; 
+		return $this->query['engine'] ? ' ) ENGINE = '.$this->query['engine'] : ' ) ';
 	}
 
 	/**
 	 * Compiles charset statements.
 	 *
+	 * @param   string  $charset  charset to compile
 	 * @return  string  compiled charset statement
 	 */
-	protected function compilePartCharset()
+	protected function compilePartCharset($charset)
 	{
-		$charset = $this->query['charset'];
-		
 		if (empty($charset))
 		{
 			return '';
 		}
-		
+
 		if (($pos = stripos($charset, '_')) !== false)
 		{
 			$charset = ' CHARACTER SET '.substr($charset, 0, $pos).' COLLATE '.$charset;
@@ -298,7 +385,7 @@ abstract class Sql extends Compiler
 	/**
 	 * Compiles the insert values.
 	 *
-	 * @return  string  
+	 * @return  string
 	 */
 	protected function compilePartInsertValues()
 	{
@@ -463,7 +550,7 @@ abstract class Sql extends Compiler
 		{
 			return '';
 		}
-	
+
 		$return = array();
 
 		foreach ($this->query['join'] as $join)

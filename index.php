@@ -18,7 +18,7 @@ $conn = Db::connection(array(
 	'database' => 'louter',
 ));
 
-die($conn->select()->from('table')->join('other_table')
+echo($conn->select()->from('table')->join('other_table')
 ->on('table.field', '=', 'other_table.field')
 ->orOn('table.field', '=', 'other_table.other_field')
 ->compile());
@@ -34,7 +34,10 @@ $conn2 = Db::connection(array(
 
 $conn->schema()
 	->createDatabase('unknown_database')
+	->charset('utf8_general_ci')
 	->execute();
+
+print_r($conn->lastQuery());
 
 $conn->schema()
 	->database('unknown_database')

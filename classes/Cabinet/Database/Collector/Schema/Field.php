@@ -52,6 +52,11 @@ class Field extends Collector;
 	public $nullable = false;
 
 	/**
+	 * @var boolean  $autoIncrement  wether the field auto increments
+	 */
+	public $autoIncrement = false;
+
+	/**
 	 * Constructor, sets the field name.
 	 *
 	 * @param  string  $name  field name
@@ -96,6 +101,19 @@ class Field extends Collector;
 	public function constraint($constraint)
 	{
 		$this->constraint = $constraint;
+
+		return $this;
+	}
+
+	/**
+	 * Set wether the field auto increments
+	 *
+	 * @param   boolean  $autoIncretement
+	 * @return  object   $this
+	 */
+	public function autoIncrement($autoIncrement = true)
+	{
+		$this->autoIncretement = $autoIncrement;
 
 		return $this;
 	}

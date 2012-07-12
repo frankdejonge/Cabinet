@@ -16,5 +16,22 @@ use Cabinet\Database\Compiler\Sql;
 
 class Pgsql extends Sql
 {
+	/**
+	 * @var  string  $tableQuote  table quote
+	 */
 	protected static $tableQuote = '"';
+
+	/**
+	 * Compiles a PGSQL concatination.
+	 *
+	 * @param   object  $value  Fn object
+	 * @return  string  compiles concat
+	 */
+	protected function compilePartConcat($value)
+	{
+		$values = $value->getParams();
+		$quoteFn = ($value->quoteAs() === 'identifier') ? 'quoteIdentifier' : 'quote';
+
+		return join(' || ', array_map(array($this, $quoteFn), $value->getParams()));
+	}
 }

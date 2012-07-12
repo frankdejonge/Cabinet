@@ -40,7 +40,6 @@ abstract class Sql extends Compiler
 		return $sql;
 	}
 
-
 	/**
 	 * Compiles a UPDATE query
 	 *
@@ -193,18 +192,19 @@ abstract class Sql extends Compiler
 	{
 		$parts = array();
 		$last = false;
-		foreach($conditions as $c)
+		foreach ($conditions as $c)
 		{
 			count($parts) > 0 and $parts[] = ' '.strtoupper($c['type']).' ';
 
-			if(isset($c['nesting']))
+			if (isset($c['nesting']))
 			{
-				if($c['nesting'] === 'open')
+				if ($c['nesting'] === 'open')
 				{
-					if($last === '(')
+					if ($last === '(')
 					{
 						array_pop($parts);
 					}
+
 					$last = '(';
 					$parts[] = '(';
 				}
@@ -221,15 +221,17 @@ abstract class Sql extends Compiler
 				{
 					array_pop($parts);
 				}
+
 				$last = false;
 				$c['op'] = trim($c['op']);
-				if($c['value'] === null)
+
+				if ($c['value'] === null)
 				{
-					if($c['op'] === '!=')
+					if ($c['op'] === '!=')
 					{
 						$c['op'] = 'IS NOT';
 					}
-					elseif($c['op'] === '=')
+					elseif ($c['op'] === '=')
 					{
 						$c['op'] = 'IS';
 					}
@@ -255,12 +257,41 @@ abstract class Sql extends Compiler
 		return ' '.trim(implode('', $parts));
 	}
 
+	/**
+	 * Compiles SQL functions
+	 *
+	 * @param   object  $value   function object
+	 * @return  string  compiles SQL function
+	 */
+	protected function compilePartFn($value)
+	{
+		$fn = ucfirst($value->getFn());
 
+		if(method_exists($this, 'compilePart'.$fn))
+		{
+			return $this->{'compilePart'.$fn}($valye);
+		}
+
+		$quoteFn = ($value->quoteAs() === 'identifier') ? 'quoteIdentifier' : 'quote';
+
+		return strtoupper($fn).'('.join(', ', array_map(array($this, $quoteFn), $value->getParams())).')';
+	}
+
+	/**
+	 * Compiles the INSERT INTO STATEMENT
+	 *
+	 *
+	 */
 	protected function compilePartInsert()
 	{
 		return 'INSERT INTO '.$this->query['table'];
 	}
 
+	/**
+	 * Compiles the insert values.
+	 *
+	 * @return  string  
+	 */
 	protected function compilePartInsertValues()
 	{
 		$sql = ' ('.join(' , ', $this->query['columns']).') VALUES (';
@@ -326,8 +357,7 @@ abstract class Sql extends Compiler
 	{
 		$tables = $this->query['table'];
 		is_array($tables) or $tables = array($tables);
-		$tables = array_map(array($this, 'quoteIdentifier'), $tables);
-		return ' FROM '.join(', ', $tables);
+		return ' FROM '.join(', ', array_map(array($this, 'quoteIdentifier'), $tables));
 	}
 
 	/**
@@ -569,6 +599,7 @@ abstract class Sql extends Compiler
 	 * Objects passed to this function will be converted to strings.
 	 * Expression objects will use the value of the expression.
 	 * Query objects will be compiled and converted to a sub-query.
+	 * Fn objects will be send of for compiling.
 	 * All other objects will be converted using the `__toString` method.
 	 *
 	 * @param   mixed   any value to quote
@@ -579,7 +610,7 @@ abstract class Sql extends Compiler
 	{
 		if ($value === null)
 		{
-			return 'null';
+			return 'NULL';
 		}
 		elseif ($value === true)
 		{
@@ -621,7 +652,7 @@ abstract class Sql extends Compiler
 		}
 		elseif (is_array($value))
 		{
-			return '('.implode(', ', array_map(array($this, __FUNCTION__), $value)).')';
+			return '('.implode(', ', array_map(array($this, 'quote'), $value)).')';
 		}
 		elseif (is_int($value))
 		{

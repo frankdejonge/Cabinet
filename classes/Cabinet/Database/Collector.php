@@ -30,13 +30,6 @@ class Collector extends Query\Base
 	 */
 	public $values = array();
 
-
-	/**
-	 * @var  array  $groupBy  GROUP BY clause
-	 */
-	public $groupBy = array();
-
-
 	/**
 	 * @var  array  $joins  query joins
 	 */

@@ -55,13 +55,14 @@ class Where extends Collector
 			$this->andWhereOpen();
 			$column($this);
 			$this->andWhereClose();
+
 			return $this;
 		}
 
 		if (func_num_args() === 2)
 		{
 			$value = $op;
-			$op = '=';
+			$op = is_array($value) ? 'in' : '=';
 		}
 
 		return $this->_where('and', $column, $op, $value);
@@ -82,6 +83,7 @@ class Where extends Collector
 			$this->orWhereOpen();
 			$column($this);
 			$this->orWhereClose();
+
 			return $this;
 		}
 

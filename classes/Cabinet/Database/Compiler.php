@@ -70,7 +70,7 @@ abstract class Compiler
 		
 		$this->query = $old_query;
 
-		return $result;
+		return is_string($result) ? trim($result) : $result;
 	}
 
 	/**

@@ -1,0 +1,21 @@
+language: php
+
+php:
+  - 5.3
+  - 5.4
+
+env:
+  - DB=mysql
+  - DB=pqsql
+
+before_script:
+  - curl -s http://getcomposer.org/installer | php
+  - php composer.phar install --dev
+  - if [[ "$DB" == "mysql" ]]; then mysql -e 'create database test_database;'; fi
+  - if [[ "$DB" == "pgsql" ]]; then psql -c 'create database test_database;' -U postgres; fi
+  - ./tests/travis.sh
+
+script: phpunit -c tests/$DB/phpunit.xml
+
+notifications:
+  irc: "irc.freenode.org#cabinet"

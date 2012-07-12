@@ -16,17 +16,4 @@ use Cabinet\Database\Compiler\Sql;
 
 class Mysql extends Sql
 {
-	/**
-	 * Compiles MySQL functions
-	 *
-	 * @param   object  $value  function object
-	 * @return  string  compiles MySQL function
-	 */
-	protected function compilePartFn($value)
-	{
-		$fn = strtoupper($value->getFn());
-		$quoteFn = ($value->quoteAs() === 'identifier') ? 'quoteIdentifier' : 'quote';
-
-		return $fn.'('.join(', ', array_map(array($this, $quoteFn), $value->getParams())).')';
-	}
 }

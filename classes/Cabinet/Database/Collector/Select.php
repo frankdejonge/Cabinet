@@ -108,6 +108,22 @@ class Select extends Where
 	}
 
 	/**
+	 * Creates a "GROUP BY ..." filter.
+	 *
+	 * @param   mixed   column name or array($column, $alias)
+	 * @param   ...
+	 * @return  object  $this
+	 */
+	public function groupBy($columns)
+	{
+		$columns = func_get_args();
+
+		$this->groupBy = array_merge($this->groupBy, $columns);
+
+		return $this;
+	}
+
+	/**
 	 * Adds a new join.
 	 *
 	 * @param   string  $table  string column name or alias array

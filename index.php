@@ -7,23 +7,36 @@ class MyObject
 
 }
 
-require 'vendor/autoload.php';
+echo 1;
+
+require './vendor/autoload.php';
+
+echo 1;
 
 $conn = Db::connection(array(
 	'driver' => 'mysql',
 	'username' => 'root',
-	'password' => 'password',
+	'password' => 'root',
 	'database' => 'louter',
 ));
+
+$conn2 = Db::connection(array(
+	'driver' => 'mysql',
+	'username' => 'root',
+	'password' => 'root',
+	'database' => 'test_database',
+));
+
+
 
 $conn->schema()
 	->createDatabase('unknown_database')
 	->execute();
 
-var_dump($conn->schema()
+$conn->schema()
 	->database('unknown_database')
 	->drop()
-	->execute());
+	->execute();
 
 $query = Db::query('SELECT * from `:table`', Db::SELECT, array(
 	'table' => 'blocks',
@@ -31,16 +44,14 @@ $query = Db::query('SELECT * from `:table`', Db::SELECT, array(
 
 $compiled = $query->execute($conn);
 
-$result = $conn->select(Db::fn('max', 'id'))
+$result = $conn->select(array(Db::fn('max', 'id'), 'max_id'))
 	->from('containers')
 	->asObject('MyObject')
 	->execute();
 
 print_r($result);
 
-//exit();
-
-//print_r($compiled);
+echo 1;
 
 $subquery = Db::select('container_id')
 	->from('blocks')
@@ -80,7 +91,7 @@ $pg = Db::connection(array(
 ));
 
 $pg->delete('my_table')
-	->where('id', '<', 100)
+	//->where('id', '<', 100)
 	->execute();
 
 $pg->insert('my_table')

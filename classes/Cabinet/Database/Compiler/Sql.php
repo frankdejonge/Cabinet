@@ -118,6 +118,14 @@ abstract class Sql extends Compiler
 			.$this->quoteIdentifier($this->query['table']);
 	}
 
+	/**
+	 * Compiles a RENAME TABLE query
+	 */
+	public function compileTableRename()
+	{
+		return 'RENAME TABLE '.$this->quoteIdentifier($this->query['table']).' TO '.$this->quoteIdentifier($this->query['newName']);
+	}
+
 	public function compileTableCreate()
 	{
 		$sql = 'CREATE TABLE ';

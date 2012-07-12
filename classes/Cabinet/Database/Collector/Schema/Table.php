@@ -28,6 +28,11 @@ class Table extends Base;
 	public $table;
 
 	/**
+	 * @var  string  $newName  new table name
+	 */
+	public $newName;
+
+	/**
 	 * @var  boolean  $ifExists  wether to use IF EXISTS
 	 */
 	public $ifExists = false;
@@ -161,6 +166,20 @@ class Table extends Base;
 	public function drop()
 	{
 		$this->type = Db::TABLE_DROP;
+
+		return $this;
+	}
+
+	/**
+	 * Sets the query type for drop database
+	 *
+	 * @param   string  $newName  new table name
+	 * @return  object  $this
+	 */
+	public function renameTo($newName)
+	{
+		$this->type = Db::TABLE_RENAME;
+		$this->newName = $newName;
 
 		return $this;
 	}

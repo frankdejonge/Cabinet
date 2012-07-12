@@ -1,5 +1,7 @@
 # Cabinet Database Package
 
+[![Build Status](https://secure.travis-ci.org/FrenkyNet/Cabinet.png?branch=master)](http://travis-ci.org/FrenkyNet/Cabinet)
+
 Cabinet is a framework independant DBAL (DataBase Abstraction Layer).
 The API is designed to be easy and very flexible.
 

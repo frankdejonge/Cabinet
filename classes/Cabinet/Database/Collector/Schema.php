@@ -107,7 +107,7 @@ class Schema
 	public function table($table)
 	{
 		$schema = new Schema\Table($table);
-		$schema->setConnection($connection);
+		$schema->setConnection($this->connection);
 
 		return $schema;
 	}

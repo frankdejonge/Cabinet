@@ -113,7 +113,7 @@ abstract class Sql extends Compiler
 	 */
 	public function compileTableDrop()
 	{
-		return 'DROP DATABASE '
+		return 'DROP TABLE '
 			.($this->query['ifExists'] ? 'IF EXISTS ' : '')
 			.$this->quoteIdentifier($this->query['table']);
 	}

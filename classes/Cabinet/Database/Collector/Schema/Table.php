@@ -13,9 +13,9 @@
 namespace Cabinet\Database\Collector\Schema;
 
 use Cabinet\Database\Db;
-use Cabinet\Database\Query\Base;
+use Cabinet\Database\Collector;
 
-class Table extends Base;
+class Table extends Collector
 {
 	/**
 	 * @var  string  $database  database name
@@ -63,11 +63,11 @@ class Table extends Base;
 	public $indexes = array();
 
 	/**
-	 * Constructor, sets the database name
+	 * Constructor, sets the table name
 	 *
-	 * @param  string  $database  database
+	 * @param  string  $table  table name
 	 */
-	public function __construct($database)
+	public function __construct($table)
 	{
 		$this->table = $table;
 	}
@@ -90,7 +90,7 @@ class Table extends Base;
 		$callback and $callback($field);
 
 		// append the field
-		$this->->fields[$field->getName()] = $field;
+		$this->fields[$field->getName()] = $field;
 
 		return $this;
 	}
@@ -223,7 +223,7 @@ class Table extends Base;
 		$callback and $callback($field);
 		$this->fields[] = $field;
 
-		returns $this;
+		return $this;
 	}
 
 	/**
@@ -237,6 +237,6 @@ class Table extends Base;
 		$callback and $callback($index);
 		$this->indexes[] = $index;
 
-		returns $this;
+		return $this;
 	}
 }

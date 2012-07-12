@@ -18,6 +18,14 @@ $conn = Db::connection(array(
 	'database' => 'louter',
 ));
 
+$query = $conn
+	->schema()
+	->table('my_table')
+	->drop()
+	->compile();
+
+die($query);
+
 echo($conn->select()->from('table')->join('other_table')
 ->on('table.field', '=', 'other_table.field')
 ->orOn('table.field', '=', 'other_table.other_field')

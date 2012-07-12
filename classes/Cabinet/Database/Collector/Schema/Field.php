@@ -49,7 +49,7 @@ class Field extends Collector;
 	/**
 	 * @var  boolean  $nullable  is nullable
 	 */
-	public $nullable = false;
+	public $null = false;
 
 	/**
 	 * @var boolean  $autoIncrement  wether the field auto increments
@@ -124,9 +124,9 @@ class Field extends Collector;
 	 * @param   string  $null  wether the field is nullable
 	 * @return  object  $this
 	 */
-	public function nullable($null = true)
+	public function null($null = true)
 	{
-		$this->nullable = $null;
+		$this->null = $null;
 
 		return $this;
 	}

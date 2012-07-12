@@ -14,7 +14,7 @@ class DeleteBuilderTest extends PHPUnit_Framework_TestCase
 		$this->connection = Db::connection(array(
 			'driver' => 'mysql',
 			'username' => 'root',
-			'password' => isset($_ENV['DB']) ? '' : 'root',
+			'password' => isset($_ENV['DB']) ? '' : '',
 			'database' => 'test_database',
 		));
 	}

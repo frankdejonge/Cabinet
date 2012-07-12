@@ -7,8 +7,6 @@ class MyObject
 
 }
 
-echo 1;
-
 require './vendor/autoload.php';
 
 echo 1;
@@ -19,6 +17,11 @@ $conn = Db::connection(array(
 	'password' => 'root',
 	'database' => 'louter',
 ));
+
+die($conn->select()->from('table')->join('other_table')
+->on('table.field', '=', 'other_table.field')
+->orOn('table.field', '=', 'other_table.other_field')
+->compile());
 
 $conn2 = Db::connection(array(
 	'driver' => 'mysql',

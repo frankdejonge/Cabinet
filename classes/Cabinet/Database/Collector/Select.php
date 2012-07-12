@@ -138,7 +138,7 @@ class Select extends Where
 	}
 	
 	/**
-	 * Sets an "on" clause on the last join.
+	 * Sets an "AND ON" clause on the last join.
 	 *
 	 * @param   string  $column1  column name
 	 * @param   string  $op       logic operator
@@ -149,10 +149,50 @@ class Select extends Where
 	{
 		if( ! $this->_lastJoin)
 		{
-			throw new Exception('You must first join a table before setting an "on" clause.');
+			throw new Exception('You must first join a table before setting an "ON" clause.');
 		}
 
 		call_user_func_array(array($this->_lastJoin, 'on'), func_get_args());
+
+		return $this;
+	}
+
+	/**
+	 * Sets an "AND ON" clause on the last join.
+	 *
+	 * @param   string  $column1  column name
+	 * @param   string  $op       logic operator
+	 * @param   string  $column2  column name
+	 * @return  object  current instance
+	 */
+	public function andOn($column1, $op, $column2 = null)
+	{
+		if( ! $this->_lastJoin)
+		{
+			throw new Exception('You must first join a table before setting an "AND ON" clause.');
+		}
+
+		call_user_func_array(array($this->_lastJoin, 'andOn'), func_get_args());
+
+		return $this;
+	}
+
+	/**
+	 * Sets an "OR ON" clause on the last join.
+	 *
+	 * @param   string  $column1  column name
+	 * @param   string  $op       logic operator
+	 * @param   string  $column2  column name
+	 * @return  object  current instance
+	 */
+	public function orOn($column1, $op, $column2 = null)
+	{
+		if( ! $this->_lastJoin)
+		{
+			throw new Exception('You must first join a table before setting an "OR ON" clause.');
+		}
+
+		call_user_func_array(array($this->_lastJoin, 'orOn'), func_get_args());
 
 		return $this;
 	}

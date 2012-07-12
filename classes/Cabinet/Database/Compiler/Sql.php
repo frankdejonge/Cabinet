@@ -254,7 +254,7 @@ abstract class Sql extends Compiler
 			}
 		}
 
-		return ' '.trim(implode('', $parts));
+		return trim(implode('', $parts));
 	}
 
 	/**
@@ -325,7 +325,7 @@ abstract class Sql extends Compiler
 		$columns = $this->query['columns'];
 		empty($columns) and $columns = array('*');
 		$columns = array_map(array($this, 'quoteIdentifier'), $columns);
-		return 'SELECT '.($this->query['distinct'] === true ? ' DISTINCT ' : '').join(', ', $columns);
+		return 'SELECT'.($this->query['distinct'] === true ? ' DISTINCT ' : ' ').trim(join(', ', $columns));
 	}
 
 	/**
@@ -370,7 +370,7 @@ abstract class Sql extends Compiler
 		if ( ! empty($this->query['where']))
 		{
 			// Add selection conditions
-			return ' WHERE'.$this->compileConditions($this->query['where']);
+			return ' WHERE '.$this->compileConditions($this->query['where']);
 		}
 
 		return '';
@@ -451,11 +451,16 @@ abstract class Sql extends Compiler
 	 */
 	protected function compilePartJoin()
 	{
+		if (empty($this->query['join']))
+		{
+			return '';
+		}
+	
 		$return = array();
 
-		foreach ($this->query['joins'] as $join)
+		foreach ($this->query['join'] as $join)
 		{
-			$join = $join->as_array();
+			$join = $join->asArray();
 
 			if ($join['type'])
 			{
@@ -469,11 +474,11 @@ abstract class Sql extends Compiler
 			// Quote the table name that is being joined
 			$sql .= ' '.$this->quoteIdentifier($join['table']).' ON ';
 
-			$conditions = array();
+			$on_sql = '';
 			foreach ($join['on'] as $condition)
 			{
 				// Split the condition
-				list($c1, $op, $c2) = $condition;
+				list($c1, $op, $c2, $andOr) = $condition;
 
 				if ($op)
 				{
@@ -482,11 +487,11 @@ abstract class Sql extends Compiler
 				}
 
 				// Quote each of the identifiers used for the condition
-				$conditions[] = $this->quoteIdentifier($c1).$op.' '.$this->quoteIdentifier($c2);
+				$on_sql .= (empty($on_sql) ? '' : ' '.$andOr.' ').$this->quoteIdentifier($c1).$op.' '.$this->quoteIdentifier($c2);
 			}
 
 			// Concat the conditions "... AND ..."
-			$sql .= '('.implode(' AND ', $conditions).')';
+			$sql .= '('.$on_sql.')';
 
 			$return[] = $sql;
 		}

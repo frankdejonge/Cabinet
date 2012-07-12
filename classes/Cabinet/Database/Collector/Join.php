@@ -56,7 +56,38 @@ class Join
 			$op = '=';
 		}
 		
-		$this->on[] = array($column, $op, $value);
+		$this->on[] = array($column, $op, $value, 'AND');
+	}
+
+	/**
+	 * Adds an 'on' clause for the join.
+	 *
+	 * @param   string|array  $column  string column name or array for alias
+	 * @param   string        $op      logic operator
+	 * @param   string|arrau  $value   value or array for alias
+	 */
+	public function andOn($column, $op = null, $value = null)
+	{
+		call_user_func_array(array($this, 'on', func_num_args()));
+	}
+
+	
+	/**
+	 * Adds an 'on' clause for the join.
+	 *
+	 * @param   string|array  $column  string column name or array for alias
+	 * @param   string        $op      logic operator
+	 * @param   string|arrau  $value   value or array for alias
+	 */
+	public function orOn($column, $op = null, $value = null)
+	{
+		if (func_num_args() === 2)
+		{
+			$value = $op;
+			$op = '=';
+		}
+		
+		$this->on[] = array($column, $op, $value, 'OR');
 	}
 	
 	/**

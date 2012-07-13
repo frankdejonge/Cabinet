@@ -151,10 +151,11 @@ abstract class Sql extends Compiler
 	public function compileTableCreate()
 	{
 		$sql = 'CREATE TABLE ';
-		$this->query['isNotExists'] and $sql .= 'IF NOT EXISTS ';
+		
+		$this->query['ifNotExists'] and $sql .= 'IF NOT EXISTS ';
 		$sql .= $this->quoteIdentifier($this->query['table']).' ( ';
 		$sql .= $this->compilePartFields('create');
-		$sql .= $this->compilePartPrimaryKey();
+		//$sql .= $this->compilePartPrimaryKey();
 		$sql .= $this->compilePartEngine();
 		$sql .= $this->compilePartCharset($this->query['charset']);
 		return $sql;
@@ -168,9 +169,9 @@ abstract class Sql extends Compiler
 		{
 			$data = $field->getContents();
 
-			if($type !== 'alter')
+			if($type === 'alter')
 			{
-				if ( ! isset($data['newName']) and $data['name'] !== $data['newName'])
+				if ($data['newName'] and $data['name'] !== $data['newName'])
 				{
 					$type = 'change';
 				}
@@ -180,37 +181,38 @@ abstract class Sql extends Compiler
 				}
 			}
 
-			$field_sql = strtoupper($type).' '.$this->quoteIdentifier($this->query['name']).' ';
+			$field_sql = $type !== 'create' ? strtoupper($type).' ' : '';
+			$field_sql .= $this->quoteIdentifier($data['name']).' ';
 
-			if ($field['newName'])
+			if ($data['newName'])
 			{
-				$field_sql .= $this->quoteIdentifier($this->query['newName']).' ';
+				$field_sql .= $this->quoteIdentifier($data['newName']).' ';
 			}
 
-			$field_sql .= strtoupper($field['type']);
+			$field_sql .= strtoupper($data['type']);
 
-			if ($field['constraint'])
+			if ($data['constraint'])
 			{
-				$constraint = is_array($field['constraint']) ? $field['constraint'] : array($field['constraint']);
+				$constraint = is_array($data['constraint']) ? $data['constraint'] : array($data['constraint']);
 				$field_sql .= '('.join(', ', array_map(array($this, 'quote'), $constraint)).')';
 			}
 
-			if ($field['charset'])
+			if ($data['charset'])
 			{
-				$field_sql .= ' '.$this->compilePartCharset($field['charset']);
+				$field_sql .= ' '.$this->compilePartCharset($data['charset']);
 			}
 
-			if ($field['unsigned'])
+			if ($data['unsigned'])
 			{
 				$field_sql .= ' UNSIGNED';
 			}
 
-			if ($field['default'])
+			if ($data['defaultValue'])
 			{
-				$field_sql .= ' DEFAULT'.$this->quote($field['default']);
+				$field_sql .= ' DEFAULT '.$this->quote($data['defaultValue']);
 			}
 
-			if ($field['null'])
+			if ($data['null'])
 			{
 				$field_sql .= ' NULL';
 			}
@@ -218,20 +220,25 @@ abstract class Sql extends Compiler
 			{
 				$field_sql .= ' NOT NULL';
 			}
+			
+			if($data['autoIncrement'])
+			{
+				$field_sql .= ' AUTO_INCREMENT ';
+			}
 
-			if($field['first'])
+			if($data['first'])
 			{
 				$field_sql .= ' FIRST';
 			}
 
-			if ($field['after'])
+			if ($data['after'])
 			{
-				$field_sql .= ' AFTER '.$this->quoteIdentifier($field['after']);
+				$field_sql .= ' AFTER '.$this->quoteIdentifier($data['after']);
 			}
 
-			if ($field['comments'])
+			if ($data['comments'])
 			{
-				$sql .= ' COMMENT '.$this->quote($field['comments']);
+				$field_sql .= ' COMMENT '.$this->quote($data['comments']);
 			}
 
 			$fields[] = $field_sql;

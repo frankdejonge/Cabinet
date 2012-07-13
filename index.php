@@ -9,7 +9,6 @@ class MyObject
 
 require './vendor/autoload.php';
 
-echo 1;
 
 $conn = Db::connection(array(
 	'driver' => 'mysql',
@@ -18,11 +17,39 @@ $conn = Db::connection(array(
 	'database' => 'louter',
 ));
 
-$query = $conn
-	->schema()
+$conn->schema()
 	->table('my_table')
 	->drop()
-	->compile();
+	->ifExists()
+	->execute();
+
+$query = $conn->schema()
+	->table('my_table')
+	->create()
+	->fields(array(
+		'id' => function($field){
+			$field->type('int')
+				->constraint(11)
+				//->autoIncrement()
+				;
+		},
+		'fieldname' => function($field){
+			$field->type('varchar')
+				->constraint(255)
+				->null();
+		},
+		'textarea' => function($field)
+		{
+			$field->type('text')
+				->comments('this is a comment')
+				//->defaultValue('donkeyballs are go!')
+				->charset('utf8_general_ci');
+		}
+	))
+	->execute();
+
+print_r($conn->lastQuery());
+	
 
 die($query);
 

@@ -28,6 +28,10 @@ class Db
 	const TABLE_DROP            = 'TableDrop';
 	const TABLE_ALTER           = 'TableAlter';
 	const TABLE_CREATE          = 'TableCreate';
+	const TABLE_ADD_FIELDS      = 'TableAddFields';
+	const TABLE_DROP_FIELDS     = 'TableDropFields';
+	const TABLE_ALTER_FIELDS    = 'TableAlterFields';
+
 	/**
 	 * Retrieve a database connection.
 	 *

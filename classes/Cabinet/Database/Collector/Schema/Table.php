@@ -48,9 +48,9 @@ class Table extends Collector
 	public $charset;
 
 	/**
-	 * @var  string  $collate  table collate
+	 * @var  string  $engine  field storage engine
 	 */
-	public $collate;
+	public $engine = null;
 
 	/**
 	 * @var  array  $fields  table fields
@@ -75,24 +75,29 @@ class Table extends Collector
 	/**
 	 * Adds a field
 	 *
-	 * @param   mixed    $field     field name or field object
+	 * @param   mixed    $field     field name
 	 * @param   Closure  $callback  field config callback
 	 * @return  object   $this
 	 */
-	public function addField($field, \Closure $callback = null)
+	public function addFields($fields, \Closure $callback = null)
 	{
-		if ( ! $field instanceof Field)
-		{
-			$field = new Field($field);
-		}
+		$this->type = Db::TABLE_ADD_FIELDS;
 
-		// pepare the query
-		$callback and $callback($field);
+		return call_user_func_array(array($this, 'fields'),	func_get_args());
+	}
 
-		// append the field
-		$this->fields[$field->getName()] = $field;
+	/**
+	 * Adds a field
+	 *
+	 * @param   mixed    $field     field name
+	 * @param   Closure  $callback  field config callback
+	 * @return  object   $this
+	 */
+	public function alterFields($fields, \Closure $callback = null)
+	{
+		$this->type = Db::TABLE_ALTER_FIELDS;
 
-		return $this;
+		return call_user_func_array(array($this, 'fields'),	func_get_args());
 	}
 
 	/**
@@ -101,8 +106,10 @@ class Table extends Collector
 	 * @param   mixed   $field  string field name or array of fields
 	 * @return  object  $this
 	 */
-	public function dropField($field)
+	public function dropFields($field)
 	{
+		$this->type = Db::TABLE_DROP_FIELDS;
+
 		is_array($field) or $field = array($field);
 
 		$this->fields = array_merge($this->fields, $field);
@@ -146,14 +153,14 @@ class Table extends Collector
 	}
 
 	/**
-	 * Sets the collate.
+	 * Sets the storage engine.
 	 *
-	 * @param   string  $charset  database collate
+	 * @param   string  $engine  database engine
 	 * @return  object  $this
 	 */
-	public function collate($collate)
+	public function engine($engine)
 	{
-		$this->collate = $collate;
+		$this->engine = $engine;
 
 		return $this;
 	}
@@ -211,31 +218,59 @@ class Table extends Collector
 	/**
 	 * Adds a field to the query
 	 *
-	 * @param   string   $field
+	 * @param   string|array   $fields    string field name or fields array
+	 * @param   closure        $callback  configuration callback
 	 */
-	public function field($field, \Closure $callback = null)
+	public function fields($fields, \Closure $callback = null)
 	{
-		if( ! $field instanceof Field)
-		{
-			$field = new Field($field);
-		}
+		is_array($fields) or $fields = array($fields => $callback);
 
-		$callback and $callback($field);
-		$this->fields[] = $field;
+		foreach ($fields as $f => $c)
+		{
+			$field = new Field($f);
+			$c($field);
+			$this->fields[$field->name] = $field;
+		}
 
 		return $this;
 	}
 
 	/**
-	 * Adds a index to the query
+	 * Adds a indexes to the query
 	 *
-	 * @param   string   $field
+	 * @param   string|array   $indexes   string field name or fields array
+	 * @param   closure        $callback  configuration callback
 	 */
-	public function index(\Closure $callback = null)
+	public function indexes($indexes)
 	{
-		$index = new Index();
-		$callback and $callback($index);
-		$this->indexes[] = $index;
+		is_array($indexes) or $indexes = func_get_args();
+
+		foreach ($indexes as $i)
+		{
+			$index = new Index();
+			$i($index);
+			$this->indexes[] = $index;
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Adds a field to the query
+	 *
+	 * @param   string|array   $fields    string field name or fields array
+	 * @param   closure        $callback  configuration callback
+	 */
+	public function foreignKeys($foreignKeys, \Closure $callback = null)
+	{
+		is_array($foreignKeys) or $foreignKeys = array($foreignKeys => $callback);
+
+		foreach ($foreignKeys as $k => $c)
+		{
+			$foreignKey = new ForeignKey($k);
+			$c($foreignKey);
+			$this->foreignKeys[$foreignKeys->on] = $foreignKey;
+		}
 
 		return $this;
 	}

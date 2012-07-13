@@ -14,7 +14,7 @@ namespace Cabinet\Database\Collector\Schema;
 
 use Cabinet\Database\Collector;
 
-class Field extends Collector;
+class Field extends Collector
 {
 	/**
 	 * @var  string  $name  field name
@@ -22,14 +22,19 @@ class Field extends Collector;
 	public $name = null;
 
 	/**
+	 * @var  string  $newName  field name
+	 */
+	public $newName = null;
+
+	/**
 	 * @var  integer  $name  field constraint
 	 */
 	public $constraint = null;
 
 	/**
-	 * @var  string  $default  default value
+	 * @var  string  $defaultValue  default value
 	 */
-	public $default = null;
+	public $defaultValue = null;
 
 	/**
 	 * @var  string  $comments  field comments
@@ -37,14 +42,9 @@ class Field extends Collector;
 	public $comments = null;
 
 	/**
-	 * @var  string  $engine  field storage engine
-	 */
-	public $engine = null;
-
-	/**
 	 * @var  string  $collation  field collation
 	 */
-	public $collation = null;
+	public $charset = null;
 
 	/**
 	 * @var  boolean  $nullable  is nullable
@@ -57,9 +57,24 @@ class Field extends Collector;
 	public $autoIncrement = false;
 
 	/**
+	 * @var boolean  $first  wether the field should be prepended
+	 */
+	public $first = false;
+
+	/**
+	 * @var string  $after  after which field the field should be appended
+	 */
+	public $after;
+
+	/**
+	 * @var boolean  $unsigned  wether to use UNSIGNED
+	 */
+	public $unsigned = false;
+
+	/**
 	 * Constructor, sets the field name.
 	 *
-	 * @param  string  $name  field name
+	 * @param  string  $name   field name
 	 */
 	public function __construct($name)
 	{
@@ -106,6 +121,32 @@ class Field extends Collector;
 	}
 
 	/**
+	 * Sets the field type.
+	 *
+	 * @param   string  $default  field default value
+	 * @return  object  $this
+	 */
+	public function defaultValue($default)
+	{
+		$this->defaultValue = $default;
+
+		return $this;
+	}
+	
+	/**
+	 * Sets the field charset.
+	 *
+	 * @param   string  $constraint  field charset
+	 * @return  object  $this
+	 */
+	public function charset($charset)
+	{
+		$this->charset = $charset;
+
+		return $this;
+	}
+
+	/**
 	 * Set wether the field auto increments
 	 *
 	 * @param   boolean  $autoIncretement
@@ -113,7 +154,7 @@ class Field extends Collector;
 	 */
 	public function autoIncrement($autoIncrement = true)
 	{
-		$this->autoIncretement = $autoIncrement;
+		$this->autoIncrement = $autoIncrement;
 
 		return $this;
 	}

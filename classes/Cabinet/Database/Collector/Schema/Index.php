@@ -12,7 +12,61 @@
 
 namespace Cabinet\Database\Collector\Schema;
 
-class Index
+class Index extends \Cabinet\Query\Collector
 {
-	
+	/**
+	 * @var  string  $index  type of index
+	 */
+	public $index;
+
+	/**
+	 * @var  
+	 */
+	public $on;
+
+	/**
+	 * Constructor, sets type and fields.
+	 *
+	 * @param   string   $index  index type
+	 * @param   
+	 *
+	 */
+	public function __construct($index = null, $on = null)
+	{
+		$index and $this->index = $index;
+		
+		if ( ! empty($on))
+		{
+			is_array($on) or $on = array($on);
+
+			$this->on = $on;
+		}
+	}
+
+	/**
+	 * Set the index type.
+	 *
+	 * @param   string  $type  index type
+	 * @return  object  $this
+	 */
+	public function type($type)
+	{
+		$this->index = $type;
+
+		return $this;
+	}
+
+	/**
+	 * Set the index fields
+	 *
+	 * @param   string  $field  column name
+	 * ......
+	 * @return  object  $this
+	 */
+	public function on($field)
+	{
+		$this->on = func_get_args();
+
+		return $this;
+	}
 }

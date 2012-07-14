@@ -16,5 +16,12 @@ use Cabinet\Database\Connection\Pdo;
 
 class Pgsql extends Pdo
 {
-	
+	public function listTables()
+	{
+		$query = Db::query('SELECT table_name FROM information_schema.tables ', Db::SELECT);
+		
+		$result = $query->execute($this);
+		
+		return $result;
+	}
 }

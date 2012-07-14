@@ -102,7 +102,7 @@ class Pdo extends Connection
 			return $this;
 		}
 
-		
+				
 	}
 
 	/**

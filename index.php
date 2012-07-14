@@ -17,6 +17,8 @@ $conn = Db::connection(array(
 	'database' => 'louter',
 ));
 
+die(print_r($conn->listTables(), true));
+
 $conn->schema()
 	->table('my_table')
 	->drop()

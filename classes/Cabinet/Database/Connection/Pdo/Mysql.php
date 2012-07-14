@@ -13,8 +13,29 @@
 namespace Cabinet\Database\Connection\Pdo;
 
 use Cabinet\Database\Connection\Pdo;
+use Cabinet\Database\Db;
 
 class Mysql extends Pdo
 {
+	public function listTables()
+	{
+		$query = Db::query('SHOW TABLES ', Db::SELECT);
+
+		$result = $query->execute($this);
+
+		return array_map(function($r){
+			return reset($r);
+		}, $result);
+	}
 	
+	public function listDatabases()
+	{
+		$query = Db::query('SHOW TABLES ', Db::SELECT);
+
+		$result = $query->execute($this);
+
+		return array_map(function($r){
+			return reset($r);
+		}, $result);
+	}
 }

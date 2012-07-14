@@ -140,4 +140,34 @@ abstract class Connection
 		
 		throw new \BadMethodCallException($func.' is not a method of '.get_called_class());
 	}
+
+	/**
+	 * List databases.
+	 *
+	 * @return  array  databases.
+	 */
+	public function listDatabases()
+	{
+		throw new Exception('List database is not supported by this driver.');
+	}
+
+	/**
+	 * List database tables.
+	 *
+	 * @return  array  tables fields.
+	 */
+	public function listTables($database = null)
+	{
+		throw new Exception('List tables is not supported by this driver.');
+	}
+
+	/**
+	 * List table fields.
+	 *
+	 * @return  array  databases.
+	 */
+	public function listFields($table)
+	{
+		throw new Exception('List fields is not supported by this driver.');
+	}
 }

@@ -156,7 +156,7 @@ abstract class Connection
 	 *
 	 * @return  array  tables fields.
 	 */
-	public function listTables($database = null)
+	public function listTables()
 	{
 		throw new Exception('List tables is not supported by this driver.');
 	}

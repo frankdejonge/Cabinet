@@ -12,7 +12,7 @@
 
 namespace Cabinet\Database\Collector\Schema;
 
-class Index extends \Cabinet\Query\Collector
+class Index extends \Cabinet\Database\Collector
 {
 	/**
 	 * @var  string  $index  type of index
@@ -20,27 +20,36 @@ class Index extends \Cabinet\Query\Collector
 	public $index;
 
 	/**
-	 * @var  
+	 * @var  array  $on  index fields
 	 */
 	public $on;
 
 	/**
+	 * @var  string  $name  index name
+	 */
+	public $name;
+
+	/**
 	 * Constructor, sets type and fields.
 	 *
-	 * @param   string   $index  index type
-	 * @param   
-	 *
+	 * @param   string   $name  index name
 	 */
-	public function __construct($index = null, $on = null)
+	public function __construct($name = null)
 	{
-		$index and $this->index = $index;
-		
-		if ( ! empty($on))
-		{
-			is_array($on) or $on = array($on);
+		$name and $this->name = $name;
+	}
 
-			$this->on = $on;
-		}
+	/**
+	 * Set the index name.
+	 *
+	 * @param   string  $name  index name
+	 * @return  object  $this
+	 */
+	public function name($name)
+	{
+		$this->name = $name;
+
+		return $this;
 	}
 
 	/**

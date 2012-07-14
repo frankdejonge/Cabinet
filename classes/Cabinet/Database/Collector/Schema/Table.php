@@ -245,9 +245,10 @@ class Table extends Collector
 	{
 		is_array($indexes) or $indexes = func_get_args();
 
-		foreach ($indexes as $i)
+		foreach ($indexes as $name => $i)
 		{
 			$index = new Index();
+			is_numeric($name) or $index->name($name);
 			$i($index);
 			$this->indexes[] = $index;
 		}

@@ -26,11 +26,15 @@ $conn->schema()
 $query = $conn->schema()
 	->table('my_table')
 	->create()
+	->indexes(array(function($index){
+		$index->on('id')
+			->type('primary key');
+	}))
 	->fields(array(
 		'id' => function($field){
 			$field->type('int')
 				->constraint(11)
-				//->autoIncrement()
+				->autoIncrement()
 				;
 		},
 		'fieldname' => function($field){

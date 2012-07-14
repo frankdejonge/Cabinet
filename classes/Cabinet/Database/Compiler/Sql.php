@@ -151,16 +151,22 @@ abstract class Sql extends Compiler
 	public function compileTableCreate()
 	{
 		$sql = 'CREATE TABLE ';
-		
+
 		$this->query['ifNotExists'] and $sql .= 'IF NOT EXISTS ';
 		$sql .= $this->quoteIdentifier($this->query['table']).' ( ';
 		$sql .= $this->compilePartFields('create');
-		//$sql .= $this->compilePartPrimaryKey();
-		$sql .= $this->compilePartEngine();
+		$sql .= $this->compilePartIndexes();
+		$sql .= ' ) '.$this->compilePartEngine();
 		$sql .= $this->compilePartCharset($this->query['charset']);
 		return $sql;
 	}
 
+	/**
+	 * Compiles field parts
+	 *
+	 * @param   string  $type  field/query type
+	 * @return  string  compiled field sql
+	 */
 	protected function compilePartFields($type)
 	{
 		$fields = array();
@@ -220,7 +226,7 @@ abstract class Sql extends Compiler
 			{
 				$field_sql .= ' NOT NULL';
 			}
-			
+
 			if($data['autoIncrement'])
 			{
 				$field_sql .= ' AUTO_INCREMENT ';
@@ -249,12 +255,28 @@ abstract class Sql extends Compiler
 
 	public function compilePartIndexes()
 	{
+		if (empty($this->query['indexes']))
+		{
+			return '';
+		}
 
+		$parts = array();
+
+		foreach ($this->query['indexes'] as $index)
+		{
+			$data = $index->getContents();
+			$name = empty($data['name']) ? join($data['on']) : $data['name'];
+			$sql = strtoupper($data['index']).' '.$this->quoteIdentifier($name).' (';
+			$sql .= join(', ', array_map(array($this, 'quoteIdentifier'), $data['on'])).')';
+			$parts[] = $sql;
+		}
+
+		return ', '.join(', ',$parts);
 	}
 
 	public function compilePartEngine()
 	{
-		return $this->query['engine'] ? ' ) ENGINE = '.$this->query['engine'] : ' ) ';
+		return $this->query['engine'] ? ' ENGINE = '.$this->query['engine'] : '';
 	}
 
 	/**

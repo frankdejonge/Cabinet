@@ -20,9 +20,9 @@ class ForeignKey
 	public $on;
 
 	/**
-	 * @var  string  $referencing  referencing table and field
+	 * @var  string  $references  table and field references
 	 */
-	public $referencing;
+	public $references;
 
 	/**
 	 * @var  string  $onUpdate  update action
@@ -55,9 +55,9 @@ class ForeignKey
 	 * @param   string  $identifier  foreign key reference
 	 * @return  object  $this;
 	 */
-	public function referencing($identifier)
+	public function references($identifier)
 	{
-		$this->referencing = $identifier;
+		$this->references = func_get_args();
 
 		return $this;
 	}

@@ -28,6 +28,17 @@ class Where extends Collector
 	public $orderBy = array();
 
 	/**
+	 * @var  integer  $limit  query limit
+	 */
+	public $limit;
+
+
+	/**
+	 * @var  array  $offset  query offset
+	 */
+	public $offset;
+
+	/**
 	 * Alias for andWhere.
  	 *
 	 * @param   mixed   $column  array of 'and where' statements or column name

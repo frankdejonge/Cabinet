@@ -26,6 +26,11 @@ class Insert extends Collector
 	 * @var  string  $insertIdField  field used for lastInsertId
 	 */
 	public $insertIdField;
+
+	/**
+	 * @var  array  $values  values for insert
+	 */
+	public $values = array();
 	
 	public function __construct($table, $values = array())
 	{

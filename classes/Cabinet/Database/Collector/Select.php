@@ -35,7 +35,22 @@ class Select extends Where
 	 * @var  object  $lastJoin  last join object
 	 */
 	protected $_lastJoin = null;
-	
+
+	/**
+	 * @var  array  $joins  query joins
+	 */
+	public $joins = array();
+
+	/**
+	 * @var  array  $columns  columns to use
+	 */
+	public $columns = array();
+
+	/**
+	 * @var  boolean  $columns  wether to use distinct
+	 */
+	public $distinct = false;
+
 	/**
 	 * Constructor
 	 *

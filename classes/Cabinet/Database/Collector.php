@@ -20,40 +20,6 @@ class Collector extends Query\Base
 	public $table = array();
 
 	/**
-	 * @var  array  $columns  columns to use
-	 */
-	public $columns = array();
-
-
-	/**
-	 * @var  array  $values  values for insert
-	 */
-	public $values = array();
-
-	/**
-	 * @var  array  $joins  query joins
-	 */
-	public $joins = array();
-
-
-	/**
-	 * @var  integer  $limit  query limit
-	 */
-	public $limit;
-
-
-	/**
-	 * @var  array  $offset  query offset
-	 */
-	public $offset;
-
-
-	/**
-	 * @var  boolean  $columns  wether to use distinct
-	 */
-	public $distinct = false;
-
-	/**
 	 * Get the query contents
 	 *
 	 * @return  array  query contents

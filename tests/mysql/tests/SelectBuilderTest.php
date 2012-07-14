@@ -212,4 +212,42 @@ class SelectBuilderTest extends PHPUnit_Framework_TestCase
 
 		$this->assertEquals($expected, $query);
 	}
+
+	/**
+	 * Test Builder SELECT JOIN ON
+	 *
+	 * @test
+	 */
+	public function testBuildSelectJoinAnd()
+	{
+		$expected = "SELECT * FROM `my_table` JOIN `other_table` ON (`my_table`.`field` = `other_table`.`field` AND `my_table`.`other_field` = `other_table`.`other_field`)";
+
+		$query = $this->connection
+			->select()->from('my_table')
+			->join('other_table')
+			->on('my_table.field', '=', 'other_table.field')
+			->andOn('my_table.other_field', 'other_table.other_field')
+			->compile();
+
+		$this->assertEquals($expected, $query);
+	}
+
+	/**
+	 * Test Builder SELECT JOIN ON
+	 *
+	 * @test
+	 */
+	public function testBuildSelectJoinOr()
+	{
+		$expected = "SELECT * FROM `my_table` JOIN `other_table` ON (`my_table`.`field` = `other_table`.`field` OR `my_table`.`other_field` = `other_table`.`other_field`)";
+
+		$query = $this->connection
+			->select()->from('my_table')
+			->join('other_table')
+			->on('my_table.field', '=', 'other_table.field')
+			->orOn('my_table.other_field', 'other_table.other_field')
+			->compile();
+
+		$this->assertEquals($expected, $query);
+	}
 }

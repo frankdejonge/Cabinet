@@ -68,7 +68,7 @@ class Join
 	 */
 	public function andOn($column, $op = null, $value = null)
 	{
-		call_user_func_array(array($this, 'on', func_num_args()));
+		call_user_func_array(array($this, 'on'), func_get_args());
 	}
 
 	

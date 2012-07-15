@@ -19,7 +19,7 @@ class Mysql extends Pdo
 {
 	public function listTables()
 	{
-		$query = Db::query('SHOW TABLES ', Db::SELECT);
+		$query = Db::query('SHOW TABLES', Db::SELECT);
 
 		$result = $query->execute($this);
 
@@ -30,7 +30,7 @@ class Mysql extends Pdo
 	
 	public function listDatabases()
 	{
-		$query = Db::query('SHOW TABLES ', Db::SELECT);
+		$query = Db::query('SHOW DATABASES', Db::SELECT);
 
 		$result = $query->execute($this);
 
@@ -49,8 +49,6 @@ class Mysql extends Pdo
 		
 		foreach ($result as $r)
 		{
-			print_r($r);
-
 			$type = $r['Type'];
 			
 			if (strpos($type, ' '))
@@ -89,8 +87,6 @@ class Mysql extends Pdo
 			
 			$return[$field['name']] = $field;
 		}
-		print_r($return);
-		die();
 		
 		return $return;
 	}

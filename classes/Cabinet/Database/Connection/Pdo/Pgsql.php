@@ -13,15 +13,43 @@
 namespace Cabinet\Database\Connection\Pdo;
 
 use Cabinet\Database\Connection\Pdo;
+use Cabinet\Database\Db;
 
 class Pgsql extends Pdo
 {
 	public function listTables()
 	{
-		$query = Db::query('SELECT table_name FROM information_schema.tables ', Db::SELECT);
+		$query = Db::query('SELECT table_name FROM information_schema.tables WHERE table_schema = \'public\'', Db::SELECT);
 		
 		$result = $query->execute($this);
 		
-		return $result;
+		return array_map(function($r){
+			return reset($r);
+		}, $result);
+	}
+
+	public function listDatabases()
+	{
+		$query = Db::query('SELECT datname FROM pg_database', Db::SELECT);
+		
+		$result = $query->execute($this);
+		
+		return array_map(function($r){
+			return reset($r);
+		}, $result);
+	}
+	
+	public function listFields($table)
+	{
+		$query = Db::query("SELECT * FROM information_schema.columns WHERE table_name ='$table'", Db::SELECT);
+		
+		$result = $query->execute($this);
+		
+		print_r($result);
+		die();
+		
+		return array_map(function($r){
+			return reset($r);
+		}, $result);
 	}
 }

@@ -17,8 +17,10 @@ $conn = Db::connection(array(
 	'database' => 'louter',
 ));
 
-die(print_r($conn->listFields('my_table'), true));
+print_r($conn->listFields('my_table'), true);
+print_r($conn->listDatabases());
 
+/*
 $conn->schema()
 	->table('my_table')
 	->drop()
@@ -57,8 +59,9 @@ $query = $conn->schema()
 print_r($conn->lastQuery());
 	
 
-die($query);
+//die($query);
 
+/*
 echo($conn->select()->from('table')->join('other_table')
 ->on('table.field', '=', 'other_table.field')
 ->orOn('table.field', '=', 'other_table.other_field')
@@ -129,6 +132,8 @@ $result = $conn->select('*')
 
 var_dump($result);
 
+*/
+
 $pg = Db::connection(array(
 	'driver' => 'pgsql',
 	'username' => 'postgres',
@@ -136,6 +141,11 @@ $pg = Db::connection(array(
 	'database' => 'mydb',
 	'port' => 5432,
 ));
+
+print_r($pg->listTables());
+print_r($pg->listDatabases());
+print_r($pg->listFields('my_table'));
+die();
 
 $pg->delete('my_table')
 	//->where('id', '<', 100)

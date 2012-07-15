@@ -17,7 +17,7 @@ $conn = Db::connection(array(
 	'database' => 'louter',
 ));
 
-die(print_r($conn->listTables(), true));
+die(print_r($conn->listFields('my_table'), true));
 
 $conn->schema()
 	->table('my_table')

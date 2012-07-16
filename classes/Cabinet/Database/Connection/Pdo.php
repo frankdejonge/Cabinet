@@ -330,28 +330,4 @@ class Pdo extends Connection
 		
 		return $this;
 	}
-	
-	public function start_transaction()
-	{
-		$this->query(0, 'SET AUTOCOMMIT=0', false);
-		$this->query(0, 'START TRANSACTION', false);
-		$this->_in_transaction = true;
-		return true;
-	}
-
-	public function commit_transaction()
-	{
-		$this->query(0, 'COMMIT', false);
-		$this->query(0, 'SET AUTOCOMMIT=1', false);
-		$this->_in_transaction = false;
-		return true;
-	}
-
-	public function rollback_transaction()
-	{
-		$this->query(0, 'ROLLBACK', false);
-		$this->query(0, 'SET AUTOCOMMIT=1', false);
-		$this->_in_transaction = false;
-		return true;
-	}
 }

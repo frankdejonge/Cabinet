@@ -47,4 +47,25 @@ class Pgsql extends Pdo
 			return reset($r);
 		}, $result);
 	}
+	
+		public function startTransaction()
+	{
+		$this->connection->query('BEGIN');
+
+		return $this;
+	}
+
+	public function commitTransaction()
+	{
+		$this->connection->query('COMMIT');
+
+		return $this;
+	}
+
+	public function rollbackTransaction()
+	{
+		$this->connection->query('ROLLBACK');
+
+		return $this;
+	}
 }

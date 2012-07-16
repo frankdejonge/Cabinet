@@ -81,7 +81,7 @@ abstract class Connection
 	 * Run transactional queries.
 	 *
 	 * @param   closure  $callback  transaction callback
-	 * @return  mixed    callback result
+	 * @return  object   $this
 	 * @throws
 	 */
 	public function transaction(\Closure $callback)
@@ -92,7 +92,7 @@ abstract class Connection
 		try
 		{
 			// execute the callback
-			$result = $callback($this);
+			$callback($this);
 		}
 		// catch any errors generated in the callback
 		catch (Exception $e)
@@ -104,15 +104,16 @@ abstract class Connection
 
 		// all fine, commit the transaction
 		$this->commitTransaction();
-		return $result;
+
+		return $this;
 	}
 
 	/**
 	 * Transaction functions.
 	 */
-	abstract public function startTransaction($name = null);
-	abstract public function commitTransaction($name = null);
-	abstract public function rollbackTransaction($name = null);
+	abstract public function startTransaction();
+	abstract public function commitTransaction();
+	abstract public function rollbackTransaction();
 
 	/**
 	 * Db class call forwarding. Sets the current connection if setter is available.

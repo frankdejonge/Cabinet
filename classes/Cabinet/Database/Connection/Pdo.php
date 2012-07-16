@@ -37,6 +37,11 @@ class Pdo extends Connection
 	public $charset;
 
 	/**
+	 * @var  integer  $savepoint  auto savepoint level
+	 */
+	public $savepoint = 0;
+
+	/**
 	 * Connection constructor.
 	 * Connects to a database with the supplied config.
 	 */
@@ -278,18 +283,75 @@ class Pdo extends Connection
 		$this->disconnect();
 	}
 	
-	public function startTransaction($name = null)
+	public function startTransaction()
 	{
-		
+		$this->connection->query('SET AUTOCOMMIT=0');
+		$this->connection->query('START TRANSACTION');
+
+		return $this;
 	}
 
-	public function commitTransaction($name = null)
+	public function commitTransaction()
 	{
-		
+		$this->connection->query('COMMIT');
+		$this->connection->query('SET AUTOCOMMIT=1');
+
+		return $this;
 	}
 
-	public function rollbackTransaction($name = null)
+	public function rollbackTransaction()
 	{
+		$this->connection->query('ROLLBACK');
+		$this->connection->query('SET AUTOCOMMIT=1');
+
+		return $this;
+	}
+	
+	public function setSavepoint($savepoint = null)
+	{
+		$savepoint or $savepoint = 'CABINET_SP_LEVEL_'. ++$this->savepoint;
+		$this->connection->query('SAVEPOINT '.$savepoint);
 		
+		return $this;
+	}
+	
+	public function rollbackSavepoint($savepoint = null)
+	{
+		$savepoint or $savepoint = 'CABINET_SP_LEVEL_'. ++$this->savepoint;
+		$this->connection->query('ROLLBACK TO SAVEPOINT '.$savepoint);
+		
+		return $this;
+	}
+	
+	public function releaseSavepoint($savepoint = null)
+	{
+		$savepoint or $savepoint = 'CABINET_SP_LEVEL_'. ++$this->savepoint;
+		$this->connection->query('RELEASE SAVEPOINT '.$savepoint);
+		
+		return $this;
+	}
+	
+	public function start_transaction()
+	{
+		$this->query(0, 'SET AUTOCOMMIT=0', false);
+		$this->query(0, 'START TRANSACTION', false);
+		$this->_in_transaction = true;
+		return true;
+	}
+
+	public function commit_transaction()
+	{
+		$this->query(0, 'COMMIT', false);
+		$this->query(0, 'SET AUTOCOMMIT=1', false);
+		$this->_in_transaction = false;
+		return true;
+	}
+
+	public function rollback_transaction()
+	{
+		$this->query(0, 'ROLLBACK', false);
+		$this->query(0, 'SET AUTOCOMMIT=1', false);
+		$this->_in_transaction = false;
+		return true;
 	}
 }

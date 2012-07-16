@@ -1,6 +1,7 @@
 <?php
 
 use Cabinet\Database\Db;
+use Cabinet\Database\Exception;
 
 class MyObject
 {
@@ -17,9 +18,34 @@ $conn = Db::connection(array(
 	'database' => 'louter',
 ));
 
-print_r($conn->listFields('my_table'), true);
-print_r($conn->listDatabases());
+//print_r($conn->listFields('my_table'));
+//print_r($conn->listDatabases());
 
+$conn->query('TRUNCATE TABLE `my_table`', Db::PLAIN)->execute();
+
+$conn->insert('my_table')
+	->values(array(
+		'fieldname' => 'name',
+		'textarea' => 'some content',
+	))
+	->execute();
+
+print_r($conn->select()->from('my_table')->execute());
+
+$conn->startTransaction();
+
+$conn->insert('my_table')
+	->values(array(
+		'fieldname' => 'name',
+		'textarea' => 'some content',
+	))
+	->execute();
+
+$conn->commitTransaction();
+
+print_r($conn->select()->from('my_table')->execute());
+
+die();
 /*
 $conn->schema()
 	->table('my_table')
@@ -145,8 +171,8 @@ $pg = Db::connection(array(
 print_r($pg->listTables());
 print_r($pg->listDatabases());
 print_r($pg->listFields('my_table'));
-die();
 
+/*
 $pg->delete('my_table')
 	//->where('id', '<', 100)
 	->execute();
@@ -168,12 +194,18 @@ var_dump($pg->select()
 	->execute());
 
 var_dump($pg->lastQuery());
+*/
 
 $sqlite = Db::connection(array(
 	'driver' => 'sqlite',
 	'dsn' => 'sqlite:/Applications/MAMP/db/sqlite/mysqlite',
 ));
 
-var_dump($sqlite->select()->from('my_table')->asObject()->execute());
+var_dump('------------------');
 
-print_r($conn->profilerQueries());
+print_r($sqlite->listTables());
+print_r($sqlite->listFields('my_table'));
+
+//var_dump($sqlite->select()->from('my_table')->asObject()->execute());
+
+//print_r($conn->profilerQueries());

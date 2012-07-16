@@ -19,9 +19,8 @@ class Pgsql extends Pdo
 {
 	public function listTables()
 	{
-		$query = Db::query('SELECT table_name FROM information_schema.tables WHERE table_schema = \'public\'', Db::SELECT);
-		
-		$result = $query->execute($this);
+		$result = Db::query('SELECT table_name FROM information_schema.tables WHERE table_schema = \'public\'', Db::SELECT)
+			->execute($this);
 		
 		return array_map(function($r){
 			return reset($r);
@@ -30,9 +29,8 @@ class Pgsql extends Pdo
 
 	public function listDatabases()
 	{
-		$query = Db::query('SELECT datname FROM pg_database', Db::SELECT);
-		
-		$result = $query->execute($this);
+		$result = Db::query('SELECT datname FROM pg_database', Db::SELECT)
+			->execute($this);
 		
 		return array_map(function($r){
 			return reset($r);
@@ -44,9 +42,6 @@ class Pgsql extends Pdo
 		$query = Db::query("SELECT * FROM information_schema.columns WHERE table_name ='$table'", Db::SELECT);
 		
 		$result = $query->execute($this);
-		
-		print_r($result);
-		die();
 		
 		return array_map(function($r){
 			return reset($r);

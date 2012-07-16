@@ -28,6 +28,11 @@ class Insert extends Collector
 	public $insertIdField;
 
 	/**
+	 * @var  array  $columns  columns to use
+	 */
+	public $columns = array();
+
+	/**
 	 * @var  array  $values  values for insert
 	 */
 	public $values = array();

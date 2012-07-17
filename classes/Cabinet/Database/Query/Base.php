@@ -123,6 +123,18 @@ abstract class Base
 	}
 
 	/**
+	 * Sets the return type to array
+	 *
+	 * @param   $object  falsey (falls/null) for array, true for stdClass or string classname
+	 */
+	public function asAssoc()
+	{
+		$this->asObject = null;
+
+		return $this;
+	}
+
+	/**
 	 * Returns wether to get as array or object
 	 *
 	 * @return  mixed  null for array, true for stdClass or string for classname

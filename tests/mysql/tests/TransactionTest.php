@@ -11,7 +11,6 @@ class TransactionTest extends PHPUnit_Framework_TestCase
 
 	public function setUp()
 	{
-		return;
 		$this->connection or $this->connection = Db::connection(array(
 			'driver' => 'mysql',
 			'username' => 'root',
@@ -19,42 +18,126 @@ class TransactionTest extends PHPUnit_Framework_TestCase
 			'database' => 'test_database',
 		));
 		
-		$this->connection
-			->schema()
+		$this->connection->schema()
 			->table('test_table')
 			->create()
+			->ifNotExists()
+			->indexes(array(function($index){
+				$index->on('id')
+					->type('primary key');
+			}))
 			->fields(array(
 				'id' => function($field){
 					$field->type('int')
 						->constraint(11)
-						->autoIncrement();
+						->autoIncrement()
+						;
 				},
 				'name' => function($field){
 					$field->type('varchar')
-						->constraint('255');
+						->constraint(255)
+						->null();
 				},
-			))
-			->indexes(array(
-				function($index){
-					$index->on('id')
-						->index('PRIMARY KEY');	
-				}
 			))
 			->execute();
 	}
 	
 	public function tearDown()
 	{
-		return;
-		$this->connection
-			->schema()
+		$this->connection->schema()
 			->table('test_table')
+			->ifExists()
 			->drop()
 			->execute();
 	}
-	
-	public function testTransaction()
+
+	/**
+	 * Tests transactions.
+	 *
+	 * @test
+	 */
+	public function testTransactionCommit()
 	{
-		$this->assertEquals(true, true);
+		$expected = array(
+			array(
+				'id' => 1,
+				'name' => 'Bill',
+			),
+		);
+		
+		$this->connection->startTransaction();
+		$this->connection->insert('test_table')
+			->values(array(
+				'name' => 'Bill',
+			))
+			->execute();
+		$this->connection->commitTransaction();
+		
+		$result = $this->connection->select()
+			->from('test_table')
+			->asAssoc()
+			->execute();
+		
+		$this->assertEquals($expected, $result);
+	}
+
+	/**
+	 * Tests transactions.
+	 *
+	 * @test
+	 */
+	public function testTransactionRollback()
+	{
+		$expected = array();
+		
+		$this->connection->startTransaction();
+		$this->connection->insert('test_table')
+			->values(array(
+				'name' => 'Bill',
+			))
+			->execute();
+		$this->connection->rollbackTransaction();
+		
+		$result = $this->connection->select()
+			->from('test_table')
+			->asAssoc()
+			->execute();
+		
+		$this->assertEquals($expected, $result);
+	}
+
+	/**
+	 * Tests transactions.
+	 *
+	 * @test
+	 */
+	public function testTransactionSavepoint()
+	{
+		$expected = array(array(
+			'id' => 1,
+			'name' => 'Bill',
+		));
+		
+		$this->connection->startTransaction();
+		$this->connection->insert('test_table')
+			->values(array(
+				'name' => 'Bill',
+			))
+			->execute();
+		$this->connection->setSavepoint('my_savepoint');
+		$this->connection->insert('test_table')
+			->values(array(
+				'name' => 'Jim',
+			))
+			->execute();
+		$this->connection->rollbackSavepoint('my_savepoint');
+		$this->connection->commitTransaction();
+		
+		$result = $this->connection->select()
+			->from('test_table')
+			->asAssoc()
+			->execute();
+		
+		$this->assertEquals($expected, $result);
 	}
 }

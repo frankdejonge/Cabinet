@@ -17,7 +17,7 @@ class Pdo extends Connection
 	protected $connection;
 
 	/**
-	 * @var  string  $driver  
+	 * @var  string  $driver
 	 */
 	protected $driver;
 
@@ -58,16 +58,16 @@ class Pdo extends Connection
 			'insertIdField' => null,
 			'charset' => null,
 		);
-		
+
 		// exception mode
 		$config['attrs'][\PDO::ATTR_ERRMODE] = \PDO::ERRMODE_EXCEPTION;
-		
+
 		// store the driver
 		$this->driver = strtolower($config['driver']);
 
 		// get connected
 		$this->connect($config);
-		
+
 		// set the charset
 		$this->setCharset($config['charset']);
 	}
@@ -99,7 +99,7 @@ class Pdo extends Connection
 			throw new Exception($e->getMessage(), $e->getCode(), $e);
 		}
 	}
-	
+
 	public function setCharset($charset)
 	{
 		if (empty($charset))
@@ -107,7 +107,7 @@ class Pdo extends Connection
 			return $this;
 		}
 
-				
+
 	}
 
 	/**
@@ -156,7 +156,7 @@ class Pdo extends Connection
 		{
 			return $config['dsn'];
 		}
-		
+
 		// build the dsn
 		return $config['driver'].':host='.
 			$config['host'].';dbname='.
@@ -197,12 +197,12 @@ class Pdo extends Connection
 	{
 		if( ! $query instanceof Query\Base)
 		{
-			$query = new Query($query, $type);	
+			$query = new Query($query, $type);
 		}
 
 		$type = $type ?: $query->getType();
 		$sql = $this->compile($query, $type, $bindings);
-		
+
 		$profilerData = array(
 			'query' => $sql,
 			'start' => microtime(true),
@@ -218,11 +218,11 @@ class Pdo extends Connection
 		{
 			throw new Exception($e->getMessage().' from QUERY: '.$sql, $e->getCode());
 		}
-		
+
 		if($type === Db::SELECT)
 		{
 			$asObject = $query->getAsObject();
-			
+
 			if ( ! $asObject)
 			{
 				$result = $result->fetchAll(\PDO::FETCH_ASSOC);
@@ -247,11 +247,11 @@ class Pdo extends Connection
 		{
 			$result = $result->errorCode() === '00000' ? $result->rowCount() : -1;
 		}
-		
+
 		$profilerData['end'] = microtime(true);
 		$profilerData['duration'] = $profilerData['end'] - $profilerData['start'];
 		$this->queries[] = $profilerData;
-		
+
 		return $result;
 	}
 
@@ -266,7 +266,7 @@ class Pdo extends Connection
 	{
 		if( ! $query instanceof Query\Base)
 		{
-			$query = new Query($query, $type);	
+			$query = new Query($query, $type);
 		}
 
 		// Reretrieve the query type
@@ -282,28 +282,33 @@ class Pdo extends Connection
 	{
 		$this->disconnect();
 	}
-	
+
 	public function setSavepoint($savepoint = null)
 	{
 		$savepoint or $savepoint = 'CABINET_SP_LEVEL_'. ++$this->savepoint;
 		$this->connection->query('SAVEPOINT '.$savepoint);
-		
+
 		return $this;
 	}
-	
+
 	public function rollbackSavepoint($savepoint = null)
 	{
-		$savepoint or $savepoint = 'CABINET_SP_LEVEL_'. ++$this->savepoint;
+		if ( ! $savepoint)
+		{
+			$savepoint = 'CABINET_SP_LEVEL_'. $this->savepoint;
+			$this->savepoint--;
+		}
+
 		$this->connection->query('ROLLBACK TO SAVEPOINT '.$savepoint);
-		
+
 		return $this;
 	}
-	
+
 	public function releaseSavepoint($savepoint = null)
 	{
-		$savepoint or $savepoint = 'CABINET_SP_LEVEL_'. ++$this->savepoint;
+		$savepoint or $savepoint = 'CABINET_SP_LEVEL_'. $this->savepoint and $this->savepoint--;
 		$this->connection->query('RELEASE SAVEPOINT '.$savepoint);
-		
+
 		return $this;
 	}
 }

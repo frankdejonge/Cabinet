@@ -18,6 +18,36 @@ $conn = Db::connection(array(
 	'database' => 'louter',
 ));
 
+$query = $conn->schema()
+	->table('my_table')
+	->create()
+	->ifNotExists()
+	->indexes(array(function($index){
+		$index->on('id')
+			->type('primary key');
+	}))
+	->fields(array(
+		'id' => function($field){
+			$field->type('int')
+				->constraint(11)
+				->autoIncrement()
+				;
+		},
+		'fieldname' => function($field){
+			$field->type('varchar')
+				->constraint(255)
+				->null();
+		},
+		'textarea' => function($field)
+		{
+			$field->type('text')
+				->comments('this is a comment')
+				//->defaultValue('donkeyballs are go!')
+				->charset('utf8_general_ci');
+		}
+	))
+	->execute();
+
 //print_r($conn->listFields('my_table'));
 //print_r($conn->listDatabases());
 
@@ -45,14 +75,15 @@ $conn->commitTransaction();
 
 print_r($conn->select()->from('my_table')->execute());
 
-die();
-/*
+
 $conn->schema()
 	->table('my_table')
 	->drop()
 	->ifExists()
 	->execute();
+die();
 
+/*
 $query = $conn->schema()
 	->table('my_table')
 	->create()

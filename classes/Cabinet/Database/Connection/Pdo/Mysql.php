@@ -27,7 +27,7 @@ class Mysql extends Pdo
 			return reset($r);
 		}, $result);
 	}
-	
+
 	public function listDatabases()
 	{
 		$query = Db::query('SHOW DATABASES', Db::SELECT);
@@ -38,24 +38,24 @@ class Mysql extends Pdo
 			return reset($r);
 		}, $result);
 	}
-	
+
 	public function listFields($table)
 	{
 		$query = Db::query('SHOW FULL COLUMNS FROM '.$table, Db::SELECT);
-		
+
 		$result  = $query->execute($this);
-		
+
 		$return = array();
-		
+
 		foreach ($result as $r)
 		{
 			$type = $r['Type'];
-			
+
 			if (strpos($type, ' '))
 			{
 				list($type, $extra) = explode(' ', $type, 2);
 			}
-			
+
 			if ($pos = strpos($type, '('))
 			{
 				$field['type'] = substr($type, 0, $pos);
@@ -65,9 +65,9 @@ class Mysql extends Pdo
 			{
 				$field['constraint'] = null;
 			}
-			
+
 			$field['extra'] = isset($extra) ? $extra : null;
-			
+
 			$field['name'] = $r['Field'];
 			$field['default'] = $r['Default'];
 			$field['null'] = $r['Null'] !== 'No';
@@ -75,7 +75,7 @@ class Mysql extends Pdo
 			$field['key'] = $r['Key'];
 			$field['comments'] = $r['Comment'];
 			$field['collation'] = $r['Collation'];
-			
+
 			if($r['Extra'] === 'auto_increment')
 			{
 				$field['auto_increment'] = true;
@@ -84,10 +84,34 @@ class Mysql extends Pdo
 			{
 				$field['auto_increment'] = false;
 			}
-			
+
 			$return[$field['name']] = $field;
 		}
-		
+
 		return $return;
+	}
+
+	public function startTransaction()
+	{
+		$this->connection->query('SET AUTOCOMMIT=0');
+		$this->connection->query('START TRANSACTION');
+
+		return $this;
+	}
+
+	public function commitTransaction()
+	{
+		$this->connection->query('COMMIT');
+		$this->connection->query('SET AUTOCOMMIT=1');
+
+		return $this;
+	}
+
+	public function rollbackTransaction()
+	{
+		$this->connection->query('ROLLBACK');
+		$this->connection->query('SET AUTOCOMMIT=1');
+
+		return $this;
 	}
 }

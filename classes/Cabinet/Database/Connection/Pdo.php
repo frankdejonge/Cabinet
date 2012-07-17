@@ -283,30 +283,6 @@ class Pdo extends Connection
 		$this->disconnect();
 	}
 	
-	public function startTransaction()
-	{
-		$this->connection->query('SET AUTOCOMMIT=0');
-		$this->connection->query('START TRANSACTION');
-
-		return $this;
-	}
-
-	public function commitTransaction()
-	{
-		$this->connection->query('COMMIT');
-		$this->connection->query('SET AUTOCOMMIT=1');
-
-		return $this;
-	}
-
-	public function rollbackTransaction()
-	{
-		$this->connection->query('ROLLBACK');
-		$this->connection->query('SET AUTOCOMMIT=1');
-
-		return $this;
-	}
-	
 	public function setSavepoint($savepoint = null)
 	{
 		$savepoint or $savepoint = 'CABINET_SP_LEVEL_'. ++$this->savepoint;

@@ -111,9 +111,20 @@ abstract class Connection
 	/**
 	 * Transaction functions.
 	 */
-	abstract public function startTransaction();
-	abstract public function commitTransaction();
-	abstract public function rollbackTransaction();
+	public function startTransaction()
+	{
+		throw new Exception('Transaction are not supported by this driver');
+	}
+
+	public function commitTransaction()
+	{
+		throw new Exception('Transaction are not supported by this driver');
+	}
+
+	public function rollbackTransaction()
+	{
+		throw new Exception('Transaction are not supported by this driver');
+	}
 
 	/**
 	 * Db class call forwarding. Sets the current connection if setter is available.
@@ -130,7 +141,7 @@ abstract class Connection
 		if (is_callable($call))
 		{
 			$return = call_user_func_array($call, $args);
-			
+
 			if (is_object($return) and method_exists($return, 'setConnection'))
 			{
 				$return->setConnection($this);
@@ -138,7 +149,7 @@ abstract class Connection
 
 			return $return;
 		}
-		
+
 		throw new \BadMethodCallException($func.' is not a method of '.get_called_class());
 	}
 

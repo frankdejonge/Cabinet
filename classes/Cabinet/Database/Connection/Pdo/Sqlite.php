@@ -27,16 +27,16 @@ class Sqlite extends Pdo
 			. "UNION ALL SELECT name FROM sqlite_temp_master "
 			. "WHERE type = 'table' ORDER BY name", Db::SELECT)->execute());
 	}
-	
+
 	public function listFields($table)
 	{
 		return array_map(function($i){
 			$field = array(
 				'name' => $i['name'],
 			);
-			
+
 			$type = $i['type'];
-			
+
 			if ($pos = strpos($type, '('))
 			{
 				$field['type'] = substr($type, 0, $pos);
@@ -46,12 +46,33 @@ class Sqlite extends Pdo
 			{
 				$field['constraint'] = null;
 			}
-			
+
 			$field['null'] = ! (bool) $i['notnull'];
 			$field['default'] = $i['dflt_value'];
 			$field['primary'] = (bool) $i['pk'];
-			
+
 			return $field;
 		}, $this->query('Pragma table_info(`'.$table.'`)', Db::SELECT)->execute());
+	}
+
+	public function startTransaction()
+	{
+		$this->connection->query('BEGIN');
+
+		return $this;
+	}
+
+	public function commitTransaction()
+	{
+		$this->connection->query('COMMIT');
+
+		return $this;
+	}
+
+	public function rollbackTransaction()
+	{
+		$this->connection->query('ROLLBACK');
+
+		return $this;
 	}
 }

@@ -113,10 +113,14 @@ class TransactionTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testTransactionSavepoint()
 	{
-		$expected = array(array(
-			'id' => 1,
-			'name' => 'Bill',
-		));
+		$expected = array(
+			array(
+				'id' => 1,
+				'name' => 'Bill',
+			)
+		);
+
+		$this->connection->query('TRUNCATE TABLE test_table', Db::PLAIN)->execute();
 		
 		$this->connection->startTransaction();
 		$this->connection->insert('test_table')

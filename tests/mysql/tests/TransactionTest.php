@@ -53,7 +53,7 @@ class TransactionTest extends PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Tests transactions.
+	 * Tests transactions commit.
 	 *
 	 * @test
 	 */
@@ -83,7 +83,7 @@ class TransactionTest extends PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Tests transactions.
+	 * Tests transaction rollbacks.
 	 *
 	 * @test
 	 */

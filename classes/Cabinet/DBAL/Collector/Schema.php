@@ -41,7 +41,7 @@ class Schema
 	 */
 	public function database($database)
 	{
-		$schema = new Schema\DBAL($database);
+		$schema = new Schema\Database($database);
 		$schema->setConnection($this->connection);
 
 		return $schema;

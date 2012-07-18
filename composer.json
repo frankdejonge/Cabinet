@@ -1,6 +1,6 @@
 {
-    "name": "Cabinet/Database",
-    "description": "Database Abstraction Layer for PDO and MongoDB",
+    "name": "Cabinet/DBAL",
+    "description": "Database Abstraction Layer for PDO",
     "authors": [
         {
             "name": "Frank de Jonge",

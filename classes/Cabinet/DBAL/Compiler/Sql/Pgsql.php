@@ -27,7 +27,7 @@ class Pgsql extends Sql
 	 * @param   object  $value  Fn object
 	 * @return  string  compiles concat
 	 */
-	protected function compilePartConcat($value)
+	protected function compileFnConcat($value)
 	{
 		$values = $value->getParams();
 		$quoteFn = ($value->quoteAs() === 'identifier') ? 'quoteIdentifier' : 'quote';

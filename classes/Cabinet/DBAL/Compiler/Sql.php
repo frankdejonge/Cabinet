@@ -391,9 +391,9 @@ abstract class Sql extends Compiler
 	{
 		$fn = ucfirst($value->getFn());
 
-		if(method_exists($this, 'compilePart'.$fn))
+		if(method_exists($this, 'compileFn'.$fn))
 		{
-			return $this->{'compilePart'.$fn}($valye);
+			return $this->{'compilFn'.$fn}($valye);
 		}
 
 		$quoteFn = ($value->quoteAs() === 'identifier') ? 'quoteIdentifier' : 'quote';

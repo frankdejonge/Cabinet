@@ -306,8 +306,13 @@ class Pdo extends Connection
 
 	public function releaseSavepoint($savepoint = null)
 	{
-		$savepoint or $savepoint = 'CABINET_SP_LEVEL_'. $this->savepoint and $this->savepoint--;
-		$this->connection->query('RELEASE SAVEPOINT '.$savepoint);
+		if ( ! $savepoint)
+		{
+			$savepoint = 'CABINET_SP_LEVEL_'. $this->savepoint;
+			$this->savepoint--;
+		}
+
+	$this->connection->query('RELEASE SAVEPOINT '.$savepoint);
 
 		return $this;
 	}

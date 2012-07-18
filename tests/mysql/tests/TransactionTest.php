@@ -22,6 +22,7 @@ class TransactionTest extends PHPUnit_Framework_TestCase
 			->table('test_table')
 			->create()
 			->ifNotExists()
+			->engine('InnoDB')
 			->indexes(array(function($index){
 				$index->on('id')
 					->type('primary key');

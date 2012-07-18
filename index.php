@@ -81,7 +81,6 @@ $conn->schema()
 	->drop()
 	->ifExists()
 	->execute();
-die();
 
 /*
 $query = $conn->schema()
@@ -198,6 +197,10 @@ $pg = Db::connection(array(
 	'database' => 'mydb',
 	'port' => 5432,
 ));
+
+
+$pg->startTransaction();
+$pg->commitTransaction();
 
 print_r($pg->listTables());
 print_r($pg->listDatabases());

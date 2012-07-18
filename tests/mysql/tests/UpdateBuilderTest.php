@@ -1,6 +1,6 @@
 <?php
 
-use Cabinet\Database\Db;
+use Cabinet\DBAL\Db;
 
 class UpdateBuilderTest extends PHPUnit_Framework_TestCase
 {

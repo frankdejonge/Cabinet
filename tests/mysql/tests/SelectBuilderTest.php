@@ -1,6 +1,6 @@
 <?php
 
-use Cabinet\Database\Db;
+use Cabinet\DBAL\Db;
 
 class SelectBuilderTest extends PHPUnit_Framework_TestCase
 {
@@ -176,7 +176,7 @@ class SelectBuilderTest extends PHPUnit_Framework_TestCase
 
 		$this->assertEquals($expected, $query);
 	}
-	
+
 	/**
 	 * Test Builder SELECT WHERE IN
 	 *
@@ -194,7 +194,7 @@ class SelectBuilderTest extends PHPUnit_Framework_TestCase
 
 		$this->assertEquals($expected, $query);
 	}
-	
+
 	/**
 	 * Test Builder SELECT JOIN
 	 *

@@ -1,6 +1,6 @@
 <?php
 
-use Cabinet\Database\Db;
+use Cabinet\DBAL\Db;
 
 class TransactionTest extends PHPUnit_Framework_TestCase
 {
@@ -17,7 +17,7 @@ class TransactionTest extends PHPUnit_Framework_TestCase
 			'password' => isset($_SERVER['DB']) ? '' : 'root',
 			'database' => 'test_database',
 		));
-		
+
 		$this->connection->schema()
 			->table('test_table')
 			->create()
@@ -42,7 +42,7 @@ class TransactionTest extends PHPUnit_Framework_TestCase
 			))
 			->execute();
 	}
-	
+
 	public function tearDown()
 	{
 		$this->connection->schema()
@@ -65,7 +65,7 @@ class TransactionTest extends PHPUnit_Framework_TestCase
 				'name' => 'Bill',
 			),
 		);
-		
+
 		$this->connection->startTransaction();
 		$this->connection->insert('test_table')
 			->values(array(
@@ -73,12 +73,12 @@ class TransactionTest extends PHPUnit_Framework_TestCase
 			))
 			->execute();
 		$this->connection->commitTransaction();
-		
+
 		$result = $this->connection->select()
 			->from('test_table')
 			->asAssoc()
 			->execute();
-		
+
 		$this->assertEquals($expected, $result);
 	}
 
@@ -90,7 +90,7 @@ class TransactionTest extends PHPUnit_Framework_TestCase
 	public function testTransactionRollback()
 	{
 		$expected = array();
-		
+
 		$this->connection->startTransaction();
 		$this->connection->insert('test_table')
 			->values(array(
@@ -98,12 +98,12 @@ class TransactionTest extends PHPUnit_Framework_TestCase
 			))
 			->execute();
 		$this->connection->rollbackTransaction();
-		
+
 		$result = $this->connection->select()
 			->from('test_table')
 			->asAssoc()
 			->execute();
-		
+
 		$this->assertEquals($expected, $result);
 	}
 
@@ -122,7 +122,7 @@ class TransactionTest extends PHPUnit_Framework_TestCase
 		);
 
 		$this->connection->query('TRUNCATE TABLE test_table', Db::PLAIN)->execute();
-		
+
 		$this->connection->startTransaction();
 		$this->connection->insert('test_table')
 			->values(array(
@@ -137,12 +137,12 @@ class TransactionTest extends PHPUnit_Framework_TestCase
 			->execute();
 		$this->connection->rollbackSavepoint('my_savepoint');
 		$this->connection->commitTransaction();
-		
+
 		$result = $this->connection->select()
 			->from('test_table')
 			->asAssoc()
 			->execute();
-		
+
 		$this->assertEquals($expected, $result);
 	}
 }

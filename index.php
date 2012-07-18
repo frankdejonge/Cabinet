@@ -1,7 +1,7 @@
 <?php
 
-use Cabinet\Database\Db;
-use Cabinet\Database\Exception;
+use Cabinet\DBAL\Db;
+use Cabinet\DBAL\Exception;
 
 class MyObject
 {
@@ -113,7 +113,7 @@ $query = $conn->schema()
 	->execute();
 
 print_r($conn->lastQuery());
-	
+
 
 //die($query);
 

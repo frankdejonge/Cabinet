@@ -1,6 +1,6 @@
 <?php
 
-use Cabinet\Database\Db;
+use Cabinet\DBAL\Db;
 
 class DeleteBuilderTest extends PHPUnit_Framework_TestCase
 {
@@ -176,7 +176,7 @@ class DeleteBuilderTest extends PHPUnit_Framework_TestCase
 
 		$this->assertEquals($expected, $query);
 	}
-	
+
 	/**
 	 * Test Builder DELETE WHERE IN
 	 *

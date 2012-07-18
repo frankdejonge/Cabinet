@@ -8,6 +8,6 @@
         }
     ],
     "autoload": {
-		"psr-0": { "Cabinet\\Database": "classes/" }
+		"psr-0": { "Cabinet\\DBAL": "classes/" }
 	}
 }

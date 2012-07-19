@@ -187,67 +187,67 @@ abstract class Sql extends Compiler
 				}
 			}
 
-			$field_sql = $type !== 'create' ? strtoupper($type).' ' : '';
-			$field_sql .= $this->quoteIdentifier($data['name']).' ';
+			$fsql = $type !== 'create' ? strtoupper($type).' ' : '';
+			$fsql .= $this->quoteIdentifier($data['name']).' ';
 
 			if ($data['newName'])
 			{
-				$field_sql .= $this->quoteIdentifier($data['newName']).' ';
+				$fsql .= $this->quoteIdentifier($data['newName']).' ';
 			}
 
-			$field_sql .= strtoupper($data['type']);
+			$fsql .= strtoupper($data['type']);
 
 			if ($data['constraint'])
 			{
 				$constraint = is_array($data['constraint']) ? $data['constraint'] : array($data['constraint']);
-				$field_sql .= '('.join(', ', array_map(array($this, 'quote'), $constraint)).')';
+				$fsql .= '('.join(', ', array_map(array($this, 'quote'), $constraint)).')';
 			}
 
 			if ($data['charset'])
 			{
-				$field_sql .= ' '.$this->compilePartCharset($data['charset']);
+				$fsql .= ' '.$this->compilePartCharset($data['charset']);
 			}
 
 			if ($data['unsigned'])
 			{
-				$field_sql .= ' UNSIGNED';
+				$fsql .= ' UNSIGNED';
 			}
 
 			if ($data['defaultValue'])
 			{
-				$field_sql .= ' DEFAULT '.$this->quote($data['defaultValue']);
+				$fsql .= ' DEFAULT '.$this->quote($data['defaultValue']);
 			}
 
 			if ($data['null'])
 			{
-				$field_sql .= ' NULL';
+				$fsql .= ' NULL';
 			}
 			else
 			{
-				$field_sql .= ' NOT NULL';
+				$fsql .= ' NOT NULL';
 			}
 
 			if($data['autoIncrement'])
 			{
-				$field_sql .= ' AUTO_INCREMENT ';
+				$fsql .= ' AUTO_INCREMENT ';
 			}
 
 			if($data['first'])
 			{
-				$field_sql .= ' FIRST';
+				$fsql .= ' FIRST';
 			}
 
 			if ($data['after'])
 			{
-				$field_sql .= ' AFTER '.$this->quoteIdentifier($data['after']);
+				$fsql .= ' AFTER '.$this->quoteIdentifier($data['after']);
 			}
 
 			if ($data['comments'])
 			{
-				$field_sql .= ' COMMENT '.$this->quote($data['comments']);
+				$fsql .= ' COMMENT '.$this->quote($data['comments']);
 			}
 
-			$fields[] = $field_sql;
+			$fields[] = $fsql;
 		}
 
 		return join(', ', $fields);

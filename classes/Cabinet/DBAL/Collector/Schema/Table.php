@@ -227,7 +227,7 @@ class Table extends Collector
 
 		foreach ($fields as $f => $c)
 		{
-			$field = new Field($f);
+			$field = new Field($f, $this);
 			$c($field);
 			$this->fields[$field->name] = $field;
 		}

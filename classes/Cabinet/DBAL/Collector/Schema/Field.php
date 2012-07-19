@@ -52,33 +52,39 @@ class Field extends Collector
 	public $null = false;
 
 	/**
-	 * @var boolean  $autoIncrement  wether the field auto increments
+	 * @var  boolean  $autoIncrement  wether the field auto increments
 	 */
 	public $autoIncrement = false;
 
 	/**
-	 * @var boolean  $first  wether the field should be prepended
+	 * @var  boolean  $first  wether the field should be prepended
 	 */
 	public $first = false;
 
 	/**
-	 * @var string  $after  after which field the field should be appended
+	 * @var  string  $after  after which field the field should be appended
 	 */
 	public $after;
 
 	/**
-	 * @var boolean  $unsigned  wether to use UNSIGNED
+	 * @var  boolean  $unsigned  wether to use UNSIGNED
 	 */
 	public $unsigned = false;
+
+	/**
+	 * @var  object  $table  table reference
+	 */
+	protected $_table;
 
 	/**
 	 * Constructor, sets the field name.
 	 *
 	 * @param  string  $name   field name
 	 */
-	public function __construct($name)
+	public function __construct($name, Table $table)
 	{
 		$this->name = $name;
+		$this->_table = $table;
 	}
 
 	/**
@@ -100,9 +106,10 @@ class Field extends Collector
 	 * @param   string  $type  field type
 	 * @return  object  $this
 	 */
-	public function type($type)
+	public function type($type, $constraint = null)
 	{
 		$this->type = $type;
+		$constraint !== null and $this->constraint = $constraint;
 
 		return $this;
 	}
@@ -181,6 +188,23 @@ class Field extends Collector
 	public function comments($comments)
 	{
 		$this->comments = $comments;
+
+		return $this;
+	}
+
+	/**
+	 * Sets a unique indec on the field.
+	 *
+	 * @return  object  $this
+	 */
+	public function unique()
+	{
+		$name = $this->name;		
+
+		$this->_table->index(function($index) use($name){
+			$index->type('unique')
+				->on($name);
+		});
 
 		return $this;
 	}

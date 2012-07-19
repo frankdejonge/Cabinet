@@ -42,6 +42,7 @@ abstract class Compiler
 	 */
 	public function compile($query, $type = null, $bindings = array())
 	{
+		// ensure an instance of Quer\Base
 		if ( ! ($query instanceof Query\Base))
 		{
 			$query = new Query($query, $type, $bindings);
@@ -63,12 +64,18 @@ abstract class Compiler
 			return $contents;
 		}
 
-		$old_query = $this->query;
+		/**
+		 * Since we can compile subqueries, store the old query
+		 * and set the new one.
+		 */
+		$oldQuery = $this->query;
 		$this->query = $contents;
 
+		// Compile the query according to it's type.
 		$result = $this->{'compile'.$type}();
 
-		$this->query = $old_query;
+		// Set back the old query
+		$this->query = $oldQuery;
 
 		return is_string($result) ? trim($result) : $result;
 	}
@@ -77,7 +84,7 @@ abstract class Compiler
 	 * Processes all the query bindings recursively.
 	 *
 	 * @param  mixes  $contents  query contents
-	 * @
+	 * @bindings  array  $bindings  an array of query bindings.
 	 */
 	protected function processBindings($contents, $bindings, $first = true)
 	{
@@ -98,7 +105,7 @@ abstract class Compiler
 			foreach($bindings as $from => $to)
 			{
 				substr($from, 0, 1) !== ':' and $from = ':'.$from;
-				$contents = preg_replace('/'.$from.'/', $to, $contents);
+				$contents = preg_replace('/'.$from.'/', $this->quote($to), $contents);
 			}
 		}
 

@@ -265,15 +265,29 @@ abstract class Sql extends Compiler
 		foreach ($this->query['indexes'] as $index)
 		{
 			$data = $index->getContents();
-			$name = empty($data['name']) ? join($data['on']) : $data['name'];
-			$sql = strtoupper($data['index']).' '.$this->quoteIdentifier($name).' (';
-			$sql .= join(', ', array_map(array($this, 'quoteIdentifier'), $data['on'])).')';
-			$parts[] = $sql;
+
+			// format the compiler function
+			$compiler = 'compileIndex'.str_replace(' ', '', ucwords(strtolower($data['index'])));
+
+			if(method_exists($this, $compiler))
+			{
+				$parts[] = $this->{$compiler}($index);
+			}
+			else
+			{
+				$name = empty($data['name']) ? join($data['on']) : $data['name'];
+				$sql = strtoupper($data['index']).' '.$this->quoteIdentifier($name).' (';
+				$sql .= join(', ', array_map(array($this, 'quoteIdentifier'), $data['on'])).')';
+				$parts[] = $sql;
+			}
 		}
 
 		return ', '.join(', ',$parts);
 	}
 
+	/**
+	 * 
+	 */
 	public function compilePartEngine()
 	{
 		return $this->query['engine'] ? ' ENGINE = '.$this->query['engine'] : '';

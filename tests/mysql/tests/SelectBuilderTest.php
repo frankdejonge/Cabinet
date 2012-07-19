@@ -9,6 +9,9 @@ class SelectBuilderTest extends PHPUnit_Framework_TestCase
 	 */
 	private $connection;
 
+	/**
+	 * Setup, connects to the database
+	 */
 	public function setUp()
 	{
 		$this->connection = Db::connection(array(
@@ -30,6 +33,118 @@ class SelectBuilderTest extends PHPUnit_Framework_TestCase
 
 		$query = $this->connection
 			->select()->from('my_table')
+			->compile();
+
+		$this->assertEquals($expected, $query);
+	}
+
+	/**
+	 * Test Builder SELECT with multiple fields
+	 *
+	 * @test
+	 */
+	public function testBuildSelectFields()
+	{
+		$expected = "SELECT `column`, `other` FROM `my_table`";
+
+		$query = $this->connection
+			->select('column', 'other')->from('my_table')
+			->compile();
+
+		$this->assertEquals($expected, $query);
+	}
+
+	/**
+	 * Test Builder SELECT with a field alias
+	 *
+	 * @test
+	 */
+	public function testBuildSelectAlias()
+	{
+		$expected = "SELECT `column` AS `alias`, `other` FROM `my_table`";
+
+		$query = $this->connection
+			->select(array('column', 'alias'), 'other')->from('my_table')
+			->compile();
+
+		$this->assertEquals($expected, $query);
+	}
+
+	/**
+	 * Test Builder SELECT with a function
+	 *
+	 * @test
+	 */
+	public function testBuildSelectFn()
+	{
+		$expected = "SELECT COUNT(*) FROM `my_table`";
+
+		$query = $this->connection
+			->select(Db::fn('count', '*'))->from('my_table')
+			->compile();
+
+		$this->assertEquals($expected, $query);
+	}
+
+	/**
+	 * Test Builder SELECT with an aliased function
+	 *
+	 * @test
+	 */
+	public function testBuildSelectFnAlias()
+	{
+		$expected = "SELECT COUNT(*) AS `alias` FROM `my_table`";
+
+		$query = $this->connection
+			->select(array(Db::fn('count', '*'), 'alias'))->from('my_table')
+			->compile();
+
+		$this->assertEquals($expected, $query);
+	}
+
+	/**
+	 * Test Builder SELECT with a field
+	 *
+	 * @test
+	 */
+	public function testBuildSelectExpr()
+	{
+		$expected = "SELECT expr FROM `my_table`";
+
+		$query = $this->connection
+			->select(Db::expr('expr'))->from('my_table')
+			->compile();
+
+		$this->assertEquals($expected, $query);
+	}
+
+	/**
+	 * Test Builder SELECT with a field
+	 *
+	 * @test
+	 */
+	public function testBuildSelectField()
+	{
+		$expected = "SELECT `column` FROM `my_table`";
+
+		$query = $this->connection
+			->select('column')->from('my_table')
+			->compile();
+
+		$this->assertEquals($expected, $query);
+	}
+
+	/**
+	 * Test Builder SELECT from multiple tables
+	 *
+	 * @test
+	 */
+	public function testBuildSelectMultipleTables()
+	{
+		$expected = "SELECT * FROM `my_table`, `other_table`";
+
+		$query = $this->connection
+			->select()->from('my_table', 'other_table')
 			->compile();
 
 		$this->assertEquals($expected, $query);

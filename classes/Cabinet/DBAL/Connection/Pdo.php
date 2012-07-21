@@ -210,6 +210,8 @@ class Pdo extends Connection
 			'driver' => get_class($this).':'.$this->driver,
 		);
 
+		is_null($this->profilerCallbacks['start']) or $this->profilerCallbacks['start']($profilerData);
+
 		try
 		{
 			$result = $this->connection->query($sql);
@@ -251,6 +253,8 @@ class Pdo extends Connection
 		$profilerData['end'] = microtime(true);
 		$profilerData['duration'] = $profilerData['end'] - $profilerData['start'];
 		$this->queries[] = $profilerData;
+
+		is_null($this->profilerCallbacks['end']) or $this->profilerCallbacks['end']($profilerData);
 
 		return $result;
 	}

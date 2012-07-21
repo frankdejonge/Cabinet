@@ -46,6 +46,14 @@ abstract class Connection
 	protected $queries = array();
 
 	/**
+	 * @var array  profiler callbacks
+	 */
+	protected $profilerCallbacks = array(
+		'start' => null,
+		'end' => null,
+	);
+
+	/**
 	 * Returnes the last executed query.
 	 *
 	 * @return  mixed  last executed query
@@ -75,6 +83,17 @@ abstract class Connection
 	public function profilerQueries()
 	{
 		return $this->queries;
+	}
+
+	/**
+	 * Returns the fired queries with profiling data.
+	 *
+	 * @return  array  profiler data about the queries
+	 */
+	public function profilerCallbacks($start = null, $end = null)
+	{
+		$this->profilerCallbacks['start'] = $start;
+		$this->profilerCallbacks['end'] = $end;
 	}
 
 	/**

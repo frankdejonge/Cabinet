@@ -143,7 +143,7 @@ class Db
 	 * @param   string   $table  table to delete from
 	 * @return  object   delete query collector object
 	 */
-	public static function delete($table)
+	public static function delete($table = null)
 	{
 		return new Collector\Delete($table);
 	}

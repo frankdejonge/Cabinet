@@ -29,7 +29,7 @@ class DeleteBuilderTest extends PHPUnit_Framework_TestCase
 		$expected = "DELETE FROM `my_table`";
 
 		$query = $this->connection
-			->delete('my_table')
+			->delete()->from('my_table')
 			->compile();
 
 		$this->assertEquals($expected, $query);
@@ -45,7 +45,7 @@ class DeleteBuilderTest extends PHPUnit_Framework_TestCase
 		$expected = "DELETE FROM `my_table` WHERE `field` = 'value'";
 
 		$query = $this->connection
-			->delete('my_table')
+			->delete()->from('my_table')
 			->where('field', 'value')
 			->compile();
 
@@ -62,7 +62,7 @@ class DeleteBuilderTest extends PHPUnit_Framework_TestCase
 		$expected = "DELETE FROM `my_table` WHERE `field` IS NULL";
 
 		$query = $this->connection
-			->delete('my_table')
+			->delete()->from('my_table')
 			->where('field', null)
 			->compile();
 
@@ -79,7 +79,7 @@ class DeleteBuilderTest extends PHPUnit_Framework_TestCase
 		$expected = "DELETE FROM `my_table` WHERE `field` IS NOT NULL";
 
 		$query = $this->connection
-			->delete('my_table')
+			->delete()->from('my_table')
 			->where('field', '!=', null)
 			->compile();
 
@@ -96,7 +96,7 @@ class DeleteBuilderTest extends PHPUnit_Framework_TestCase
 		$expected = "DELETE FROM `my_table` WHERE `field` = 'value' OR `other` != 'other value'";
 
 		$query = $this->connection
-			->delete('my_table')
+			->delete()->from('my_table')
 			->where('field', 'value')
 			->orWhere('other', '!=', 'other value')
 			->compile();
@@ -114,7 +114,7 @@ class DeleteBuilderTest extends PHPUnit_Framework_TestCase
 		$expected = "DELETE FROM `my_table` WHERE `field` = 'value' AND `other` != 'other value'";
 
 		$query = $this->connection
-			->delete('my_table')
+			->delete()->from('my_table')
 			->where('field', 'value')
 			->andWhere('other', '!=', 'other value')
 			->compile();
@@ -132,7 +132,7 @@ class DeleteBuilderTest extends PHPUnit_Framework_TestCase
 		$expected = "DELETE FROM `my_table` WHERE `field` = 'value' AND (`other` != 'other value' OR `field` = 'something')";
 
 		$query = $this->connection
-			->delete('my_table')
+			->delete()->from('my_table')
 			->where('field', 'value')
 			->andWhereOpen()
 			->Where('other', '!=', 'other value')
@@ -153,7 +153,7 @@ class DeleteBuilderTest extends PHPUnit_Framework_TestCase
 		$expected = "DELETE FROM `my_table` WHERE `field` IN (1, 2, 3)";
 
 		$query = $this->connection
-			->delete('my_table')
+			->delete()->from('my_table')
 			->where('field', array(1, 2, 3))
 			->compile();
 
@@ -170,7 +170,7 @@ class DeleteBuilderTest extends PHPUnit_Framework_TestCase
 		$expected = "DELETE FROM `my_table` WHERE `field` NOT IN (1, 2, 3)";
 
 		$query = $this->connection
-			->delete('my_table')
+			->delete()->from('my_table')
 			->where('field', 'not in', array(1, 2, 3))
 			->compile();
 
@@ -187,7 +187,7 @@ class DeleteBuilderTest extends PHPUnit_Framework_TestCase
 		$expected = "DELETE FROM `my_table` WHERE CHAR_LENGTH(`field`) > 2 AND CHAR_LENGTH(`field`) < 20";
 
 		$query = $this->connection
-			->delete('my_table')
+			->delete()->from('my_table')
 			->where(Db::fn('char_length', 'field'), '>', 2)
 			->where('CHAR_LENGTH("field")', '<', 20)
 			->compile();

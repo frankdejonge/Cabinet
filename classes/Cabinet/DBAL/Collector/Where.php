@@ -108,6 +108,75 @@ class Where extends Collector
 	}
 
 	/**
+	 * Alias for andWhere.
+ 	 *
+	 * @param   mixed   $column  array of 'and not where' statements or column name
+	 * @param   string  $op      where logic operator
+	 * @param   mixed   $value   where value
+	 * @return  object  current instance
+	 */
+	public function notWhere($column, $op = null, $value = null)
+	{
+		return call_user_func_array(array($this, 'andNotWhere'), func_get_args());
+	}
+
+	/**
+	 * Adds an 'and not where' statement to the query.
+	 *
+	 * @param   mixed   $column  array of 'and where' statements or column name
+	 * @param   string  $op      where logic operator
+	 * @param   mixed   $value   where value
+	 * @return  object  current instance
+	 */
+	public function andNotWhere($column, $op = null, $value = null)
+	{
+		if($column instanceof \Closure)
+		{
+			$this->andNotWhereOpen();
+			$column($this);
+			$this->andNotWhereClose();
+
+			return $this;
+		}
+
+		if (func_num_args() === 2)
+		{
+			$value = $op;
+			$op = is_array($value) ? 'in' : '=';
+		}
+
+		return $this->_where('and not', $column, $op, $value);
+	}
+
+	/**
+	 * Adds an 'or not where' statement to the query.
+	 *
+	 * @param   mixed   $column  array of 'or where' statements or column name
+	 * @param   string  $op      where logic operator
+	 * @param   mixed   $value   where value
+	 * @return  object  current instance
+	 */
+	public function orNotWhere($column, $op = null, $value = null)
+	{
+		if($column instanceof \Closure)
+		{
+			$this->orNotWhereOpen();
+			$column($this);
+			$this->orNotWhereClose();
+
+			return $this;
+		}
+
+		if (func_num_args() === 2)
+		{
+			$value = $op;
+			$op = '=';
+		}
+
+		return $this->_where('or not', $column, $op, $value);
+	}
+
+	/**
 	 * Opens an 'and where' nesting.
 	 *
 	 * @return  object  current instance
@@ -130,7 +199,6 @@ class Where extends Collector
 	public function whereClose()
 	{
 		$this->where[] = array(
-			'type' => 'and',
 			'nesting' => 'close',
 		);
 
@@ -159,12 +227,7 @@ class Where extends Collector
 	 */
 	public function andWhereClose()
 	{
-		$this->where[] = array(
-			'type' => 'and',
-			'nesting' => 'close',
-		);
-
-		return $this;
+		return $this->whereClose();
 	}
 
 	/**
@@ -189,12 +252,86 @@ class Where extends Collector
 	 */
 	public function orWhereClose()
 	{
+		return $this->whereClose();
+	}
+
+	/**
+	 * Opens an 'and not where' nesting.
+	 *
+	 * @return  object  current instance
+	 */
+	public function notWhereOpen()
+	{
 		$this->where[] = array(
-			'type' => 'or',
+			'type' => 'and not',
+			'nesting' => 'open',
+		);
+
+		return $this;
+	}
+
+	/**
+	 * Closes an 'and not where' nesting.
+	 *
+	 * @return  object  current instance
+	 */
+	public function notWhereClose()
+	{
+		$this->where[] = array(
 			'nesting' => 'close',
 		);
 
 		return $this;
+	}
+
+	/**
+	 * Opens an 'and not where' nesting.
+	 *
+	 * @return  object  current instance
+	 */
+	public function andNotWhereOpen()
+	{
+		$this->where[] = array(
+			'type' => 'and not',
+			'nesting' => 'open',
+		);
+
+		return $this;
+	}
+
+	/**
+	 * Closes an 'and not where' nesting.
+	 *
+	 * @return  object  current instance
+	 */
+	public function andNotWhereClose()
+	{
+		return $this->notWhereClose();
+	}
+
+	/**
+	 * Opens an 'or not where' nesting.
+	 *
+	 * @return  object  current instance
+	 */
+	public function orNotWhereOpen()
+	{
+		$this->where[] = array(
+			'type' => 'or not',
+			'nesting' => 'open',
+		);
+
+		return $this;
+	}
+
+	/**
+	 * Closes an 'or where' nesting.
+	 *
+	 * @return  object  current instance
+	 */
+	public function orNotWhereClose()
+	{
+		return $this->notWhereClose();
 	}
 
 	/**

@@ -330,9 +330,13 @@ abstract class Sql extends Compiler
 	{
 		$parts = array();
 		$last = false;
+
 		foreach ($conditions as $c)
 		{
-			count($parts) > 0 and $parts[] = ' '.strtoupper($c['type']).' ';
+			if (isset($c['type']) and count($parts) > 0)
+			{
+				$parts[] = ' '.strtoupper($c['type']).' ';
+			}
 
 			if (isset($c['nesting']))
 			{
@@ -349,7 +353,6 @@ abstract class Sql extends Compiler
 				else
 				{
 					$last = ')';
-					array_pop($parts);
 					$parts[] = ')';
 				}
 			}

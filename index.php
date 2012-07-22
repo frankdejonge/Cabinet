@@ -18,6 +18,14 @@ $conn = Db::connection(array(
 	'database' => 'louter',
 ));
 
+die($conn->select()->from('my_table')
+			->where('field', 'value')
+			->andNotWhere(function($w){
+				$w->where('something', 'different')
+					->orNotWhere('this', 'crazy');
+			})
+			->compile());
+
 $query = $conn->schema()
 	->table('my_table')
 	->create()

@@ -168,6 +168,45 @@ class SelectBuilderTest extends PHPUnit_Framework_TestCase
 	}
 
 	/**
+	 * Test Builder SELECT WHERE with NOT
+	 *
+	 * @test
+	 */
+	public function testBuildSelectWhereNot()
+	{
+		$expected = "SELECT * FROM `my_table` WHERE `field` = 'value' AND NOT `other_field` = 'other value'";
+
+		$query = $this->connection
+			->select()->from('my_table')
+			->where('field', 'value')
+			->andNotWhere('other_field', 'other value')
+			->compile();
+
+		$this->assertEquals($expected, $query);
+	}
+	
+	/**
+	 * Test Builder nested SELECT WHERE with NOT
+	 *
+	 * @test
+	 */
+	public function testBuildSelectWhereNotNested()
+	{
+		$expected = "SELECT * FROM `my_table` WHERE `field` = 'value' AND NOT (`something` = 'different' OR NOT `this` = 'crazy')";
+
+		$query = $this->connection
+			->select()->from('my_table')
+			->where('field', 'value')
+			->andNotWhere(function($w){
+				$w->where('something', 'different')
+					->orNotWhere('this', 'crazy');
+			})
+			->compile();
+
+		$this->assertEquals($expected, $query);
+	}
+
+	/**
 	 * Test Builder SELECT WHERE NULL
 	 *
 	 * @test

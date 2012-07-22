@@ -289,7 +289,7 @@ class Select extends Where
 			$op = is_array($value) ? 'in' : '=';
 		}
 
-		return $this->_having('and not', $column, $op, $value);
+		return $this->_having('and', $column, $op, $value, true);
 	}
 
 	/**
@@ -343,7 +343,7 @@ class Select extends Where
 			$op = '=';
 		}
 
-		return $this->_having('or not', $column, $op, $value);
+		return $this->_having('or', $column, $op, $value, true);
 	}
 
 	/**
@@ -369,7 +369,8 @@ class Select extends Where
 	public function notHavingOpen()
 	{
 		$this->having[] = array(
-			'type' => 'and not',
+			'type' => 'and',
+			'not' => true,
 			'nesting' => 'open',
 		);
 
@@ -423,7 +424,8 @@ class Select extends Where
 	public function andNotHavingOpen()
 	{
 		$this->having[] = array(
-			'type' => 'and not',
+			'type' => 'and',
+			'not' => true,
 			'nesting' => 'open',
 		);
 
@@ -473,7 +475,8 @@ class Select extends Where
 	public function orNotHavingOpen()
 	{
 		$this->having[] = array(
-			'type' => 'or not',
+			'type' => 'or',
+			'not' => true,
 			'nesting' => 'open',
 		);
 
@@ -504,12 +507,13 @@ class Select extends Where
 	 * Adds an 'and having' statement to the query
 	 *
 	 *
-	 * @param   mixed   $column  array of 'and having' statements or column name
-	 * @param   string  $op      having logic operator
-	 * @param   mixed   $value   having value
+	 * @param   mixed    $column  array of 'and having' statements or column name
+	 * @param   string   $op      having logic operator
+	 * @param   mixed    $value   having value
+	 * @param   boolean  $not     wether to use NOT
 	 * @return  object  current instance
 	 */
-	protected function _having($type, $column, $op, $value)
+	protected function _having($type, $column, $op, $value, $not = false)
 	{
 		if (is_array($column) and $op = null and $value = null)
 		{
@@ -517,13 +521,26 @@ class Select extends Where
 			{
 				if (is_array($val))
 				{
-					if (count($val) === 2)
+					$numArgs = count($val);
+
+					if ($numArgs === 2)
 					{
 						$this->having[] = array(
 							'type' => $type,
 							'field' => $val[0],
 							'op' => '=',
 							'value' => $val[1],
+							'not' => false,
+						);
+					}
+					elseif ($numArgs === 3)
+					{
+						$this->having[] = array(
+							'type' => $type,
+							'field' => $val[0],
+							'op' =>  $val[1],
+							'value' => $val[1],
+							'not' => false,
 						);
 					}
 					else
@@ -533,6 +550,7 @@ class Select extends Where
 							'field' => $val[0],
 							'op' => $val[1],
 							'value' => $val[2],
+							'not' => $val[3]
 						);
 					}
 				}
@@ -545,6 +563,7 @@ class Select extends Where
 				'field' => $column,
 				'op' => $op,
 				'value' => $value,
+				'not' => $not,
 			);
 		}
 

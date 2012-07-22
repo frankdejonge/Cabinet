@@ -145,7 +145,7 @@ class Where extends Collector
 			$op = is_array($value) ? 'in' : '=';
 		}
 
-		return $this->_where('and not', $column, $op, $value);
+		return $this->_where('and', $column, $op, $value, true);
 	}
 
 	/**
@@ -173,7 +173,7 @@ class Where extends Collector
 			$op = is_array($value) ? 'in' : '=';
 		}
 
-		return $this->_where('or not', $column, $op, $value);
+		return $this->_where('or', $column, $op, $value, true);
 	}
 
 	/**
@@ -263,7 +263,8 @@ class Where extends Collector
 	public function notWhereOpen()
 	{
 		$this->where[] = array(
-			'type' => 'and not',
+			'type' => 'and',
+			'not' => true,
 			'nesting' => 'open',
 		);
 
@@ -288,7 +289,8 @@ class Where extends Collector
 	public function andNotWhereOpen()
 	{
 		$this->where[] = array(
-			'type' => 'and not',
+			'type' => 'and',
+			'not' => true,
 			'nesting' => 'open',
 		);
 
@@ -302,7 +304,7 @@ class Where extends Collector
 	 */
 	public function andNotWhereClose()
 	{
-		return $this->notWhereClose();
+		return $this->whereClose();
 	}
 
 	/**
@@ -313,7 +315,8 @@ class Where extends Collector
 	public function orNotWhereOpen()
 	{
 		$this->where[] = array(
-			'type' => 'or not',
+			'type' => 'or',
+			'not' => true,
 			'nesting' => 'open',
 		);
 
@@ -333,13 +336,14 @@ class Where extends Collector
 	/**
 	 * Adds an 'and where' statement to the query
 	 *
-	 * @param   string  $type    chain type
-	 * @param   mixed   $column  array of 'where' statements or column name
-	 * @param   string  $op      where logic operator
-	 * @param   mixed   $value   where value
-	 * @return  object  current instance
+	 * @param   string   $type    chain type
+	 * @param   mixed    $column  array of 'where' statements or column name
+	 * @param   string   $op      where logic operator
+	 * @param   mixed    $value   where value
+	 * @param   boolean  $not     wether to use NOT
+	 * @return  object   current instance
 	 */
-	protected function _where($type, $column, $op, $value)
+	protected function _where($type, $column, $op, $value, $not = false)
 	{
 		if (is_array($column) and $op = null and $value = null)
 		{
@@ -347,13 +351,26 @@ class Where extends Collector
 			{
 				if (is_array($val))
 				{
-					if (count($val) === 2)
+					$numArgs = count($val);
+
+					if ($numArgs === 2)
 					{
 						$this->where[] = array(
 							'type' => $type,
 							'field' => $val[0],
 							'op' => '=',
 							'value' => $val[1],
+							'not' => false,
+						);
+					}
+					elseif ($numArgs === 3)
+					{
+						$this->where[] = array(
+							'type' => $type,
+							'field' => $val[0],
+							'op' =>  $val[1],
+							'value' => $val[1],
+							'not' => false,
 						);
 					}
 					else
@@ -363,6 +380,7 @@ class Where extends Collector
 							'field' => $val[0],
 							'op' => $val[1],
 							'value' => $val[2],
+							'not' => $val[3]
 						);
 					}
 				}
@@ -375,6 +393,7 @@ class Where extends Collector
 				'field' => $column,
 				'op' => $op,
 				'value' => $value,
+				'not' => $not,
 			);
 		}
 

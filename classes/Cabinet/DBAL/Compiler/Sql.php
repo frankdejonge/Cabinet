@@ -337,6 +337,11 @@ abstract class Sql extends Compiler
 			{
 				$parts[] = ' '.strtoupper($c['type']).' ';
 			}
+			
+			if ($useNot = (isset($c['not']) and $c['not']))
+			{
+				$parts[] = count($parts) > 0 ? 'NOT ' : ' NOT '; 
+			}
 
 			if (isset($c['nesting']))
 			{
@@ -345,6 +350,12 @@ abstract class Sql extends Compiler
 					if ($last === '(')
 					{
 						array_pop($parts);
+
+						if ($useNot)
+						{
+							array_pop($parts);
+							$parts[] = ' NOT ';
+						}
 					}
 
 					$last = '(';
@@ -361,6 +372,12 @@ abstract class Sql extends Compiler
 				if($last === '(')
 				{
 					array_pop($parts);
+
+					if ($useNot)
+					{
+						array_pop($parts);
+						$parts[] = ' NOT ';
+					}
 				}
 
 				$last = false;

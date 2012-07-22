@@ -427,7 +427,7 @@ abstract class Sql extends Compiler
 
 		if(method_exists($this, 'compileFn'.$fn))
 		{
-			return $this->{'compilFn'.$fn}($valye);
+			return $this->{'compilFn'.$fn}($value);
 		}
 
 		$quoteFn = ($value->quoteAs() === 'identifier') ? 'quoteIdentifier' : 'quote';
@@ -790,11 +790,11 @@ abstract class Sql extends Compiler
 				// Create a sub-query
 				return '('.$value->compile($this->connection).')';
 			}
-			elseif ($valye instanceof \Cabinet\DBAL\Value)
+			elseif ($value instanceof \Cabinet\DBAL\Value)
 			{
 				return $this->escape($value->value());
 			}
-			elseif ($valye instanceof \Cabinet\DBAL\Identifier)
+			elseif ($value instanceof \Cabinet\DBAL\Identifier)
 			{
 				return $this->quoteIdentifier($value->value());
 			}

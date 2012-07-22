@@ -39,6 +39,23 @@ class SelectBuilderTest extends PHPUnit_Framework_TestCase
 	}
 
 	/**
+	 * Test Builder SELECT
+	 *
+	 * @test
+	 */
+	public function testBuildSelectLike()
+	{
+		$expected = "SELECT * FROM `my_table` WHERE `field` LIKE '%this%'";
+
+		$query = $this->connection
+			->select()->from('my_table')
+			->where('field', 'like', '%this%')
+			->compile();
+
+		$this->assertEquals($expected, $query);
+	}
+
+	/**
 	 * Test Builder SELECT with multiple fields
 	 *
 	 * @test
@@ -647,6 +664,23 @@ class SelectBuilderTest extends PHPUnit_Framework_TestCase
 			->join('other_table')
 			->on('my_table.field', '=', 'other_table.field')
 			->orOn('my_table.other_field', 'other_table.other_field')
+			->compile();
+
+		$this->assertEquals($expected, $query);
+	}
+
+	/**
+	 * Test Builder SELECT with bindings
+	 *
+	 * @test
+	 */
+	public function testBuildSelectBindings()
+	{
+		$expected = "SELECT * FROM `my_table`";
+
+		$query = $this->connection
+			->select()->from(':table')
+			->bind('table', 'my_table')
 			->compile();
 
 		$this->assertEquals($expected, $query);

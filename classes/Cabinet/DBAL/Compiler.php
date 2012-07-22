@@ -105,7 +105,7 @@ abstract class Compiler
 			foreach($bindings as $from => $to)
 			{
 				substr($from, 0, 1) !== ':' and $from = ':'.$from;
-				$contents = preg_replace('/'.$from.'/', $this->quote($to), $contents);
+				$contents = preg_replace('/'.$from.'/', $to, $contents);
 			}
 		}
 

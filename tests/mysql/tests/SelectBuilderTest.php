@@ -87,11 +87,27 @@ class SelectBuilderTest extends PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Test Builder SELECT with an aliased function
+	 * Test Builder SELECT with a function aliased from the Fn object
 	 *
 	 * @test
 	 */
 	public function testBuildSelectFnAlias()
+	{
+		$expected = "SELECT COUNT(*) AS `num` FROM `my_table`";
+
+		$query = $this->connection
+			->select(Db::fn('count', '*')->aliasTo('num'))->from('my_table')
+			->compile();
+
+		$this->assertEquals($expected, $query);
+	}
+
+	/**
+	 * Test Builder SELECT with an aliased function
+	 *
+	 * @test
+	 */
+	public function testBuildSelectFnAliasArray()
 	{
 		$expected = "SELECT COUNT(*) AS `alias` FROM `my_table`";
 
@@ -563,7 +579,7 @@ class SelectBuilderTest extends PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Test Builder SELECT WHERE IN
+	 * Test Builder SELECT WHERE with function
 	 *
 	 * @test
 	 */

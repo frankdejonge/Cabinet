@@ -96,4 +96,15 @@ class Fn
 	{
 		return $this->params;
 	}
+
+	/**
+	 * Wrap the function in an alias.
+	 *
+	 * @param   string  alias identifier
+	 * @return  array   alias array
+	 */
+	public function aliasTo($name)
+	{
+		return array($this, $name);
+	}
 }

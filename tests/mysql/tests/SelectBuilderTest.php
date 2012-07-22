@@ -168,6 +168,23 @@ class SelectBuilderTest extends PHPUnit_Framework_TestCase
 	}
 
 	/**
+	 * Test Builder SELECT HAVING
+	 *
+	 * @test
+	 */
+	public function testBuildSelectHaving()
+	{
+		$expected = "SELECT * FROM `my_table` HAVING `field` = 'value'";
+
+		$query = $this->connection
+			->select()->from('my_table')
+			->having('field', 'value')
+			->compile();
+
+		$this->assertEquals($expected, $query);
+	}
+
+	/**
 	 * Test Builder SELECT WHERE with NOT
 	 *
 	 * @test
@@ -180,6 +197,24 @@ class SelectBuilderTest extends PHPUnit_Framework_TestCase
 			->select()->from('my_table')
 			->where('field', 'value')
 			->andNotWhere('other_field', 'other value')
+			->compile();
+
+		$this->assertEquals($expected, $query);
+	}
+
+	/**
+	 * Test Builder SELECT HAVING with NOT
+	 *
+	 * @test
+	 */
+	public function testBuildSelectHavingNot()
+	{
+		$expected = "SELECT * FROM `my_table` HAVING `field` = 'value' AND NOT `other_field` = 'other value'";
+
+		$query = $this->connection
+			->select()->from('my_table')
+			->having('field', 'value')
+			->andNotHaving('other_field', 'other value')
 			->compile();
 
 		$this->assertEquals($expected, $query);
@@ -205,6 +240,27 @@ class SelectBuilderTest extends PHPUnit_Framework_TestCase
 
 		$this->assertEquals($expected, $query);
 	}
+	
+	/**
+	 * Test Builder nested SELECT HAVING with NOT
+	 *
+	 * @test
+	 */
+	public function testBuildSelectHavingNotNested()
+	{
+		$expected = "SELECT * FROM `my_table` HAVING `field` = 'value' AND NOT (`something` = 'different' OR NOT `this` = 'crazy')";
+
+		$query = $this->connection
+			->select()->from('my_table')
+			->having('field', 'value')
+			->andNotHaving(function($w){
+				$w->having('something', 'different')
+					->orNotHaving('this', 'crazy');
+			})
+			->compile();
+
+		$this->assertEquals($expected, $query);
+	}
 
 	/**
 	 * Test Builder SELECT WHERE NULL
@@ -218,6 +274,23 @@ class SelectBuilderTest extends PHPUnit_Framework_TestCase
 		$query = $this->connection
 			->select()->from('my_table')
 			->where('field', null)
+			->compile();
+
+		$this->assertEquals($expected, $query);
+	}
+
+	/**
+	 * Test Builder SELECT HAVING NULL
+	 *
+	 * @test
+	 */
+	public function testBuildSelectHavingNull()
+	{
+		$expected = "SELECT * FROM `my_table` HAVING `field` IS NULL";
+
+		$query = $this->connection
+			->select()->from('my_table')
+			->having('field', null)
 			->compile();
 
 		$this->assertEquals($expected, $query);
@@ -241,6 +314,41 @@ class SelectBuilderTest extends PHPUnit_Framework_TestCase
 	}
 
 	/**
+	 * Test Builder SELECT HAVING NOT NULL
+	 *
+	 * @test
+	 */
+	public function testBuildSelectHavingNotNull()
+	{
+		$expected = "SELECT * FROM `my_table` HAVING `field` IS NOT NULL";
+
+		$query = $this->connection
+			->select()->from('my_table')
+			->having('field', '!=', null)
+			->compile();
+
+		$this->assertEquals($expected, $query);
+	}
+
+	/**
+	 * Test Builder SELECT HAVING OR
+	 *
+	 * @test
+	 */
+	public function testBuildSelectHavingOr()
+	{
+		$expected = "SELECT * FROM `my_table` HAVING `field` = 'value' OR `other` != 'other value'";
+
+		$query = $this->connection
+			->select()->from('my_table')
+			->having('field', 'value')
+			->orHaving('other', '!=', 'other value')
+			->compile();
+
+		$this->assertEquals($expected, $query);
+	}
+
+	/**
 	 * Test Builder SELECT WHERE OR
 	 *
 	 * @test
@@ -253,6 +361,24 @@ class SelectBuilderTest extends PHPUnit_Framework_TestCase
 			->select()->from('my_table')
 			->where('field', 'value')
 			->orWhere('other', '!=', 'other value')
+			->compile();
+
+		$this->assertEquals($expected, $query);
+	}
+
+	/**
+	 * Test Builder SELECT HAVING AND
+	 *
+	 * @test
+	 */
+	public function testBuildSelectHavingAnd()
+	{
+		$expected = "SELECT * FROM `my_table` HAVING `field` = 'value' AND `other` != 'other value'";
+
+		$query = $this->connection
+			->select()->from('my_table')
+			->having('field', 'value')
+			->andHaving('other', '!=', 'other value')
 			->compile();
 
 		$this->assertEquals($expected, $query);
@@ -302,6 +428,31 @@ class SelectBuilderTest extends PHPUnit_Framework_TestCase
 	}
 
 	/**
+	 * Test Builder SELECT HAVING AND GROUPS
+	 *
+	 * @test
+	 */
+	public function testBuildSelectHavingAndGroups()
+	{
+		$expected = "SELECT * FROM `my_table` HAVING `field` = 'value' AND (`other` != 'other value' OR `field` = 'something') AND (`age` IN (1, 2, 3) OR `age` NOT IN (2, 5, 7))";
+
+		$query = $this->connection
+			->select()->from('my_table')
+			->having('field', 'value')
+			->andHavingOpen()
+			->having('other', '!=', 'other value')
+			->orHaving('field', '=', 'something')
+			->andHavingClose()
+			->andHaving(function($q){
+				$q->having('age', 'in', array(1, 2, 3))
+					->orHaving('age', 'not in', array(2, 5, 7));
+			})
+			->compile();
+
+		$this->assertEquals($expected, $query);
+	}
+
+	/**
 	 * Test Builder SELECT WHERE AND GROUP
 	 *
 	 * @test
@@ -317,6 +468,27 @@ class SelectBuilderTest extends PHPUnit_Framework_TestCase
 			->Where('other', '!=', 'other value')
 			->orWhere('field', '=', 'something')
 			->andWhereClose()
+			->compile();
+
+		$this->assertEquals($expected, $query);
+	}
+
+	/**
+	 * Test Builder SELECT HAVING AND GROUP
+	 *
+	 * @test
+	 */
+	public function testBuildSelectHavingAndGroup()
+	{
+		$expected = "SELECT * FROM `my_table` HAVING `field` = 'value' AND (`other` != 'other value' OR `field` = 'something')";
+
+		$query = $this->connection
+			->select()->from('my_table')
+			->having('field', 'value')
+			->andHavingOpen()
+			->having('other', '!=', 'other value')
+			->orHaving('field', '=', 'something')
+			->andHavingClose()
 			->compile();
 
 		$this->assertEquals($expected, $query);
@@ -340,6 +512,23 @@ class SelectBuilderTest extends PHPUnit_Framework_TestCase
 	}
 
 	/**
+	 * Test Builder SELECT HAVING IN
+	 *
+	 * @test
+	 */
+	public function testBuildSelectHavingIn()
+	{
+		$expected = "SELECT * FROM `my_table` HAVING `field` IN (1, 2, 3)";
+
+		$query = $this->connection
+			->select()->from('my_table')
+			->having('field', array(1, 2, 3))
+			->compile();
+
+		$this->assertEquals($expected, $query);
+	}
+
+	/**
 	 * Test Builder SELECT WHERE NOT IN
 	 *
 	 * @test
@@ -351,6 +540,23 @@ class SelectBuilderTest extends PHPUnit_Framework_TestCase
 		$query = $this->connection
 			->select()->from('my_table')
 			->where('field', 'not in', array(1, 2, 3))
+			->compile();
+
+		$this->assertEquals($expected, $query);
+	}
+
+	/**
+	 * Test Builder SELECT WHERE NOT IN
+	 *
+	 * @test
+	 */
+	public function testBuildSelectHavingNotIn()
+	{
+		$expected = "SELECT * FROM `my_table` HAVING `field` NOT IN (1, 2, 3)";
+
+		$query = $this->connection
+			->select()->from('my_table')
+			->having('field', 'not in', array(1, 2, 3))
 			->compile();
 
 		$this->assertEquals($expected, $query);

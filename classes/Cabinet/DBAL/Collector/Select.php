@@ -220,9 +220,22 @@ class Select extends Where
 	 * @param   mixed   $value   having value
 	 * @return  object  current instance
 	 */
-	public function having($column, $op, $value = null)
+	public function having($column, $op = null, $value = null)
 	{
 		return call_user_func_array(array($this, 'andHaving'), func_get_args());
+	}
+
+	/**
+	 * Alias for andNotHaving.
+ 	 *
+	 * @param   mixed   $column  array of 'and not having' statements or column name
+	 * @param   string  $op      having logic operator
+	 * @param   mixed   $value   having value
+	 * @return  object  current instance
+	 */
+	public function notHaving($column, $op = null, $value = null)
+	{
+		return call_user_func_array(array($this, 'andNotHaving'), func_get_args());
 	}
 
 	/**
@@ -246,10 +259,37 @@ class Select extends Where
 		if (func_num_args() == 2)
 		{
 			$value = $op;
-			$op = '=';
+			$op = is_array($value) ? 'in' : '=';
 		}
 
 		return $this->_having('and', $column, $op, $value);
+	}
+
+	/**
+	 * Adds an 'and not having' statement to the query.
+	 *
+	 * @param   mixed   $column  array of 'and not having' statements or column name
+	 * @param   string  $op      having logic operator
+	 * @param   mixed   $value   having value
+	 * @return  object  current instance
+	 */
+	public function andNotHaving($column, $op = null, $value = null)
+	{
+		if($column instanceof \Closure)
+		{
+			$this->andNotHavingOpen();
+			$column($this);
+			$this->andNotHavingClose();
+			return $this;
+		}
+
+		if (func_num_args() == 2)
+		{
+			$value = $op;
+			$op = is_array($value) ? 'in' : '=';
+		}
+
+		return $this->_having('and not', $column, $op, $value);
 	}
 
 	/**
@@ -266,7 +306,34 @@ class Select extends Where
 		{
 			$this->orHavingOpen();
 			$column($this);
-			$this->orHavingClose();
+			$this->havingClose();
+			return $this;
+		}
+
+		if (func_num_args() == 2)
+		{
+			$value = $op;
+			$op = is_array($value) ? 'in' : '=';
+		}
+
+		return $this->_having('or', $column, $op, $value);
+	}
+
+	/**
+	 * Adds an 'or having' statement to the query.
+	 *
+	 * @param   mixed   $column  array of 'or having' statements or column name
+	 * @param   string  $op      having logic operator
+	 * @param   mixed   $value   having value
+	 * @return  object  current instance
+	 */
+	public function orNotHaving($column, $op = null, $value = null)
+	{
+		if($column instanceof \Closure)
+		{
+			$this->orNotHavingOpen();
+			$column($this);
+			$this->havingClose();
 			return $this;
 		}
 
@@ -276,7 +343,7 @@ class Select extends Where
 			$op = '=';
 		}
 
-		return $this->_having('or', $column, $op, $value);
+		return $this->_having('or not', $column, $op, $value);
 	}
 
 	/**
@@ -295,6 +362,21 @@ class Select extends Where
 	}
 
 	/**
+	 * Opens an 'and having' nesting.
+	 *
+	 * @return  object  current instance
+	 */
+	public function notHavingOpen()
+	{
+		$this->having[] = array(
+			'type' => 'and not',
+			'nesting' => 'open',
+		);
+
+		return $this;
+	}
+
+	/**
 	 * Closes an 'and having' nesting.
 	 *
 	 * @return  object  current instance
@@ -302,11 +384,20 @@ class Select extends Where
 	public function havingClose()
 	{
 		$this->having[] = array(
-			'type' => 'and',
 			'nesting' => 'close',
 		);
 
 		return $this;
+	}
+
+	/**
+	 * Closes an 'and having' nesting.
+	 *
+	 * @return  object  current instance
+	 */
+	public function notHavingClose()
+	{
+		return $this->havingClose();
 	}
 
 	/**
@@ -325,18 +416,38 @@ class Select extends Where
 	}
 
 	/**
+	 * Opens an 'and having' nesting.
+	 *
+	 * @return  object  current instance
+	 */
+	public function andNotHavingOpen()
+	{
+		$this->having[] = array(
+			'type' => 'and not',
+			'nesting' => 'open',
+		);
+
+		return $this;
+	}
+
+	/**
 	 * Closes an 'and having' nesting.
 	 *
 	 * @return  object  current instance
 	 */
 	public function andHavingClose()
 	{
-		$this->having[] = array(
-			'type' => 'and',
-			'nesting' => 'close',
-		);
+		return $this->havingClose();
+	}
 
-		return $this;
+	/**
+	 * Closes an 'and not having' nesting.
+	 *
+	 * @return  object  current instance
+	 */
+	public function andNotHavingClose()
+	{
+		return $this->havingClose();
 	}
 
 	/**
@@ -355,18 +466,38 @@ class Select extends Where
 	}
 
 	/**
+	 * Opens an 'or having' nesting.
+	 *
+	 * @return  object  current instance
+	 */
+	public function orNotHavingOpen()
+	{
+		$this->having[] = array(
+			'type' => 'or not',
+			'nesting' => 'open',
+		);
+
+		return $this;
+	}
+
+	/**
 	 * Closes an 'or having' nesting.
 	 *
 	 * @return  object  current instance
 	 */
 	public function orHavingClose()
 	{
-		$this->having[] = array(
-			'type' => 'or',
-			'nesting' => 'close',
-		);
+		return $this->havingClose();
+	}
 
-		return $this;
+	/**
+	 * Closes an 'or having' nesting.
+	 *
+	 * @return  object  current instance
+	 */
+	public function orNotHavingClose()
+	{
+		return $this->havingClose();
 	}
 
 	/**

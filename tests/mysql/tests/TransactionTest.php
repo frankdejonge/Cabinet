@@ -31,8 +31,7 @@ class TransactionTest extends PHPUnit_Framework_TestCase
 				'id' => function($field){
 					$field->type('int')
 						->constraint(11)
-						->autoIncrement()
-						;
+						->autoIncrement();
 				},
 				'name' => function($field){
 					$field->type('varchar')

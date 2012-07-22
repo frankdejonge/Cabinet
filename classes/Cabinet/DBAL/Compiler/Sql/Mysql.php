@@ -16,4 +16,5 @@ use Cabinet\DBAL\Compiler\Sql;
 
 class Mysql extends Sql
 {
+
 }

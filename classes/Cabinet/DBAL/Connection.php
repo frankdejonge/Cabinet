@@ -27,6 +27,7 @@ abstract class Connection
 		$config = $config + array(
 			'type' => 'pdo',
 			'driver' => null,
+			'profiling' => false,
 		);
 
 		$class = ucfirst(strtolower($config['type']));
@@ -124,6 +125,24 @@ abstract class Connection
 	public function rollbackTransaction()
 	{
 		throw new Exception('Transaction are not supported by this driver');
+	}
+
+	/**
+	 * Savepoints functions.
+	 */
+	public function setSavepoint($savepoint = null)
+	{
+		throw new Exception('Savepoints are not supported by this driver');
+	}
+
+	public function rollbackSavepoint($savepoint = null)
+	{
+		throw new Exception('Savepoints are not supported by this driver');
+	}
+
+	public function releaseSavepoint($savepoint = null)
+	{
+		throw new Exception('Savepoints are not supported by this driver');
 	}
 
 	/**

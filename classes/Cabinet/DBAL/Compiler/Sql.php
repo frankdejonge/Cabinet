@@ -348,7 +348,7 @@ abstract class Sql extends Compiler
 				}
 				else
 				{
-					$last = '(';
+					$last = ')';
 					array_pop($parts);
 					$parts[] = ')';
 				}

@@ -238,6 +238,31 @@ class SelectBuilderTest extends PHPUnit_Framework_TestCase
 	}
 
 	/**
+	 * Test Builder SELECT WHERE AND GROUPS
+	 *
+	 * @test
+	 */
+	public function testBuildSelectWhereAndGroups()
+	{
+		$expected = "SELECT * FROM `my_table` WHERE `field` = 'value' AND (`other` != 'other value' OR `field` = 'something') AND (`age` IN (1, 2, 3) OR `age` NOT IN (2, 5, 7))";
+
+		$query = $this->connection
+			->select()->from('my_table')
+			->where('field', 'value')
+			->andWhereOpen()
+			->Where('other', '!=', 'other value')
+			->orWhere('field', '=', 'something')
+			->andWhereClose()
+			->andWhere(function($q){
+				$q->where('age', 'in', array(1, 2, 3))
+					->orWhere('age', 'not in', array(2, 5, 7));
+			})
+			->compile();
+
+		$this->assertEquals($expected, $query);
+	}
+
+	/**
 	 * Test Builder SELECT WHERE AND GROUP
 	 *
 	 * @test

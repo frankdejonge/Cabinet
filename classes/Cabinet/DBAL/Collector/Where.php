@@ -65,7 +65,7 @@ class Where extends Collector
 		{
 			$this->andWhereOpen();
 			$column($this);
-			$this->andWhereClose();
+			$this->whereClose();
 
 			return $this;
 		}
@@ -93,7 +93,7 @@ class Where extends Collector
 		{
 			$this->orWhereOpen();
 			$column($this);
-			$this->orWhereClose();
+			$this->whereClose();
 
 			return $this;
 		}
@@ -101,7 +101,7 @@ class Where extends Collector
 		if (func_num_args() === 2)
 		{
 			$value = $op;
-			$op = '=';
+			$op = is_array($value) ? 'in' : '=';
 		}
 
 		return $this->_where('or', $column, $op, $value);
@@ -134,7 +134,7 @@ class Where extends Collector
 		{
 			$this->andNotWhereOpen();
 			$column($this);
-			$this->andNotWhereClose();
+			$this->whereClose();
 
 			return $this;
 		}
@@ -162,7 +162,7 @@ class Where extends Collector
 		{
 			$this->orNotWhereOpen();
 			$column($this);
-			$this->orNotWhereClose();
+			$this->whereClose();
 
 			return $this;
 		}
@@ -170,7 +170,7 @@ class Where extends Collector
 		if (func_num_args() === 2)
 		{
 			$value = $op;
-			$op = '=';
+			$op = is_array($value) ? 'in' : '=';
 		}
 
 		return $this->_where('or not', $column, $op, $value);
@@ -277,11 +277,7 @@ class Where extends Collector
 	 */
 	public function notWhereClose()
 	{
-		$this->where[] = array(
-			'nesting' => 'close',
-		);
-
-		return $this;
+		return $this->whereClose();
 	}
 
 	/**
@@ -331,7 +327,7 @@ class Where extends Collector
 	 */
 	public function orNotWhereClose()
 	{
-		return $this->notWhereClose();
+		return $this->whereClose();
 	}
 
 	/**

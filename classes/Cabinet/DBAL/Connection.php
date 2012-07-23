@@ -55,6 +55,53 @@ abstract class Connection
 	);
 
 	/**
+	 * @var  array  $config  connection config
+	 */
+	protected $config;
+
+	/**
+	 * Constructor, sets the main config array.
+	 */
+	public function __construct($config = array())
+	{
+		if (isset($config['username']))
+		{
+			unset($config['username']);
+		}
+
+		if (isset($config['password']))
+		{
+			unset($config['password']);
+		}
+
+		$this->config = $config;
+	}
+
+	/**
+	 * Enables the profiling.
+	 *
+	 * @return  object  $this
+	 */
+	public function enableProfiler()
+	{
+		$this->config['profiling'] = true;
+
+		return $this;
+	}
+
+	/**
+	 * Enables the profiling, will clear out past queries on next execution.
+	 *
+	 * @return  object  $this
+	 */
+	public function disableProfiling()
+	{
+		$this->config['profiling'] = false;
+
+		return $this;
+	}
+
+	/**
 	 * Returnes the last executed query.
 	 *
 	 * @return  mixed  last executed query

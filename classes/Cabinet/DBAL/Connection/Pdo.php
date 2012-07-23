@@ -39,7 +39,7 @@ class Pdo extends Connection
 	/**
 	 * @var  integer  $savepoint  auto savepoint level
 	 */
-	public $savepoint = 0;
+	protected $savepoint = 0;
 
 	/**
 	 * Connection constructor.
@@ -57,10 +57,14 @@ class Pdo extends Connection
 			'attrs' => array(),
 			'insertIdField' => null,
 			'charset' => null,
+			'persistent' => true,
 		);
 
 		// exception mode
 		$config['attrs'][\PDO::ATTR_ERRMODE] = \PDO::ERRMODE_EXCEPTION;
+
+		// set persistent connection
+		$config['persistent'] and $config['attr'][\PDO::ATTR_PERSISTENT] = true;
 
 		// store the driver
 		$this->driver = strtolower($config['driver']);
@@ -70,6 +74,8 @@ class Pdo extends Connection
 
 		// set the charset
 		$this->setCharset($config['charset']);
+		
+		parent::__construct($config);
 	}
 
 	/**
@@ -252,6 +258,13 @@ class Pdo extends Connection
 
 		$profilerData['end'] = microtime(true);
 		$profilerData['duration'] = $profilerData['end'] - $profilerData['start'];
+
+		// clear out any previous queries when profiling is turned off.
+		if ($this->config['profiling'] === false)
+		{
+			$this->queries = array();
+		}
+
 		$this->queries[] = $profilerData;
 
 		$this->profilerCallbacks['end'] instanceOf \Closure and $this->profilerCallbacks['end']($profilerData);

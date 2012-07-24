@@ -17,6 +17,11 @@ use Cabinet\DBAL\Db;
 
 class Pgsql extends Pdo
 {
+	/**
+	 * Get an array of table names from the connection.
+	 *
+	 * @return  array  tables names
+	 */
 	public function listTables()
 	{
 		$result = Db::query('SELECT table_name FROM information_schema.tables WHERE table_schema = \'public\'', Db::SELECT)
@@ -27,6 +32,11 @@ class Pgsql extends Pdo
 		}, $result);
 	}
 
+	/**
+	 * Get an array of database names from the connection.
+	 *
+	 * @return  array  database names
+	 */
 	public function listDatabases()
 	{
 		$result = Db::query('SELECT datname FROM pg_database', Db::SELECT)
@@ -37,6 +47,11 @@ class Pgsql extends Pdo
 		}, $result);
 	}
 
+	/**
+	 * Get an array of table fields from a table.
+	 *
+	 * @return  array  field arrays
+	 */
 	public function listFields($table)
 	{
 		$query = Db::query("SELECT * FROM information_schema.columns WHERE table_name ='$table'", Db::SELECT);
@@ -48,6 +63,11 @@ class Pgsql extends Pdo
 		}, $result);
 	}
 
+	/**
+	 * Start a transaction.
+	 *
+	 * @return  object  $this;
+	 */
 	public function startTransaction()
 	{
 		$this->connection->query('BEGIN');
@@ -55,6 +75,11 @@ class Pgsql extends Pdo
 		return $this;
 	}
 
+	/**
+	 * Commit a transaction.
+	 *
+	 * @return  object  $this;
+	 */
 	public function commitTransaction()
 	{
 		$this->connection->query('COMMIT');
@@ -62,6 +87,11 @@ class Pgsql extends Pdo
 		return $this;
 	}
 
+	/**
+	 * Roll back a transaction.
+	 *
+	 * @return  object  $this;
+	 */
 	public function rollbackTransaction()
 	{
 		$this->connection->query('ROLLBACK');

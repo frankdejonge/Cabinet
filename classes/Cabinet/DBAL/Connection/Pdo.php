@@ -56,7 +56,7 @@ class Pdo extends Connection
 			'password' => null,
 			'attrs' => array(),
 			'insertIdField' => null,
-			'charset' => null,
+			'charset' => 'utf8',
 			'persistent' => true,
 		);
 
@@ -113,7 +113,7 @@ class Pdo extends Connection
 			return $this;
 		}
 
-
+		
 	}
 
 	/**
@@ -198,6 +198,7 @@ class Pdo extends Connection
 	 * @param   object  $query     query object
 	 * @param   string  $type      query type
 	 * @param   array   $bindings  query bindings
+	 * @return  mixed   query results
 	 */
 	public function execute($query, $type = null, $bindings = array())
 	{
@@ -216,6 +217,7 @@ class Pdo extends Connection
 			'driver' => get_class($this).':'.$this->driver,
 		);
 
+		// fire start callback for profiling
 		$this->profilerCallbacks['start'] instanceOf \Closure and $this->profilerCallbacks['start']($profilerData);
 
 		try
@@ -230,6 +232,7 @@ class Pdo extends Connection
 		if($type === Db::SELECT)
 		{
 			$asObject = $query->getAsObject();
+			$asObject === null and $asObject = $this->config['asObject'];
 
 			if ( ! $asObject)
 			{
@@ -260,13 +263,16 @@ class Pdo extends Connection
 		$profilerData['duration'] = $profilerData['end'] - $profilerData['start'];
 
 		// clear out any previous queries when profiling is turned off.
+		// This will save memory, better for performance.
 		if ($this->config['profiling'] === false)
 		{
 			$this->queries = array();
 		}
 
+		// always save the last query, for lastQuery support
 		$this->queries[] = $profilerData;
 
+		// fire eny given profiler callbacks
 		$this->profilerCallbacks['end'] instanceOf \Closure and $this->profilerCallbacks['end']($profilerData);
 
 		return $result;
@@ -293,13 +299,11 @@ class Pdo extends Connection
 	}
 
 	/**
-	 * Object destruct closes the database connection.
+	 * Sets transaction savepoint.
+	 *
+	 * @param   string  $savepoint  savepoint name
+	 * @return  object  $this
 	 */
-	public function __destruct()
-	{
-		$this->disconnect();
-	}
-
 	public function setSavepoint($savepoint = null)
 	{
 		$savepoint or $savepoint = 'CABINET_SP_LEVEL_'. ++$this->savepoint;
@@ -308,6 +312,12 @@ class Pdo extends Connection
 		return $this;
 	}
 
+	/**
+	 * Roll back to a transaction savepoint.
+	 *
+	 * @param   string  $savepoint  savepoint name
+	 * @return  object  $this
+	 */
 	public function rollbackSavepoint($savepoint = null)
 	{
 		if ( ! $savepoint)
@@ -321,6 +331,12 @@ class Pdo extends Connection
 		return $this;
 	}
 
+	/**
+	 * Release a transaction savepoint.
+	 *
+	 * @param   string  $savepoint  savepoint name
+	 * @return  object  $this
+	 */
 	public function releaseSavepoint($savepoint = null)
 	{
 		if ( ! $savepoint)
@@ -329,8 +345,16 @@ class Pdo extends Connection
 			$this->savepoint--;
 		}
 
-	$this->connection->query('RELEASE SAVEPOINT '.$savepoint);
+		$this->connection->query('RELEASE SAVEPOINT '.$savepoint);
 
 		return $this;
+	}
+
+	/**
+	 * Object destruct closes the database connection.
+	 */
+	public function __destruct()
+	{
+		$this->disconnect();
 	}
 }

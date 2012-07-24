@@ -28,6 +28,7 @@ abstract class Connection
 			'type' => 'pdo',
 			'driver' => null,
 			'profiling' => false,
+			'asObject' => true,
 		);
 
 		$class = ucfirst(strtolower($config['type']));

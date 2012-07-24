@@ -19,7 +19,7 @@ abstract class Base
 	/**
 	 * @var  string  $asOjbect  true for stCLass or string classname
 	 */
-	protected $asObject = false;
+	protected $asObject = null;
 
 	/**
 	 * @var  array  $bindings  query bindings
@@ -111,13 +111,14 @@ abstract class Base
 	}
 
 	/**
-	 * As object setter.
+	 * Set the return type for SELECT statements
 	 *
-	 * @param   $object  falsey (falls/null) for array, true for stdClass or string classname
+	 * @param   $object  null for connection default, false for array, true for stdClass or string classname
+	 * @return  object  $this;
 	 */
 	public function asObject($object = true)
 	{
-		$this->asObject = $object ?: null;
+		$this->asObject = $object;
 
 		return $this;
 	}
@@ -125,11 +126,11 @@ abstract class Base
 	/**
 	 * Sets the return type to array
 	 *
-	 * @param   $object  falsey (falls/null) for array, true for stdClass or string classname
+	 * @return  object  $this;
 	 */
 	public function asAssoc()
 	{
-		$this->asObject = null;
+		$this->asObject = false;
 
 		return $this;
 	}

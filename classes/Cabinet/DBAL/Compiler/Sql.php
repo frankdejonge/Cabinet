@@ -229,7 +229,7 @@ abstract class Sql extends Compiler
 
 			if($data['autoIncrement'])
 			{
-				$fsql .= ' AUTO_INCREMENT ';
+				$fsql .= ' AUTO_INCREMENT';
 			}
 
 			if($data['first'])

@@ -1,5 +1,5 @@
 {
-    "name": "Cabinet/DBAL",
+    "name": "cabinet/dbal",
     "description": "Database Abstraction Layer for PDO",
     "authors": [
         {

@@ -17,6 +17,11 @@ use Cabinet\DBAL\Db;
 
 class Mysql extends Pdo
 {
+	/**
+	 * Get an array of table names from the connection.
+	 *
+	 * @return  array  tables names
+	 */
 	public function listTables()
 	{
 		$query = Db::query('SHOW TABLES', Db::SELECT);
@@ -28,6 +33,11 @@ class Mysql extends Pdo
 		}, $result);
 	}
 
+	/**
+	 * Get an array of database names from the connection.
+	 *
+	 * @return  array  database names
+	 */
 	public function listDatabases()
 	{
 		$query = Db::query('SHOW DATABASES', Db::SELECT);
@@ -39,6 +49,11 @@ class Mysql extends Pdo
 		}, $result);
 	}
 
+	/**
+	 * Get an array of table fields from a table.
+	 *
+	 * @return  array  field arrays
+	 */
 	public function listFields($table)
 	{
 		$query = Db::query('SHOW FULL COLUMNS FROM '.$table, Db::SELECT);
@@ -91,6 +106,11 @@ class Mysql extends Pdo
 		return $return;
 	}
 
+	/**
+	 * Start a transaction.
+	 *
+	 * @return  object  $this;
+	 */
 	public function startTransaction()
 	{
 		$this->connection->query('SET AUTOCOMMIT=0');

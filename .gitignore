@@ -1,3 +1,15 @@
 .DS_Store
 vendor
 composer.lock
+*~
+*.bak
+Thumbs.db
+desktop.ini
+.buildpath
+.project
+.settings
+nbproject/
+.idea
+*.tmproj
+*.sublime-project
+*.sublime-workspace

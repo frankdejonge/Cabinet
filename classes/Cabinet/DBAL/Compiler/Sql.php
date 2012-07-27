@@ -227,7 +227,7 @@ abstract class Sql extends Compiler
 				$fsql .= ' NOT NULL';
 			}
 
-			if($data['autoIncrement'])
+			if($data['incremental'])
 			{
 				$fsql .= ' AUTO_INCREMENT';
 			}

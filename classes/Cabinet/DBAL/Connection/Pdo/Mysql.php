@@ -24,7 +24,7 @@ class Mysql extends Pdo
 	 */
 	public function listTables()
 	{
-		$query = Db::query('SHOW TABLES', Db::SELECT);
+		$query = Db::query('SHOW TABLES', Db::SELECT)->asAssoc();
 
 		$result = $query->execute($this);
 
@@ -40,7 +40,7 @@ class Mysql extends Pdo
 	 */
 	public function listDatabases()
 	{
-		$query = Db::query('SHOW DATABASES', Db::SELECT);
+		$query = Db::query('SHOW DATABASES', Db::SELECT)->asAssoc();
 
 		$result = $query->execute($this);
 
@@ -56,7 +56,7 @@ class Mysql extends Pdo
 	 */
 	public function listFields($table)
 	{
-		$query = Db::query('SHOW FULL COLUMNS FROM '.$table, Db::SELECT);
+		$query = Db::query('SHOW FULL COLUMNS FROM '.$table, Db::SELECT)->asAssoc();
 
 		$result  = $query->execute($this);
 

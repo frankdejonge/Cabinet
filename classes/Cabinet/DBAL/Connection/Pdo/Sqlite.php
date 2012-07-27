@@ -25,7 +25,9 @@ class Sqlite extends Pdo
 			" AND name != 'sqlite_sequence' AND name != 'geometry_columns'"
 			." AND name != 'spatial_ref_sys' "
 			. "UNION ALL SELECT name FROM sqlite_temp_master "
-			. "WHERE type = 'table' ORDER BY name", Db::SELECT)->execute());
+			. "WHERE type = 'table' ORDER BY name", Db::SELECT)
+			->asAssoc()
+			->execute());
 	}
 
 	public function listFields($table)
@@ -52,7 +54,9 @@ class Sqlite extends Pdo
 			$field['primary'] = (bool) $i['pk'];
 
 			return $field;
-		}, $this->query('Pragma table_info(`'.$table.'`)', Db::SELECT)->execute());
+		}, $this->query('Pragma table_info(`'.$table.'`)', Db::SELECT)
+			->asAssoc()
+			->execute());
 	}
 
 	public function startTransaction()

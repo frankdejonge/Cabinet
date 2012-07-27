@@ -18,9 +18,11 @@ $conn = Db::connection(array(
 	'database' => 'louter',
 ));
 
+/*
 die($conn->select()->from(':table')
 			->bind('table', 'my_table')
 			->compile());
+*/
 
 $query = $conn->schema()
 	->table('my_table')
@@ -34,7 +36,7 @@ $query = $conn->schema()
 		'id' => function($field){
 			$field->type('int')
 				->constraint(11)
-				->autoIncrement()
+				->incremental()
 				;
 		},
 		'fieldname' => function($field){

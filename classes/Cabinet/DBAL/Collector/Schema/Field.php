@@ -52,9 +52,9 @@ class Field extends Collector
 	public $null = false;
 
 	/**
-	 * @var  boolean  $autoIncrement  wether the field auto increments
+	 * @var  boolean  $incremental  wether the field auto increments
 	 */
-	public $autoIncrement = false;
+	public $incremental = false;
 
 	/**
 	 * @var  boolean  $first  wether the field should be prepended
@@ -156,12 +156,12 @@ class Field extends Collector
 	/**
 	 * Set wether the field auto increments
 	 *
-	 * @param   boolean  $autoIncretement
+	 * @param   boolean  $incremental
 	 * @return  object   $this
 	 */
-	public function autoIncrement($autoIncrement = true)
+	public function incremental($increment = true)
 	{
-		$this->autoIncrement = $autoIncrement;
+		$this->incremental = $increment;
 
 		return $this;
 	}
@@ -199,7 +199,7 @@ class Field extends Collector
 	 */
 	public function unique()
 	{
-		$name = $this->name;		
+		$name = $this->name;
 
 		$this->_table->index(function($index) use($name){
 			$index->type('unique')

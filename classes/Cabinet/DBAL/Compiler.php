@@ -111,14 +111,26 @@ abstract class Compiler
 
 		return $contents;
 	}
-	
+
+	/**
+	 * Value quoting shotcut.
+	 *
+	 * @param   mixed   $value  value to quote
+	 * @return  string  quoted value
+	 */
 	protected function quote($value)
 	{
 		return $this->connection->quote($value);
 	}
-	
-	protected function quoteIdentifier($value)
+
+	/**
+	 * Identifier quoting shotcut.
+	 *
+	 * @param   mixed   $identifier  identifier to quote
+	 * @return  string  quoted value
+	 */
+	protected function quoteIdentifier($identifier)
 	{
-		return $this->connection->quoteIdentifier($value);
+		return $this->connection->quoteIdentifier($identifier);
 	}
 }

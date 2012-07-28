@@ -17,6 +17,16 @@ use Cabinet\DBAL\Db;
 
 class Sqlite extends Pdo
 {
+	/**
+	 * Sets the connection encoding.
+	 *
+	 * @param  string  $charset  encoding
+	 */
+	protected function setCharset($charset)
+	{
+		// skip setting the character set
+	}
+
 	public function listTables()
 	{
 		return array_map(function($i){

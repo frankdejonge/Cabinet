@@ -61,7 +61,7 @@ class Pdo extends Connection
 			'password' => null,
 			'attrs' => array(),
 			'insertIdField' => null,
-			'charset' => 'utf8',
+			'charset' => 'UTF8',
 			'persistent' => true,
 		);
 
@@ -76,9 +76,6 @@ class Pdo extends Connection
 
 		// get connected
 		$this->connect($config);
-
-		// set the charset
-		$this->setCharset($config['charset']);
 		
 		parent::__construct($config);
 	}
@@ -233,10 +230,13 @@ class Pdo extends Connection
 		try
 		{
 			$this->connection = new \PDO($this->formatDsn($config), $config['username'], $config['password'], $config['attrs']);
+			
+			$this->setCharset($config['charset']);
 		}
 		catch (\PDOException $e)
 		{
-			throw new Exception($e->getMessage(), $e->getCode(), $e);
+			$errorCode = is_numeric($e->getCode()) ? $e->getCode() : 0;
+			throw new Exception($e->getMessage(), $errorCode, $e);
 		}
 	}
 
@@ -249,7 +249,7 @@ class Pdo extends Connection
 	{
 		if ( ! empty($charset))
 		{
-			$this->connection->query('SET NAMES '.$this->quote($charset));
+			$this->connection->exec("SET NAMES {$this->quote($charset)}");
 		}
 	}
 

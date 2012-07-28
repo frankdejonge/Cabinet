@@ -66,7 +66,7 @@ $conn->insert('my_table')
 	))
 	->execute();
 
-print_r($conn->select()->from('my_table')->execute());
+print_r($conn->select(Db::fn('count', '*'))->from('my_table')->execute());
 
 $conn->startTransaction();
 

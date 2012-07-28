@@ -418,7 +418,7 @@ abstract class Sql extends Compiler
 	 * @param   object  $value   function object
 	 * @return  string  compiles SQL function
 	 */
-	protected function compilePartFn($value)
+	public function compilePartFn($value)
 	{
 		$fn = ucfirst($value->getFn());
 

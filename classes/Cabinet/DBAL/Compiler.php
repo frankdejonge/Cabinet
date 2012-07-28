@@ -111,4 +111,14 @@ abstract class Compiler
 
 		return $contents;
 	}
+	
+	protected function quote($value)
+	{
+		return $this->connection->quote($value);
+	}
+	
+	protected function quoteIdentifier($value)
+	{
+		return $this->connection->quoteIdentifier($value);
+	}
 }

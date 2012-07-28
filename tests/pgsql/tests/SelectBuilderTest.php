@@ -16,7 +16,7 @@ class SelectBuilderTest extends PHPUnit_Framework_TestCase
 	{
 		$this->connection = Db::connection(array(
 			'driver' => 'pgsql',
-			'username' => 'root',
+			'username' => 'pgsql',
 			'password' => isset($_SERVER['DB']) ? '' : 'root',
 			'database' => 'test_database',
 		));

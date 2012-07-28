@@ -12,6 +12,11 @@ use Cabinet\DBAL\Connection;
 class Pdo extends Connection
 {
 	/**
+	 * @var  string  $tableQuote  table quote
+	 */
+	protected static $tableQuote = '`';
+
+	/**
 	 * @var  object  $connection  PDO connection
 	 */
 	protected $connection;

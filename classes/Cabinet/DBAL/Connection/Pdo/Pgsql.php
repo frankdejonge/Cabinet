@@ -18,6 +18,11 @@ use Cabinet\DBAL\Db;
 class Pgsql extends Pdo
 {
 	/**
+	 * @var  string  $tableQuote  table quote
+	 */
+	protected static $tableQuote = '"';
+
+	/**
 	 * Get an array of table names from the connection.
 	 *
 	 * @return  array  tables names
@@ -56,7 +61,7 @@ class Pgsql extends Pdo
 	 */
 	public function listFields($table)
 	{
-		$query = Db::query('SELECT * FROM information_schema.columns WHERE table_name = '.$this->quoteIdentifier($table), Db::SELECT)
+		$query = Db::query('SELECT * FROM information_schema.columns WHERE table_name = '.$this->quote($table), Db::SELECT)
 			->asAssoc();
 
 		$result = $query->execute($this);

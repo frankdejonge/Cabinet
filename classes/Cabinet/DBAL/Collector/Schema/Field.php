@@ -49,7 +49,7 @@ class Field extends Collector
 	/**
 	 * @var  boolean  $nullable  is nullable
 	 */
-	public $null = false;
+	public $nullable = false;
 
 	/**
 	 * @var  boolean  $primary  wether the field is a primary key

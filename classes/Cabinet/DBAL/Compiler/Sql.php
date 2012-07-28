@@ -18,11 +18,6 @@ use Cabinet\DBAL\Query\Base;
 abstract class Sql extends Compiler
 {
 	/**
-	 * @var  string  $tableQuote  table quote
-	 */
-	protected static $tableQuote = '`';
-
-	/**
 	 * Compiles a INSERT query
 	 *
 	 * @return  string  compiled INSERT query
@@ -286,7 +281,9 @@ abstract class Sql extends Compiler
 	}
 
 	/**
-	 * 
+	 * Compiles the ENGINE statement
+	 *
+	 * @return  string  compiled ENGINE statement
 	 */
 	public function compilePartEngine()
 	{
@@ -695,133 +692,7 @@ abstract class Sql extends Compiler
 		return $part;
 	}
 
-	/**
-	 * Quotes an identifier
-	 *
-	 * @param   mixed   $value  value to quote
-	 * @return  string  quoted identifier
-	 */
-	public function quoteIdentifier($value)
-	{
-		if ($value === '*')
-		{
-			return $value;
-		}
-
-		if (is_object($value))
-		{
-			if ($value instanceof Base)
-			{
-				// Create a sub-query
-				return '('.$value->compile($this->connection).')';
-			}
-			elseif ($value instanceof \Cabinet\DBAL\Expression)
-			{
-				// Use a raw expression
-				return $value->handle($this);
-			}
-			elseif ($value instanceof \Cabinet\DBAL\Fn)
-			{
-				return $this->compilePartFn($value);
-			}
-			else
-			{
-				// Convert the object to a string
-				return $this->quoteIdentifier((string) $value);
-			}
-		}
-
-		if (is_array($value))
-		{
-			// Separate the column and alias
-			list ($_value, $alias) = $value;
-			return $this->quoteIdentifier($_value).' AS '.$this->quoteIdentifier($alias);
-		}
-
-		if (strpos($value, '"') !== false)
-		{
-			// Quote the column in FUNC("ident") identifiers
-			return preg_replace('/"(.+?)"/e', '$this->quoteIdentifier("$1")', $value);
-		}
-
-		if (strpos($value, '.') !== false)
-		{
-			// Split the identifier into the individual parts
-			$parts = explode('.', $value);
-
-			// Quote each of the parts
-			return implode('.', array_map(array($this, __FUNCTION__), $parts));
-		}
-
-		return static::$tableQuote.$value.static::$tableQuote;
-	}
-
-	/**
-	 * Quote a value for an SQL query.
-	 *
-	 * Objects passed to this function will be converted to strings.
-	 * Expression objects will use the value of the expression.
-	 * Query objects will be compiled and converted to a sub-query.
-	 * Fn objects will be send of for compiling.
-	 * All other objects will be converted using the `__toString` method.
-	 *
-	 * @param   mixed   any value to quote
-	 * @return  string
-	 * @uses    static::escape
-	 */
-	public function quote($value)
-	{
-		if ($value === null)
-		{
-			return 'NULL';
-		}
-		elseif ($value === true)
-		{
-			return "'1'";
-		}
-		elseif ($value === false)
-		{
-			return "'0'";
-		}
-		elseif (is_object($value))
-		{
-			if ($value instanceof Base)
-			{
-				// create a sub-query
-				return '('.$value->compile($this->connection).')';
-			}
-			if ($value instanceof \Cabinet\DBAL\Fn)
-			{
-				// compile the function
-				return $this->compilePartFn($value);
-			}
-			elseif ($value instanceof \Cabinet\DBAL\Expression)
-			{
-				// get the output from the expression
-				return $value->handle($this);
-			}
-			else
-			{
-				// Convert the object to a string
-				return $this->quote((string) $value, $commands['params']);
-			}
-		}
-		elseif (is_array($value))
-		{
-			return '('.implode(', ', array_map(array($this, 'quote'), $value)).')';
-		}
-		elseif (is_int($value))
-		{
-			return (int) $value;
-		}
-		elseif (is_float($value))
-		{
-			// Convert to non-locale aware float to prevent possible commas
-			return sprintf('%F', $value);
-		}
-
-		return $this->escape($value);
-	}
+	//
 
 	/**
 	 * Escapes a value

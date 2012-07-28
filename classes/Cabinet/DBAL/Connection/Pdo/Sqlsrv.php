@@ -14,7 +14,15 @@ namespace Cabinet\DBAL\Connection\Pdo;
 
 use Cabinet\DBAL\Connection\Pdo;
 
-class Sqlserver extends Pdo
+class Sqlsrv extends Pdo
 {
-
+	/**
+	 * Sets the connection encoding.
+	 *
+	 * @param  string  $charset  encoding
+	 */
+	protected function setCharset($charset)
+	{
+		$this->connection->setAttribute(\PDO::SQLSRV_ATTR_ENCODING, constant("\PDO::SQLSRV_ENCODING_".strtoupper($charset)));
+	}
 }

@@ -240,14 +240,17 @@ class Pdo extends Connection
 		}
 	}
 
-	public function setCharset($charset)
+	/**
+	 * Sets the connection encoding.
+	 *
+	 * @param  string  $charset  encoding
+	 */
+	protected function setCharset($charset)
 	{
-		if (empty($charset))
+		if ( ! empty($charset))
 		{
-			return $this;
+			$this->connection->query('SET NAMES '.$this->quote($charset));
 		}
-
-		
 	}
 
 	/**
@@ -431,7 +434,7 @@ class Pdo extends Connection
 	{
 		if ( ! $savepoint)
 		{
-			$savepoint = 'CABINET_SP_LEVEL_'. $this->savepoint;
+			$savepoint = 'CABINET_SP_LEVEL_'.$this->savepoint;
 			$this->savepoint--;
 		}
 

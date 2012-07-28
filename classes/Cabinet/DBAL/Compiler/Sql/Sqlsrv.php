@@ -14,7 +14,7 @@ namespace Cabinet\DBAL\Compiler\Sql;
 
 use Cabinet\DBAL\Compiler\Sql;
 
-class Sqlserver extends Sql
+class Sqlsrv extends Sql
 {
 
 }

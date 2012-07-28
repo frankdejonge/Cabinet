@@ -17,11 +17,6 @@ use Cabinet\DBAL\Compiler\Sql;
 class Pgsql extends Sql
 {
 	/**
-	 * @var  string  $tableQuote  table quote
-	 */
-	protected static $tableQuote = '"';
-
-	/**
 	 * Compiles a PGSQL concatination.
 	 *
 	 * @param   object  $value  Fn object

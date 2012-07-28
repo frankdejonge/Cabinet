@@ -12,4 +12,16 @@
 
 namespace Cabinet\DBAL;
 
-class Identifier extends Expression {}
+class Identifier extends Expression
+{
+	/**
+	 * Handles identifier quoting.
+	 *
+	 * @param   Compiler  $compiler  compiler instance
+	 * @return  string    quoted identifier
+	 */
+	public function handle(Compiler $compiler)
+	{
+		return $compiler->quoteIdentifier($this->value);
+	}
+}

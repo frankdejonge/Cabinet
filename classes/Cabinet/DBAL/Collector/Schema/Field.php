@@ -57,6 +57,16 @@ class Field extends Collector
 	public $incremental = false;
 
 	/**
+	 * @var  boolean  $unique  wether the field is unique
+	 */
+	public $unique = false;
+
+	/**
+	 * @var  boolean  $fulltext  wether the field is fulltext searchable
+	 */
+	public $fulltext = false;
+
+	/**
 	 * @var  boolean  $first  wether the field should be prepended
 	 */
 	public $first = false;
@@ -193,18 +203,27 @@ class Field extends Collector
 	}
 
 	/**
-	 * Sets a unique indec on the field.
+	 * Sets a unique index on the field.
 	 *
+	 * @param   boolean  $unique  wether the field is unique
 	 * @return  object  $this
 	 */
-	public function unique()
+	public function unique($unique = true)
 	{
-		$name = $this->name;
+		$this->unique = $unique;
 
-		$this->_table->index(function($index) use($name){
-			$index->type('unique')
-				->on($name);
-		});
+		return $this;
+	}
+
+	/**
+	 * Sets the fields as fulltext searchable
+	 *
+	 * @param   boolean  $ulltext  wether the field is fulltext searchable
+	 * @return  object   $this
+	 */
+	public function fulltext($fulltext = true)
+	{
+		$this->fulltext = $fulltext;
 
 		return $this;
 	}

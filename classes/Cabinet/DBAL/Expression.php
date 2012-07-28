@@ -15,6 +15,11 @@ namespace Cabinet\DBAL;
 class Expression
 {
 	/**
+	 * @var  mixed  $value  the raw expression
+	 */
+	protected $value;
+
+	/**
 	 * Expression constructor.
 	 *
 	 * @param  mixed  expression value
@@ -30,7 +35,7 @@ class Expression
 	 * @param   object  $connection  connection
 	 * @return  mixed   the expression value
 	 */
-	public function value()
+	public function handle()
 	{
 		return $this->value;
 	}

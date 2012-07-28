@@ -718,7 +718,7 @@ abstract class Sql extends Compiler
 			elseif ($value instanceof \Cabinet\DBAL\Expression)
 			{
 				// Use a raw expression
-				return $value->value();
+				return $value->handle($this);
 			}
 			elseif ($value instanceof \Cabinet\DBAL\Fn)
 			{
@@ -787,25 +787,18 @@ abstract class Sql extends Compiler
 		{
 			if ($value instanceof Base)
 			{
-				// Create a sub-query
+				// create a sub-query
 				return '('.$value->compile($this->connection).')';
 			}
-			elseif ($value instanceof \Cabinet\DBAL\Value)
+			if ($value instanceof \Cabinet\DBAL\Fn)
 			{
-				return $this->escape($value->value());
-			}
-			elseif ($value instanceof \Cabinet\DBAL\Identifier)
-			{
-				return $this->quoteIdentifier($value->value());
-			}
-			elseif ($value instanceof \Cabinet\DBAL\Fn)
-			{
+				// compile the function
 				return $this->compilePartFn($value);
 			}
 			elseif ($value instanceof \Cabinet\DBAL\Expression)
 			{
-				// Use a raw expression
-				return $value->value();
+				// get the output from the expression
+				return $value->handle($this);
 			}
 			else
 			{

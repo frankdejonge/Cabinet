@@ -54,7 +54,7 @@ class Sqlite extends Pdo
 			$field['primary'] = (bool) $i['pk'];
 
 			return $field;
-		}, $this->query('Pragma table_info(`'.$table.'`)', Db::SELECT)
+		}, $this->query('Pragma table_info('.$this->quoteIdentifier($table).')', Db::SELECT)
 			->asAssoc()
 			->execute());
 	}

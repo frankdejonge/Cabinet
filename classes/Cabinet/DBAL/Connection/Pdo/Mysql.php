@@ -56,7 +56,7 @@ class Mysql extends Pdo
 	 */
 	public function listFields($table)
 	{
-		$query = Db::query('SHOW FULL COLUMNS FROM '.$table, Db::SELECT)->asAssoc();
+		$query = Db::query('SHOW FULL COLUMNS FROM '.$this->quoteIdentifier($table), Db::SELECT)->asAssoc();
 
 		$result  = $query->execute($this);
 

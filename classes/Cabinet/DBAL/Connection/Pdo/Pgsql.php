@@ -56,7 +56,7 @@ class Pgsql extends Pdo
 	 */
 	public function listFields($table)
 	{
-		$query = Db::query("SELECT * FROM information_schema.columns WHERE table_name ='$table'", Db::SELECT)
+		$query = Db::query('SELECT * FROM information_schema.columns WHERE table_name = '.$this->quoteIdentifier($table), Db::SELECT)
 			->asAssoc();
 
 		$result = $query->execute($this);

@@ -216,7 +216,7 @@ abstract class Sql extends Compiler
 				$fsql .= ' DEFAULT '.$this->quote($data['defaultValue']);
 			}
 
-			if ($data['null'])
+			if ($data['nullable'])
 			{
 				$fsql .= ' NULL';
 			}

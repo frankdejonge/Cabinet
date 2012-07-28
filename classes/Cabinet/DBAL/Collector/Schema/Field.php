@@ -200,9 +200,9 @@ class Field extends Collector
 	 * @param   string  $null  wether the field is nullable
 	 * @return  object  $this
 	 */
-	public function null($null = true)
+	public function nullable($nullable = true)
 	{
-		$this->null = $null;
+		$this->nullable = $nullable;
 
 		return $this;
 	}

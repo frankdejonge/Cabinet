@@ -36,7 +36,7 @@ class TransactionTest extends PHPUnit_Framework_TestCase
 				'name' => function($field){
 					$field->type('varchar')
 						->constraint(255)
-						->null();
+						->nullable();
 				},
 			))
 			->execute();

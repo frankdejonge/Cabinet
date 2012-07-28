@@ -22,7 +22,6 @@ class TransactionTest extends PHPUnit_Framework_TestCase
 			->table('test_table')
 			->create()
 			->ifNotExists()
-			->engine('InnoDB')
 			->fields(array(
 				'id' => function($field){
 					$field->incremental()
@@ -31,7 +30,7 @@ class TransactionTest extends PHPUnit_Framework_TestCase
 				'name' => function($field){
 					$field->type('varchar')
 						->constraint(255)
-						->null();
+						->nullable();
 				},
 			))
 			->execute();

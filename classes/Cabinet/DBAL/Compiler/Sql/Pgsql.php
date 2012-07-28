@@ -29,4 +29,35 @@ class Pgsql extends Sql
 
 		return join(' || ', array_map(array($this, $quoteFn), $value->getParams()));
 	}
+
+	/**
+	 * Prepares the fields for rendering.
+	 *
+	 * @param   array  $fields  array with field objects
+	 * @return  array  array with prepped field objects
+	 */
+	protected function prepareFields($fields)
+	{
+		return array_map(function($field){
+			$data = $field->getContents();
+			
+			if ($data['incremental'])
+			{
+				$data['type'] = 'serial';
+				$data['incremental'] = false;
+			}
+			
+			return $data;
+		}, $fields);
+	}
+
+	/**
+	 * Compiles the ENGINE statement
+	 *
+	 * @return  string  compiled ENGINE statement
+	 */
+	protected function compilePartEngine()
+	{
+		return '';
+	}
 }

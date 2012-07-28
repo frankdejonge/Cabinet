@@ -52,6 +52,11 @@ class Field extends Collector
 	public $null = false;
 
 	/**
+	 * @var  boolean  $primary  wether the field is a primary key
+	 */
+	public $primary = false;
+
+	/**
 	 * @var  boolean  $incremental  wether the field auto increments
 	 */
 	public $incremental = false;
@@ -159,6 +164,19 @@ class Field extends Collector
 	public function charset($charset)
 	{
 		$this->charset = $charset;
+
+		return $this;
+	}
+
+	/**
+	 * Set wether the field is a primary key
+	 *
+	 * @param   boolean  $incremental
+	 * @return  object   $this
+	 */
+	public function primary($primary = true)
+	{
+		$this->primary = $primary;
 
 		return $this;
 	}

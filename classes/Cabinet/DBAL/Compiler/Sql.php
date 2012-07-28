@@ -146,7 +146,6 @@ abstract class Sql extends Compiler
 	public function compileTableCreate()
 	{
 		$sql = 'CREATE TABLE ';
-
 		$this->query['ifNotExists'] and $sql .= 'IF NOT EXISTS ';
 		$sql .= $this->quoteIdentifier($this->query['table']).' ( ';
 		$sql .= $this->compilePartFields('create');
@@ -164,12 +163,11 @@ abstract class Sql extends Compiler
 	 */
 	protected function compilePartFields($type)
 	{
-		$fields = array();
+		$fieldsSql = array();
+		$fields = $this->prepareFields($this->query['fields']);
 
-		foreach ($this->query['fields'] as $field)
+		foreach ($fields as $data)
 		{
-			$data = $field->getContents();
-
 			if($type === 'alter')
 			{
 				if ($data['newName'] and $data['name'] !== $data['newName'])
@@ -201,6 +199,11 @@ abstract class Sql extends Compiler
 			if ($data['charset'])
 			{
 				$fsql .= ' '.$this->compilePartCharset($data['charset']);
+			}
+			
+			if ($data['primary'])
+			{
+				$fsql .= ' PRIMARY KEY';
 			}
 
 			if ($data['unsigned'])
@@ -242,10 +245,10 @@ abstract class Sql extends Compiler
 				$fsql .= ' COMMENT '.$this->quote($data['comments']);
 			}
 
-			$fields[] = $fsql;
+			$fieldsSql[] = $fsql;
 		}
 
-		return join(', ', $fields);
+		return join(', ', $fieldsSql);
 	}
 
 	public function compilePartIndexes()
@@ -281,11 +284,24 @@ abstract class Sql extends Compiler
 	}
 
 	/**
+	 * Prepares the fields for rendering.
+	 *
+	 * @param   array  $fields  array with field objects
+	 * @return  array  array with prepped field objects
+	 */
+	protected function prepareFields($fields)
+	{
+		return array_map(function($field){
+			return $field->getContents();
+		}, $fields);
+	}
+
+	/**
 	 * Compiles the ENGINE statement
 	 *
 	 * @return  string  compiled ENGINE statement
 	 */
-	public function compilePartEngine()
+	protected function compilePartEngine()
 	{
 		return $this->query['engine'] ? ' ENGINE = '.$this->query['engine'] : '';
 	}

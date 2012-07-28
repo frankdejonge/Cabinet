@@ -18,7 +18,7 @@ use Cabinet\DBAL\Query\Base;
 abstract class Sql extends Compiler
 {
 	/**
-	 * Compiles a INSERT query
+	 * Compiles an insert query
 	 *
 	 * @return  string  compiled INSERT query
 	 */
@@ -36,7 +36,7 @@ abstract class Sql extends Compiler
 	}
 
 	/**
-	 * Compiles a UPDATE query
+	 * Compiles an update query
 	 *
 	 * @return  string  compiled UPDATE query
 	 */
@@ -51,7 +51,7 @@ abstract class Sql extends Compiler
 	}
 
 	/**
-	 * Compiles a DELETE query
+	 * Compiles a delete query
 	 *
 	 * @return  string  compiled DELETE query
 	 */
@@ -65,7 +65,7 @@ abstract class Sql extends Compiler
 	}
 
 	/**
-	 * Compiles a INSERT query
+	 * Compiles an insert query
 	 *
 	 * @return  string  compiled INSERT query
 	 */
@@ -77,7 +77,7 @@ abstract class Sql extends Compiler
 	}
 
 	/**
-	 * Compiles a DROP DATABASE query
+	 * Compiles a drop databse query
 	 *
 	 * @return  string  compiles DROP DATABASE query
 	 */
@@ -89,7 +89,7 @@ abstract class Sql extends Compiler
 	}
 
 	/**
-	 * Compiles a CREATE DATABASE query
+	 * Compiles a create database query
 	 *
 	 * @return  string  compiles DROP DATABASE query
 	 */
@@ -102,7 +102,7 @@ abstract class Sql extends Compiler
 	}
 
 	/**
-	 * Compiles a DROP TABLE query
+	 * Compiles a drop table query
 	 *
 	 * @return  string  compiles DROP TABLE query
 	 */
@@ -114,13 +114,20 @@ abstract class Sql extends Compiler
 	}
 
 	/**
-	 * Compiles a RENAME TABLE query
+	 * Compiles a rename table query
+	 *
+	 * @return  string  compiled rename table query
 	 */
 	public function compileTableRename()
 	{
 		return 'RENAME TABLE '.$this->quoteIdentifier($this->query['table']).' TO '.$this->quoteIdentifier($this->query['newName']);
 	}
 
+	/**
+	 * Compile an alter table query for dropping fields.
+	 *
+	 * @return  string  compiled create table query
+	 */
 	public function compileTableDropFields()
 	{
 		return 'ALTER TABLE '.
@@ -129,6 +136,11 @@ abstract class Sql extends Compiler
 			join(', ', array_map(array($this, 'quoteIdentifier'), $this->query['fields']));
 	}
 
+	/**
+	 * Compile an alter table query for altering fields.
+	 *
+	 * @return  string  compiled create table query
+	 */
 	public function compileTableAlterFields()
 	{
 		return 'ALTER TABLE '.
@@ -136,6 +148,11 @@ abstract class Sql extends Compiler
 			$this->compilePartFields('alter');
 	}
 
+	/**
+	 * Compile an alter table query for adding fields.
+	 *
+	 * @return  string  compiled create table query
+	 */
 	public function compileTableAddFields()
 	{
 		return 'ALTER TABLE '.
@@ -143,6 +160,11 @@ abstract class Sql extends Compiler
 			$this->compilePartFields('add');
 	}
 
+	/**
+	 * Compile a create table query.
+	 *
+	 * @return  string  compiled create table query
+	 */
 	public function compileTableCreate()
 	{
 		$sql = 'CREATE TABLE ';
@@ -251,6 +273,11 @@ abstract class Sql extends Compiler
 		return join(', ', $fieldsSql);
 	}
 
+	/**
+	 * Compiles the table indexes.
+	 *
+	 * @return  string  compiled index sql
+	 */
 	public function compilePartIndexes()
 	{
 		if (empty($this->query['indexes']))
@@ -291,7 +318,7 @@ abstract class Sql extends Compiler
 	 */
 	protected function prepareFields($fields)
 	{
-		return array_map(function($field){
+		return array_map(function($field) {
 			return $field->getContents();
 		}, $fields);
 	}
@@ -449,9 +476,9 @@ abstract class Sql extends Compiler
 	}
 
 	/**
-	 * Compiles the INSERT INTO STATEMENT
+	 * Compiles the insert into part.
 	 *
-	 *
+	 * @return  string  compiled inter into part
 	 */
 	protected function compilePartInsert()
 	{
@@ -461,7 +488,7 @@ abstract class Sql extends Compiler
 	/**
 	 * Compiles the insert values.
 	 *
-	 * @return  string
+	 * @return  string  compiled values part
 	 */
 	protected function compilePartInsertValues()
 	{
@@ -487,9 +514,9 @@ abstract class Sql extends Compiler
 	}
 
 	/**
-	 * Compiles SELECT statement
+	 * Compiles a select part.
 	 *
-	 * @return  string  compiled SELECT statement
+	 * @return  string  compiled select part
 	 */
 	protected function compilePartSelect()
 	{
@@ -500,9 +527,9 @@ abstract class Sql extends Compiler
 	}
 
 	/**
-	 * Compiles DELETE statement
+	 * Compiles a delete part.
 	 *
-	 * @return  string  compiled DELETE statement
+	 * @return  string  compiled delete part
 	 */
 	protected function compilePartDelete()
 	{
@@ -510,9 +537,9 @@ abstract class Sql extends Compiler
 	}
 
 	/**
-	 * Compiles UPDATE statement
+	 * Compiles an update part.
 	 *
-	 * @return  string  compiled UPDATE statement
+	 * @return  string  compiled update part
 	 */
 	protected function compilePartUpdate()
 	{
@@ -520,9 +547,9 @@ abstract class Sql extends Compiler
 	}
 
 	/**
-	 * Compiles FROM statement
+	 * Compiles a from part.
 	 *
-	 * @return  string  compiled FROM statement
+	 * @return  string  compiled from part
 	 */
 	protected function compilePartFrom()
 	{
@@ -532,9 +559,9 @@ abstract class Sql extends Compiler
 	}
 
 	/**
-	 * Compiles the WHERE statement
+	 * Compiles the where part.
 	 *
-	 * @return  string  compiled WHERE statement
+	 * @return  string  compiled where part
 	 */
 	protected function compilePartWhere()
 	{
@@ -548,9 +575,9 @@ abstract class Sql extends Compiler
 	}
 
 	/**
-	 * Compiles the SET statement
+	 * Compiles the set part.
 	 *
-	 * @return  string  compiled WHERE statement
+	 * @return  string  compiled set part
 	 */
 	protected function compilePartSet()
 	{
@@ -570,7 +597,7 @@ abstract class Sql extends Compiler
 	}
 
 	/**
-	 * Compiles the HAVING statement
+	 * Compiles the having part.
 	 *
 	 * @return  string  compiled HAVING statement
 	 */
@@ -586,9 +613,9 @@ abstract class Sql extends Compiler
 	}
 
 	/**
-	 * Compiles the ORDER BY statement
+	 * Compiles the order by part.
 	 *
-	 * @return  string  compiled ORDER BY statement
+	 * @return  string  compiled order by part
 	 */
 	protected function compilePartOrderBy()
 	{
@@ -616,9 +643,9 @@ abstract class Sql extends Compiler
 	}
 
 	/**
-	 * Compiles the JOIN statements
+	 * Compiles the join part.
 	 *
-	 * @return  string  compiled JOIN statement
+	 * @return  string  compiled join part
 	 */
 	protected function compilePartJoin()
 	{
@@ -671,9 +698,9 @@ abstract class Sql extends Compiler
 	}
 
 	/**
-	 * Compiles the GROUP BY statement
+	 * Compiles the group by part.
 	 *
-	 * @return  string  compiler GROUP BY statement
+	 * @return  string  compiler group by part
 	 */
 	protected function compilePartGroupBy()
 	{
@@ -687,7 +714,7 @@ abstract class Sql extends Compiler
 	}
 
 	/**
-	 * Compiles the LIMIT and OFFSET statement.
+	 * Compiles the limit and offset statement.
 	 *
 	 * @return  string  compiled limit and offset statement
 	 */
@@ -708,10 +735,8 @@ abstract class Sql extends Compiler
 		return $part;
 	}
 
-	//
-
 	/**
-	 * Escapes a value
+	 * Escapes a value.
 	 *
 	 * @param   string  $value  value to escape
 	 * @return  string  escaped string

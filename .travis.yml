@@ -6,7 +6,7 @@ php:
 
 env:
   - DB=mysql
-  - DB=pqsql
+  - DB=pgsql
 
 before_script:
   - curl -s http://getcomposer.org/installer | php

@@ -3,6 +3,7 @@
 namespace Cabinet\DBAL\Connection;
 
 use Cabinet\DBAL\Db;
+use Cabinet\DBAL\Base;
 use Cabinet\DBAL\Query;
 use Cabinet\DBAL\Result;
 use Cabinet\DBAL\Exception;
@@ -314,7 +315,7 @@ class Pdo extends Connection
 	 */
 	public function execute($query, $type = null, $bindings = array())
 	{
-		if( ! $query instanceof Query\Base)
+		if( ! $query instanceof Base)
 		{
 			$query = new Query($query, $type);
 		}
@@ -399,7 +400,7 @@ class Pdo extends Connection
 	 */
 	public function compile($query, $type = null, $bindings = array())
 	{
-		if( ! $query instanceof Query\Base)
+		if( ! $query instanceof Base)
 		{
 			$query = new Query($query, $type);
 		}

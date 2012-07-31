@@ -10,9 +10,7 @@
  * @link       http://cabinetphp.com
  */
 
-namespace Cabinet\DBAL\Query;
-
-use Cabibet\DBAL\Connection;
+namespace Cabinet\DBAL;
 
 abstract class Base
 {
@@ -60,11 +58,11 @@ abstract class Base
 	 * @param   object  $connection  database connection object
 	 * @return  object  $this
 	 */
-	public function setConnection($connection)
+	public function setConnection(Connection $connection)
 	{
-		if( ! $connection instanceof \Cabinet\DBAL\Connection)
+		if( ! $connection instanceof Connection)
 		{
-			throw new \Cabinet\DBAL\Exception('Supplied invalid connection object');
+			throw new Exception('Supplied invalid connection object');
 		}
 
 		$this->_connection = $connection;

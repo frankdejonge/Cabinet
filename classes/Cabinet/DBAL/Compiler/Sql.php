@@ -13,7 +13,7 @@
 namespace Cabinet\DBAL\Compiler;
 
 use Cabinet\DBAL\Compiler;
-use Cabinet\DBAL\Query\Base;
+use Cabinet\DBAL\Base;
 
 abstract class Sql extends Compiler
 {
@@ -222,7 +222,7 @@ abstract class Sql extends Compiler
 			{
 				$fsql .= ' '.$this->compilePartCharset($data['charset']);
 			}
-			
+
 			if ($data['primary'])
 			{
 				$fsql .= ' PRIMARY KEY';
@@ -310,6 +310,44 @@ abstract class Sql extends Compiler
 		return ', '.join(', ',$parts);
 	}
 
+	protected function compilePartForeignKeys()
+	{
+		if (empty($this->query['foreignKeys']))
+		{
+			return '';
+		}
+
+		$sql = array();
+		$part = array();
+
+		foreach ($this->query['foreignKeys'] as $fk)
+		{
+			if ($fk['constraint'])
+			{
+				$part[] = 'CONTSTRAINT '.$this->quoteIdentifier($fk['constraint']);
+			}
+			
+			$part[] = 'FOREIGN KEY ('.$this->quoteIdentifier($fk['key']).')';
+			$part[] = 'REFERENCES '.$this->quoteIdentifier($fk['reference']['table']).' ('.
+				$this->quoteIdentifier($fk['reference']['columns']).')';
+
+			if ($fk['onUpdate'])
+			{
+				$part[] = 'ON UPDATE '.strtoupper($fk['onUpdate']);
+			}
+
+			if ($fk['onDelete'])
+			{
+				$part[] = 'ON DELETE '.strtoupper($fk['onDelete']);
+			}
+
+			$sql[] = join(' ', $part);
+			$part = array();
+		}
+
+		return join(', ');
+	}
+
 	/**
 	 * Prepares the fields for rendering.
 	 *
@@ -377,10 +415,10 @@ abstract class Sql extends Compiler
 			{
 				$parts[] = ' '.strtoupper($c['type']).' ';
 			}
-			
+
 			if ($useNot = (isset($c['not']) and $c['not']))
 			{
-				$parts[] = count($parts) > 0 ? 'NOT ' : ' NOT '; 
+				$parts[] = count($parts) > 0 ? 'NOT ' : ' NOT ';
 			}
 
 			if (isset($c['nesting']))

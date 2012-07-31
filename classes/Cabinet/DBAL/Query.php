@@ -12,7 +12,7 @@
 
 namespace Cabinet\DBAL;
 
-class Query extends Query\Base
+class Query extends Base
 {
 	/**
 	 * @var  mixed  raw query (string for sql, array for NoSQL)

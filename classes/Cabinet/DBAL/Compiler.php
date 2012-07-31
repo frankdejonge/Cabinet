@@ -12,6 +12,8 @@
 
 namespace Cabinet\DBAL;
 
+use Cabinet\DBAL\Base;
+
 
 abstract class Compiler
 {
@@ -42,9 +44,11 @@ abstract class Compiler
 	 */
 	public function compile($query, $type = null, $bindings = array())
 	{
-		// ensure an instance of Quer\Base
-		if ( ! ($query instanceof Query\Base))
+		// ensure an instance of Base
+		//var_dump($query instanceof Base);
+		if ( ! ($query instanceof Base))
 		{
+			//echo 'this';
 			$query = new Query($query, $type, $bindings);
 		}
 

@@ -12,7 +12,7 @@
 
 namespace Cabinet\DBAL;
 
-class Collector extends Query\Base
+class Collector extends Base
 {
 	/**
 	 * @var  array|string  $table  tables to use

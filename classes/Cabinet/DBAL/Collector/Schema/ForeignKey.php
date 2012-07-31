@@ -15,14 +15,17 @@ namespace Cabinet\DBAL\Collector\Schema;
 class ForeignKey
 {
 	/**
-	 * @var  string  $on  field name
+	 * @var  string  $key  key name
 	 */
-	public $on;
+	public $key;
 
 	/**
 	 * @var  string  $references  table and field references
 	 */
-	public $references;
+	public $reference = array(
+		'table' => null,
+		'columns' => array(),
+	);
 
 	/**
 	 * @var  string  $onUpdate  update action
@@ -42,11 +45,11 @@ class ForeignKey
 	/**
 	 * Constructor, sets the key field
 	 *
-	 * @param  string  $on  field name
+	 * @param  string  $key  key name
 	 */
-	public function __construct($on)
+	public function __construct($key)
 	{
-		$this->on = $on;
+		$this->key = $key;
 	}
 
 	/**
@@ -55,9 +58,10 @@ class ForeignKey
 	 * @param   string  $identifier  foreign key reference
 	 * @return  object  $this;
 	 */
-	public function references($identifier)
+	public function references($table, $columns)
 	{
-		$this->references = func_get_args();
+		$this->reference['table'] = $table;
+		$this->reference['columns'] = is_array($columns) ? $columns : array($columns);
 
 		return $this;
 	}

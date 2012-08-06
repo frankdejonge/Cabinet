@@ -77,7 +77,7 @@ abstract class Compiler
 
 		// Compile the query according to it's type.
 		$result = $this->{'compile'.$type}();
-		is_string($result) and $result = trim($result)
+		is_string($result) and $result = trim($result);
 
 		// Set back the old query
 		$this->query = $oldQuery;

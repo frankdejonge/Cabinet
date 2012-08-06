@@ -310,6 +310,11 @@ abstract class Sql extends Compiler
 		return ', '.join(', ',$parts);
 	}
 
+	/**
+	 * Compiles foreign keys.
+	 *
+	 * @return  string  compiled foreign keys
+	 */
 	protected function compilePartForeignKeys()
 	{
 		if (empty($this->query['foreignKeys']))
@@ -318,10 +323,11 @@ abstract class Sql extends Compiler
 		}
 
 		$sql = array();
-		$part = array();
 
 		foreach ($this->query['foreignKeys'] as $fk)
 		{
+			$part = array();
+
 			if ($fk['constraint'])
 			{
 				$part[] = 'CONTSTRAINT '.$this->quoteIdentifier($fk['constraint']);
@@ -342,10 +348,9 @@ abstract class Sql extends Compiler
 			}
 
 			$sql[] = join(' ', $part);
-			$part = array();
 		}
 
-		return join(', ');
+		return ', '.join(', ', $sql);
 	}
 
 	/**

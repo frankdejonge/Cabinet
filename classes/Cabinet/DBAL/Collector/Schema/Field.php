@@ -208,6 +208,32 @@ class Field extends Collector
 	}
 
 	/**
+	 * Set the field as an integer.
+	 *
+	 * @param   string  $integer  wether the field is an integer
+	 * @return  object  $this
+	 */
+	public function integer($integer = true)
+	{
+		$this->integer = $integer;
+		
+		return $this;
+	}
+
+	/**
+	 * Set the field as a string.
+	 *
+	 * @param   string  $integer  wether the field is an integer
+	 * @return  object  $this
+	 */
+	public function string($string = true)
+	{
+		$this->string = $string;
+		
+		return $this;
+	}
+
+	/**
 	 * Sets the field comments.
 	 *
 	 * @param   string  $comments  field comments

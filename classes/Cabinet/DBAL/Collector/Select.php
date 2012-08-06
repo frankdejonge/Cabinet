@@ -97,6 +97,18 @@ class Select extends Where
 	}
 
 	/**
+	 * Empty the select array
+	 *
+	 * @return  object  current instance
+	 */
+	public function resetSelect()
+	{
+		$this->columns = array();
+
+		return $this;
+	}
+
+	/**
 	 * Choose the columns to select from, using an array.
 	 *
 	 * @param   array  $columns  list of column names or aliases

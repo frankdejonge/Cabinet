@@ -332,7 +332,7 @@ abstract class Sql extends Compiler
 			{
 				$part[] = 'CONTSTRAINT '.$this->quoteIdentifier($fk['constraint']);
 			}
-			
+
 			$part[] = 'FOREIGN KEY ('.$this->quoteIdentifier($fk['key']).')';
 			$part[] = 'REFERENCES '.$this->quoteIdentifier($fk['reference']['table']).' ('.
 				$this->quoteIdentifier($fk['reference']['columns']).')';
@@ -535,7 +535,8 @@ abstract class Sql extends Compiler
 	 */
 	protected function compilePartInsertValues()
 	{
-		$sql = ' ('.join(' , ', $this->query['columns']).') VALUES (';
+		$columns = array_map(array($this, 'quoteIdentifier'), $this->query['columns']);
+		$sql = ' ('.join(' , ', $columns).') VALUES (';
 		$parts = array();
 
 		foreach ($this->query['values'] as $row)

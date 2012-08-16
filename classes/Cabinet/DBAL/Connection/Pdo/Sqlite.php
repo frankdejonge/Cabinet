@@ -27,6 +27,24 @@ class Sqlite extends Pdo
 		// skip setting the character set
 	}
 
+	/**
+	 * Formats the dsn if none supplied and returns it.
+	 *
+	 * @param   array   $config  connection config
+	 * @return  string  formatted connection dsn
+	 */
+	protected function formatDsn($config)
+	{
+		// check for dsn, if set, return that
+		if (isset($config['dsn']) and ! empty($config['dsn']))
+		{
+			return $config['dsn'];
+		}
+
+		// build the dsn
+		return $config['driver'].':'.$config['database'];
+	}
+
 	public function listTables()
 	{
 		return array_map(function($i){

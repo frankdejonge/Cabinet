@@ -339,7 +339,8 @@ class Pdo extends Connection
 		}
 		catch (\PDOException $e)
 		{
-			throw new Exception($e->getMessage().' from QUERY: '.$sql, $e->getCode());
+			$code = is_long($e->getCode()) ? $e->getCode() : 0;
+			throw new Exception($e->getMessage().' from QUERY: '.$sql, $code);
 		}
 
 		if($type === Db::SELECT)

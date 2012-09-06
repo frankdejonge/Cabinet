@@ -369,7 +369,7 @@ class Where extends Collector
 							'type' => $type,
 							'field' => $val[0],
 							'op' =>  $val[1],
-							'value' => $val[1],
+							'value' => $val[2],
 							'not' => false,
 						);
 					}

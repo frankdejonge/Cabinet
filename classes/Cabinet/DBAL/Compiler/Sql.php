@@ -525,7 +525,7 @@ abstract class Sql extends Compiler
 	 */
 	protected function compilePartInsert()
 	{
-		return 'INSERT INTO '.$this->query['table'];
+		return 'INSERT INTO '.$this->quoteIdentifier($this->query['table']);
 	}
 
 	/**

@@ -77,7 +77,7 @@ class Pdo extends Connection
 
 		// get connected
 		$this->connect($config);
-		
+
 		parent::__construct($config);
 	}
 
@@ -231,7 +231,7 @@ class Pdo extends Connection
 		try
 		{
 			$this->connection = new \PDO($this->formatDsn($config), $config['username'], $config['password'], $config['attrs']);
-			
+
 			$this->setCharset($config['charset']);
 		}
 		catch (\PDOException $e)
@@ -339,7 +339,8 @@ class Pdo extends Connection
 		}
 		catch (\PDOException $e)
 		{
-			throw new Exception($e->getMessage().' from QUERY: '.$sql, $e->getCode());
+			$code = is_int($e->getCode()) ? $e->getCode() : 0;
+			throw new Exception($e->getMessage().' from QUERY: '.$sql, $code);
 		}
 
 		if($type === Db::SELECT)

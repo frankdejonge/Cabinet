@@ -33,7 +33,66 @@ class InsertBuilderTest extends PHPUnit_Framework_TestCase
 
 		$query = $this->connection
 			->insert('my_table')
-			
+			->compile();
+
+		$this->assertEquals($expected, $query);
+	}
+
+	/**
+	 * Test Builder SELECT
+	 *
+	 * @test
+	 */
+	public function testBuildInsertWithValues()
+	{
+		$expected = "INSERT INTO `my_table` (`id`, `name`) VALUES (1, 'Frank')";
+
+		$query = $this->connection
+			->insert('my_table')
+			->values(array(
+				'id' => 1,
+				'name' => 'Frank',
+			))
+			->compile();
+
+		$this->assertEquals($expected, $query);
+	}
+
+	/**
+	 * Test Builder SELECT
+	 *
+	 * @test
+	 */
+	public function testBuildInsertWithFunction()
+	{
+		$expected = "INSERT INTO `my_table` (`id`, `time`) VALUES (1, NOW())";
+
+		$query = $this->connection
+			->insert('my_table')
+			->values(array(
+				'id' => 1,
+				'time' => $this->connection->fn('now'),
+			))
+			->compile();
+
+		$this->assertEquals($expected, $query);
+	}
+
+	/**
+	 * Test Builder SELECT
+	 *
+	 * @test
+	 */
+	public function testBuildInsertWithExpression()
+	{
+		$expected = "INSERT INTO `my_table` (`id`, `expression`) VALUES (1, 'value')";
+
+		$query = $this->connection
+			->insert('my_table')
+			->values(array(
+				'id' => 1,
+				'expression' => $this->connection->expr("'value'"),
+			))
 			->compile();
 
 		$this->assertEquals($expected, $query);

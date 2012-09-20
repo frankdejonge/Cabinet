@@ -536,7 +536,7 @@ abstract class Sql extends Compiler
 	protected function compilePartInsertValues()
 	{
 		$columns = array_map(array($this, 'quoteIdentifier'), $this->query['columns']);
-		$sql = ' ('.join(' , ', $columns).') VALUES (';
+		$sql = ' ('.join(', ', $columns).') VALUES (';
 		$parts = array();
 
 		foreach ($this->query['values'] as $row)

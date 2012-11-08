@@ -9,5 +9,4 @@ It's an easy to use and flexible DBAL to drop into your projects.
 
 - Make it easy to connect and query a database.
 - Support major SQL dialects.
-- Supply a basic interface for interacting with NoSQL databases.
 - Be framework independant, and easy to drop into a project without major configuration.

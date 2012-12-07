@@ -733,7 +733,7 @@ abstract class Sql extends Compiler
 			}
 
 			// Concat the conditions "... AND ..."
-			$sql .= '('.$on_sql.')';
+			empty($on_sql) or $sql .= '('.$on_sql.')';
 
 			$return[] = $sql;
 		}

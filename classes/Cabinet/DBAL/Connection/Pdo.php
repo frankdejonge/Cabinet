@@ -356,7 +356,6 @@ class Pdo extends Connection
 			{
 				$propsLate = $query->getPropsLate();
 				$propsLate === false and $propsLate = $this->config['propsLate'];
-
                 if( ! $propsLate)
                 {
                     $result = $result->fetchAll(\PDO::FETCH_CLASS, $asObject);
@@ -364,7 +363,7 @@ class Pdo extends Connection
                 else
                 {
                     $result = $result->fetchAll(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, $asObject);
-                }  
+                }
 			}
 			else
 			{

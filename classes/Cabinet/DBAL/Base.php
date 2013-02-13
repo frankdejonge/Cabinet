@@ -18,11 +18,11 @@ abstract class Base
 	 * @var  string  $asOjbect  true for stCLass or string classname
 	 */
 	protected $asObject = null;
-
-    /**
-     * @var  boolean  $propsLate  true for assigning properties after object creation
-     */
-    protected $propsLate = false;
+    
+	/**
+	 * @var  boolean  $propsLate  true for assigning properties after object creation
+	 */
+	protected $propsLate = false;
 
 	/**
 	 * @var  array  $bindings  query bindings
@@ -124,25 +124,28 @@ abstract class Base
 		$this->asObject = $object;
 
 		return $this;
+	}
+    
+	/**
+	 * When return type is classname u can assign properties late
+	 *
+	 * @param  boolean  $late false, true to assign properties late
+	 * @return  object  $this;
+	 */
+	public function propsLate($late = false)
+	{
+		$this->propsLate = $late;
 
-    /**
-     * When return type is classname u can assign properties late
-     *
-     * @param  boolean  $late false, true to assign properties late
-     * @return object  $this;
-     */
-    public function propsLate($late = false)
-    {
-        $this->propsLate = $late;
-        
-        return $this;
-    }
+		return $this;
+	}
     
-    
-    public function getPropsLate()
-    {
-        return $this->propsLate;
-    }
+	/**
+	 * @return  boolean
+	 */
+	public function getPropsLate()
+	{
+		return $this->propsLate;
+	}
     
 	/**
 	 * Sets the return type to array

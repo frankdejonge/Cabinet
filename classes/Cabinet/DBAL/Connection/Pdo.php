@@ -354,7 +354,19 @@ class Pdo extends Connection
 			}
 			elseif (is_string($asObject))
 			{
-				$result = $result->fetchAll(\PDO::FETCH_CLASS, $asObject);
+				$propertiesLate = $query->getPropertiesLate();
+				$propertiesLate == null and $propertiesLate = $this->config['propertiesLate'];
+
+				$constructorArguments = $query->getConstructorArguments();
+
+				$fetchStyle = \PDO::FETCH_CLASS;
+
+				if($propertiesLate)
+				{
+					$fetchStyle = \PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE;
+				}
+
+				$result = $result->fetchAll($fetchStyle, $asObject, $constructorArguments);
 			}
 			else
 			{

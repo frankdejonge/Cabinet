@@ -20,14 +20,14 @@ abstract class Base
 	protected $asObject = null;
 
 	/**
-	 * @var  boolean  $propsLate  true for assigning properties after object creation
+	 * @var  boolean  $propertiesLate  true for assigning properties after object creation
 	 */
-	protected $propsLate = false;
+	protected $propertiesLate = null;
 
 	/**
-	 * @var  array  $ctorArgs constructor arguments
+	 * @var  array  $constructorArguments constructor arguments
 	 */
-	protected $ctorArgs = array();
+	protected $constructorArguments = array();
 
 	/**
 	 * @var  array  $bindings  query bindings
@@ -122,16 +122,16 @@ abstract class Base
 	 * Set the return type for SELECT statements
 	 *
 	 * @param   $object  null for connection default, false for array, true for stdClass or string classname
-	 * @param   $late boolean assing properties late
-	 * @param   $ctorargs array constructor arguments
+	 * @param   $propertiesLate boolean assing properties late
+	 * @param   $constructorArguments array constructor arguments
 	 *
 	 * @return  object  $this;
 	 */
-	public function asObject($object = true, $late = false, array $ctorargs = array())
+	public function asObject($object = true, $propertiesLate = false, array $constructorArguments = array())
 	{
 		$this->asObject = $object;
-		$this->propsLate = $late;
-		$this->ctorArgs = $ctorargs;
+		$this->propertiesLate = $propertiesLate;
+		$this->constructorArguments = $constructorArguments;
 
 		return $this;
 	}
@@ -139,12 +139,12 @@ abstract class Base
 	/**
 	 * When return type is classname u can assign properties late
 	 *
-	 * @param  boolean  $late false, true to assign properties late
+	 * @param  boolean  $propertieslate false, true to assign properties late
 	 * @return  object  $this;
 	 */
-	public function propsLate($late = false)
+	public function setPropertiesLate($propertieslate = false)
 	{
-		$this->propsLate = $late;
+		$this->propertiesLate = $propertieslate;
 
 		return $this;
 	}
@@ -152,31 +152,31 @@ abstract class Base
 	/**
 	 * @return  boolean
 	 */
-	public function getPropsLate()
+	public function getPropertiesLate()
 	{
-		return $this->propsLate;
+		return $this->propertiesLate;
 	}
 
 	/**
-	 * ctorArgs	set constructor arguments
+	 * ConstructorArguments	set constructor arguments
 	 *
-	 * @param array $ctorargs
+	 * @param array $constructorArguments
 	 * @return object $this;
 	 */
-	public function ctorArgs(array $ctorargs = array())
+	public function setConstructorArguments(array $constructorArguments = array())
 	{
-		$this->ctorArgs = $ctorargs;
+		$this->constructorArguments = $constructorArguments;
 		return $this;
 	}
 
 	/**
-	 * getCtoArgs
+	 * getConstructorArguments
 	 *
 	 * @return array
 	 */
-	public function getCtorArgs()
+	public function getConstructorArguments()
 	{
-		return $this->ctorArgs;
+		return $this->constructorArguments;
 	}
 
 	/**

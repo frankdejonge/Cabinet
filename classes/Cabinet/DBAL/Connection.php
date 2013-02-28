@@ -29,8 +29,7 @@ abstract class Connection
 			'driver' => null,
 			'profiling' => false,
 			'asObject' => true,
-			'propsLate' => false,
-			'ctorArgs' => array()
+			'propertiesLate' => false,
 		);
 
 		$class = ucfirst(strtolower($config['type']));

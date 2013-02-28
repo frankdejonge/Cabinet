@@ -29,6 +29,7 @@ abstract class Connection
 			'driver' => null,
 			'profiling' => false,
 			'asObject' => true,
+			'propertiesLate' => false
 		);
 
 		$class = ucfirst(strtolower($config['type']));
@@ -268,8 +269,7 @@ abstract class Connection
 	{
 		throw new Exception('List fields is not supported by this driver.');
 	}
-	
-		
+
 	abstract public function quote($value);
 	abstract public function quoteIdentifier($value);
 }

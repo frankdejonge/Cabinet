@@ -20,6 +20,16 @@ abstract class Base
 	protected $asObject = null;
 
 	/**
+	 * @var  boolean  $propertiesLate  true for assigning properties after object creation
+	 */
+	protected $propertiesLate = null;
+
+	/**
+	 * @var  array  $constructorArguments constructor arguments
+	 */
+	protected $constructorArguments = array();
+
+	/**
 	 * @var  array  $bindings  query bindings
 	 */
 	protected $bindings = array();
@@ -112,13 +122,61 @@ abstract class Base
 	 * Set the return type for SELECT statements
 	 *
 	 * @param   $object  null for connection default, false for array, true for stdClass or string classname
+	 * @param   $propertiesLate boolean assing properties late
+	 * @param   $constructorArguments array constructor arguments
+	 *
 	 * @return  object  $this;
 	 */
-	public function asObject($object = true)
+	public function asObject($object = true, $propertiesLate = false, array $constructorArguments = array())
 	{
 		$this->asObject = $object;
+		$this->propertiesLate = $propertiesLate;
+		$this->constructorArguments = $constructorArguments;
 
 		return $this;
+	}
+
+	/**
+	 * When return type is classname u can assign properties late
+	 *
+	 * @param  boolean  $propertieslate false, true to assign properties late
+	 * @return  object  $this;
+	 */
+	public function setPropertiesLate($propertieslate = false)
+	{
+		$this->propertiesLate = $propertieslate;
+
+		return $this;
+	}
+
+	/**
+	 * @return  boolean
+	 */
+	public function getPropertiesLate()
+	{
+		return $this->propertiesLate;
+	}
+
+	/**
+	 * ConstructorArguments	set constructor arguments
+	 *
+	 * @param array $constructorArguments
+	 * @return object $this;
+	 */
+	public function setConstructorArguments(array $constructorArguments = array())
+	{
+		$this->constructorArguments = $constructorArguments;
+		return $this;
+	}
+
+	/**
+	 * getConstructorArguments
+	 *
+	 * @return array
+	 */
+	public function getConstructorArguments()
+	{
+		return $this->constructorArguments;
 	}
 
 	/**

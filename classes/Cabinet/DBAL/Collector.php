@@ -31,7 +31,7 @@ class Collector extends Base
 
 		foreach ($vars as $k => $v)
 		{
-			if ( ! preg_match('/^_/', $k))
+			if ($k[0] != '_')
 			{
 				$return[$k] = $v;
 			}

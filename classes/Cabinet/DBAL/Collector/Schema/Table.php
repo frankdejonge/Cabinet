@@ -62,6 +62,11 @@ class Table extends Collector
 	 */
 	public $indexes = array();
 
+    /**
+     * @var  array  $foreignKeys  foreign keys
+     */
+    public $foreignKeys = array();
+
 	/**
 	 * Constructor, sets the table name
 	 *
@@ -270,7 +275,7 @@ class Table extends Collector
 		{
 			$foreignKey = new ForeignKey($k);
 			$c($foreignKey);
-			$this->foreignKeys[$foreignKeys->on] = $foreignKey;
+			$this->foreignKeys[] = $foreignKey;
 		}
 
 		return $this;

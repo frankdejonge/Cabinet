@@ -172,6 +172,7 @@ abstract class Sql extends Compiler
 		$sql .= $this->quoteIdentifier($this->query['table']).' ( ';
 		$sql .= $this->compilePartFields('create');
 		$sql .= $this->compilePartIndexes();
+        $sql .= $this->compilePartForeignKeys();
 		$sql .= ' ) '.$this->compilePartEngine();
 		$sql .= $this->compilePartCharset($this->query['charset']);
 		return $sql;
@@ -326,6 +327,8 @@ abstract class Sql extends Compiler
 
 		foreach ($this->query['foreignKeys'] as $fk)
 		{
+            $fk = $fk->getContents();
+
 			$part = array();
 
 			if ($fk['constraint'])
@@ -335,7 +338,7 @@ abstract class Sql extends Compiler
 
 			$part[] = 'FOREIGN KEY ('.$this->quoteIdentifier($fk['key']).')';
 			$part[] = 'REFERENCES '.$this->quoteIdentifier($fk['reference']['table']).' ('.
-				$this->quoteIdentifier($fk['reference']['columns']).')';
+				implode(',', array_map(array($this, 'quoteIdentifier'), $fk['reference']['columns'])).')';
 
 			if ($fk['onUpdate'])
 			{

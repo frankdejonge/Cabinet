@@ -12,7 +12,7 @@
 
 namespace Cabinet\DBAL\Collector\Schema;
 
-class ForeignKey
+class ForeignKey extends \Cabinet\DBAL\Collector
 {
 	/**
 	 * @var  string  $key  key name
@@ -40,7 +40,7 @@ class ForeignKey
 	/**
 	 * @var  string  $constraint  constraint
 	 */
-	public $constaint;
+	public $constraint;
 
 	/**
 	 * Constructor, sets the key field

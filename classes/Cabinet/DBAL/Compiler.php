@@ -89,7 +89,7 @@ abstract class Compiler
 	 * Processes all the query bindings recursively.
 	 *
 	 * @param  mixes  $contents  query contents
-	 * @bindings  array  $bindings  an array of query bindings.
+	 * @param  array  $bindings  an array of query bindings.
 	 */
 	protected function processBindings($contents, $bindings, $first = true)
 	{

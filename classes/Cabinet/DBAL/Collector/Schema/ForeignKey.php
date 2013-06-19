@@ -72,7 +72,7 @@ class ForeignKey
 	 * @param   string  $action  update action
 	 * @return  object  $this;
 	 */
-	public functin onUpdate($action)
+	public function onUpdate($action)
 	{
 		$this->onUpdate = $action;
 
@@ -102,6 +102,6 @@ class ForeignKey
 	{
 		$this->constraint = $constraint;
 
-		return this;
+		return $this;
 	}
 }
